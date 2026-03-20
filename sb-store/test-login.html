@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Login System Test</h1>
+    
+    <div id="status">Checking login status...</div>
+    
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testLogout()">Test Logout</button>
+    <button onclick="checkStatus()">Check Status</button>
+    <button onclick="clearAll()">Clear All Storage</button>
+    
+    <script>
+        function testLogin() {
+            const user = {
+                id: 'test_' + Date.now(),
+                name: 'Test User',
+                email: 'test@example.com',
+                time: new Date().toLocaleString()
+            };
+            
+            // Try both storages
+            localStorage.setItem('sbstore_current_user', JSON.stringify(user));
+            sessionStorage.setItem('sbstore_current_user', JSON.stringify(user));
+            
+            document.getElementById('status').innerHTML = 
+                '<span class="success">✅ Logged in as: ' + user.name + ' at ' + user.time + '</span>';
+        }
+        
+        function testLogout() {
+            localStorage.removeItem('sbstore_current_user');
+            sessionStorage.removeItem('sbstore_current_user');
+            document.getElementById('status').innerHTML = '<span class="error">❌ Logged out</span>';
+        }
+        
+        function checkStatus() {
+            const local = localStorage.getItem('sbstore_current_user');
+            const session = sessionStorage.getItem('sbstore_current_user');
+            
+            if (local || session) {
+                const user = JSON.parse(local || session);
+                document.getElementById('status').innerHTML = 
+                    '<span class="success">✅ Logged in as: ' + user.name + '</span>';
+            } else {
+                document.getElementById('status').innerHTML = '<span class="error">❌ Not logged in</span>';
+            }
+        }
+        
+        function clearAll() {
+            localStorage.clear();
+            sessionStorage.clear();
+            document.getElementById('status').innerHTML = '<span>⚠️ All storage cleared</span>';
+        }
+        
+        // Check on load
+        checkStatus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Best Sellers 2025 - Coming Soon | SB Store</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Discover the most anticipated best-selling products of 2025 at SB Store. Sign up for exclusive early access and special launch offers.">
+    <meta name="author" content="SB Store">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="Best Sellers 2025 - Coming Soon | SB Store">
+    <meta property="og:description" content="Be the first to know when our best-selling products launch. Exclusive early access available.">
+    <meta property="og:image" content="https://sbstore.com/images/coming-soon-bestsellers.jpg">
+    <meta property="og:url" content="https://sbstore.com/bestsellers-coming-soon">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Best Sellers 2025 - Coming Soon | SB Store">
+    <meta name="twitter:description" content="Be the first to know when our best-selling products launch.">
+    <meta name="twitter:image" content="https://sbstore.com/images/coming-soon-bestsellers.jpg">
+    
+    <!-- Favicon and App Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Page Specific Styles -->
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --accent-color: #ff6b6b;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --text-light: #999;
+            --background-light: #f8f9fa;
+            --white: #ffffff;
+            --shadow-sm: 0 5px 20px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+            --shadow-hover: 0 30px 80px rgba(102,126,234,0.3);
+            --border-radius-sm: 10px;
+            --border-radius-md: 20px;
+            --border-radius-lg: 30px;
+            --border-radius-xl: 50px;
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Loading Animation */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .page-loader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .loader-text {
+            font-size: 18px;
+            font-weight: 600;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Main Container */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Coming Soon Page Styles */
+        .coming-soon-page {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Background Animation Elements */
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-shape {
+            position: absolute;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 20s infinite;
+        }
+
+        .bg-shape:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -250px;
+            left: -250px;
+            animation-delay: 0s;
+        }
+
+        .bg-shape:nth-child(2) {
+            width: 600px;
+            height: 600px;
+            bottom: -300px;
+            right: -300px;
+            animation-delay: -5s;
+        }
+
+        .bg-shape:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(5%, 5%) rotate(5deg); }
+            50% { transform: translate(-5%, 10%) rotate(-5deg); }
+            75% { transform: translate(-10%, -5%) rotate(3deg); }
+        }
+
+        /* Main Card */
+        .coming-soon-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            padding: 70px 50px;
+            max-width: 700px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            z-index: 10;
+            animation: cardAppear 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .coming-soon-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: var(--primary-gradient);
+            border-radius: calc(var(--border-radius-lg) + 2px);
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(10px);
+        }
+
+        @keyframes cardAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Icon Animation */
+        .icon-wrapper {
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .icon-wrapper i {
+            font-size: 100px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: iconPulse 2s ease-in-out infinite, iconRotate 10s linear infinite;
+        }
+
+        .icon-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, rgba(102,126,234,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes iconRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Typography */
+        .coming-soon-card h1 {
+            font-size: 56px;
+            margin-bottom: 15px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(102,126,234,0.3)); }
+            50% { filter: drop-shadow(0 0 20px rgba(102,126,234,0.5)); }
+        }
+
+        .coming-soon-card h2 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 32px;
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        .coming-soon-card h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+        }
+
+        .coming-soon-card p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.8;
+        }
+
+        /* Countdown Timer */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius-md);
+            padding: 20px 15px;
+            min-width: 100px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .countdown-number {
+            font-size: 42px;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .countdown-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            margin-bottom: 40px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .progress-percentage {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            width: 85%;
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            animation: progressPulse 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes progressPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Newsletter Signup */
+        .newsletter-section {
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .newsletter-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: var(--border-radius-xl);
+            font-size: 16px;
+            transition: all var(--transition-normal);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .newsletter-input.error {
+            border-color: var(--accent-color);
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .newsletter-btn {
+            padding: 15px 30px;
+            background: var(--primary-gradient);
+            color: var(--white);
+            border: none;
+            border-radius: var(--border-radius-xl);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .newsletter-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .newsletter-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .newsletter-btn:active {
+            transform: translateY(0);
+        }
+
+        .newsletter-message {
+            margin-top: 10px;
+            font-size: 14px;
+            min-height: 20px;
+            transition: all var(--transition-normal);
+        }
+
+        .newsletter-message.success {
+            color: #28a745;
+        }
+
+        .newsletter-message.error {
+            color: var(--accent-color);
+        }
+
+        /* Product Preview Section */
+        .product-preview {
+            margin-bottom: 40px;
+        }
+
+        .product-preview h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .product-item {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius-md);
+            padding: 20px 15px;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-gradient);
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+            z-index: 1;
+        }
+
+        .product-item:hover::before {
+            opacity: 0.1;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+.product-item i {
+    font-size: 30px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: #667eea; /* Fallback color */
+    margin-bottom: 10px;
+}
+
+        .product-item span {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        /* Social Proof Section */
+        .social-proof {
+            margin-bottom: 40px;
+        }
+
+        .testimonial {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            position: relative;
+        }
+
+        .testimonial i {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            animation: none;
+        }
+
+        .testimonial-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .testimonial-author {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* CTA Button */
+        .shop-now-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 18px 45px;
+            background: var(--primary-gradient);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: var(--border-radius-xl);
+            font-weight: 700;
+            font-size: 18px;
+            transition: all var(--transition-normal);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .shop-now-btn i {
+            font-size: 18px;
+            animation: none;
+            color: var(--white);
+        }
+
+        .shop-now-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .shop-now-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .shop-now-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .shop-now-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Info Text */
+        .info-text {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .info-text i {
+            font-size: 14px;
+            animation: none;
+            color: var(--text-light);
+        }
+
+        /* Social Share */
+        .social-share {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .social-share p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .share-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .share-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+            font-size: 18px;
+        }
+
+        .share-icon:hover {
+            transform: translateY(-3px);
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .coming-soon-card {
+                padding: 50px 30px;
+            }
+
+            .coming-soon-card h1 {
+                font-size: 48px;
+            }
+
+            .coming-soon-card h2 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .coming-soon-card {
+                padding: 40px 20px;
+            }
+
+            .coming-soon-card h1 {
+                font-size: 42px;
+            }
+
+            .coming-soon-card h2 {
+                font-size: 24px;
+            }
+
+            .coming-soon-card p {
+                font-size: 16px;
+            }
+
+            .countdown-item {
+                min-width: 70px;
+                padding: 15px 10px;
+            }
+
+            .countdown-number {
+                font-size: 32px;
+            }
+
+            .countdown-label {
+                font-size: 12px;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter-input {
+                width: 100%;
+            }
+
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .coming-soon-card h1 {
+                font-size: 36px;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .countdown-container {
+                gap: 10px;
+            }
+
+            .countdown-item {
+                min-width: 60px;
+                padding: 10px 5px;
+            }
+
+            .countdown-number {
+                font-size: 24px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .animated-bg,
+            .back-to-top,
+            .social-share,
+            .newsletter-section {
+                display: none;
+            }
+
+            .coming-soon-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">Loading Best Sellers...</div>
+        </div>
+    </div>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Header Container -->
+        <div id="header-container"></div>
+
+        <!-- Main Content -->
+        <main>
+            <div class="coming-soon-page">
+                <!-- Animated Background -->
+                <div class="animated-bg">
+                    <div class="bg-shape"></div>
+                    <div class="bg-shape"></div>
+                    <div class="bg-shape"></div>
+                </div>
+
+                <!-- Main Card -->
+                <div class="coming-soon-card">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-star"></i>
+                    </div>
+
+                    <h1>Best Sellers</h1>
+                    <h2>Coming Soon!</h2>
+                    <p>We're analyzing top products and curating the best selection for you. Get ready for an amazing shopping experience!</p>
+
+                    <!-- Countdown Timer -->
+                    <div class="countdown-container" id="countdown">
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="days">00</div>
+                            <div class="countdown-label">Days</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="hours">00</div>
+                            <div class="countdown-label">Hours</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="minutes">00</div>
+                            <div class="countdown-label">Minutes</div>
+                        </div>
+                        <div class="countdown-item">
+                            <div class="countdown-number" id="seconds">00</div>
+                            <div class="countdown-label">Seconds</div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Section -->
+                    <div class="progress-section">
+                        <div class="progress-header">
+                            <span>Launch Progress</span>
+                            <span class="progress-percentage">85%</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Product Preview -->
+                    <div class="product-preview">
+                        <h3>Featured Products Preview</h3>
+                        <div class="product-grid">
+                            <div class="product-item">
+                                <i class="fas fa-laptop"></i>
+                                <span>Premium Laptops</span>
+                                <div class="product-badge">Coming</div>
+                            </div>
+                            <div class="product-item">
+                                <i class="fas fa-headphones"></i>
+                                <span>Audio Gear</span>
+                                <div class="product-badge">Soon</div>
+                            </div>
+                            <div class="product-item">
+                                <i class="fas fa-watch"></i>
+                                <span>Smart Watches</span>
+                                <div class="product-badge">New</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Newsletter Signup -->
+                    <div class="newsletter-section">
+                        <div class="newsletter-title">
+                            <i class="fas fa-bell" style="margin-right: 8px;"></i>
+                            Get Notified When We Launch
+                        </div>
+                        <div class="newsletter-form" id="newsletterForm">
+                            <input type="email" 
+                                   class="newsletter-input" 
+                                   id="newsletterEmail" 
+                                   placeholder="Enter your email address"
+                                   aria-label="Email for notifications"
+                                   required>
+                            <button type="submit" class="newsletter-btn" id="newsletterSubmit">
+                                <i class="fas fa-paper-plane"></i>
+                                Notify Me
+                            </button>
+                        </div>
+                        <div class="newsletter-message" id="newsletterMessage"></div>
+                    </div>
+
+                    <!-- Social Proof -->
+                    <div class="social-proof">
+                        <div class="testimonial">
+                            <i class="fas fa-quote-left"></i>
+                            <div class="testimonial-text">
+                                "I can't wait for the new best sellers! The previous collection was amazing."
+                            </div>
+                            <div class="testimonial-author">- Sarah J., Premium Member</div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Button -->
+                    <a href="shop.html" class="shop-now-btn" id="shopNowBtn">
+                        <i class="fas fa-shopping-bag"></i> 
+                        Browse All Products
+                    </a>
+
+                    <!-- Info Text -->
+                    <div class="info-text">
+                        <i class="fas fa-gem"></i>
+                        <span>Exclusive early access for newsletter subscribers</span>
+                    </div>
+
+                    <!-- Social Share -->
+                    <div class="social-share">
+                        <p>Share this page:</p>
+                        <div class="share-icons">
+                            <a href="#" class="share-icon" aria-label="Share on Facebook" onclick="shareOnFacebook(); return false;">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="share-icon" aria-label="Share on Twitter" onclick="shareOnTwitter(); return false;">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="share-icon" aria-label="Share on LinkedIn" onclick="shareOnLinkedIn(); return false;">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="share-icon" aria-label="Share via Email" onclick="shareViaEmail(); return false;">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Container -->
+        <div id="footer-container"></div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript Files -->
+    <script src="js/data-bridge.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Comprehensive JavaScript -->
+    <script>
+        (function() {
+            'use strict';
+
+            // Configuration
+            const CONFIG = {
+                launchDate: '2025-06-01T00:00:00',
+                newsletterEndpoint: 'https://api.sbstore.com/subscribe',
+                debug: false
+            };
+
+            // State Management
+            const state = {
+                componentsLoaded: false,
+                newsletterSubscribed: false,
+                countdownInterval: null,
+                currentLanguage: 'en'
+            };
+
+            // DOM Elements
+            const elements = {
+                headerContainer: document.getElementById('header-container'),
+                footerContainer: document.getElementById('footer-container'),
+                pageLoader: document.getElementById('pageLoader'),
+                backToTop: document.getElementById('backToTop'),
+                newsletterForm: document.getElementById('newsletterForm'),
+                newsletterEmail: document.getElementById('newsletterEmail'),
+                newsletterSubmit: document.getElementById('newsletterSubmit'),
+                newsletterMessage: document.getElementById('newsletterMessage'),
+                shopNowBtn: document.getElementById('shopNowBtn')
+            };
+
+            // Utility Functions
+            const utils = {
+                log: function(message, type = 'info') {
+                    if (CONFIG.debug) {
+                        console.log(`[${type.toUpperCase()}] ${message}`);
+                    }
+                },
+
+                showError: function(message) {
+                    if (elements.newsletterMessage) {
+                        elements.newsletterMessage.textContent = message;
+                        elements.newsletterMessage.className = 'newsletter-message error';
+                        elements.newsletterEmail.classList.add('error');
+                        setTimeout(() => {
+                            elements.newsletterEmail.classList.remove('error');
+                        }, 3000);
+                    }
+                },
+
+                showSuccess: function(message) {
+                    if (elements.newsletterMessage) {
+                        elements.newsletterMessage.textContent = message;
+                        elements.newsletterMessage.className = 'newsletter-message success';
+                    }
+                },
+
+                validateEmail: function(email) {
+                    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return re.test(String(email).toLowerCase());
+                },
+
+                formatNumber: function(num) {
+                    return num < 10 ? `0${num}` : num;
+                },
+
+                debounce: function(func, wait) {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                }
+            };
+
+            // Header/Footer Management
+            const componentManager = {
+                async loadHeader() {
+                    try {
+                        const response = await fetch('header.html');
+                        if (!response.ok) throw new Error('Header not found');
+                        const data = await response.text();
+                        elements.headerContainer.innerHTML = data;
+                        return true;
+                    } catch (error) {
+                        utils.log('Header load failed, using fallback', 'error');
+                        elements.headerContainer.innerHTML = this.getFallbackHeader();
+                        return false;
+                    }
+                },
+
+                async loadFooter() {
+                    try {
+                        const response = await fetch('footer.html');
+                        if (!response.ok) throw new Error('Footer not found');
+                        const data = await response.text();
+                        elements.footerContainer.innerHTML = data;
+                        return true;
+                    } catch (error) {
+                        utils.log('Footer load failed, using fallback', 'error');
+                        elements.footerContainer.innerHTML = this.getFallbackFooter();
+                        return false;
+                    }
+                },
+
+                getFallbackHeader() {
+                    return `
+                        <header class="fallback-header" style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 20px; color: white; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <i class="fas fa-store" style="font-size: 24px;"></i>
+                                    <h2 style="margin: 0; font-size: 24px;">SB Store</h2>
+                                </div>
+                                <nav>
+                                    <ul style="display: flex; gap: 20px; list-style: none; margin: 0; padding: 0;">
+                                        <li><a href="index.html" style="color: white; text-decoration: none;">Home</a></li>
+                                        <li><a href="shop.html" style="color: white; text-decoration: none;">Shop</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </header>
+                    `;
+                },
+
+                getFallbackFooter() {
+                    return `
+                        <footer class="fallback-footer" style="background: #2d3748; color: white; padding: 40px 20px; margin-top: auto;">
+                            <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+                                <p style="margin-bottom: 20px;">&copy; 2025 SB Store. All rights reserved.</p>
+                                <div style="display: flex; justify-content: center; gap: 20px;">
+                                    <a href="#" style="color: white; text-decoration: none;">Privacy Policy</a>
+                                    <a href="#" style="color: white; text-decoration: none;">Terms of Service</a>
+                                    <a href="#" style="color: white; text-decoration: none;">Contact</a>
+                                </div>
+                            </div>
+                        </footer>
+                    `;
+                },
+
+                async loadAll() {
+                    try {
+                        const [headerLoaded, footerLoaded] = await Promise.all([
+                            this.loadHeader(),
+                            this.loadFooter()
+                        ]);
+                        
+                        state.componentsLoaded = headerLoaded && footerLoaded;
+                        
+                        if (state.componentsLoaded) {
+                            this.initializeComponents();
+                        }
+                    } catch (error) {
+                        utils.log('Failed to load components', 'error');
+                    }
+                },
+
+                initializeComponents() {
+                    // Initialize mobile menu
+                    const menuBtn = document.querySelector('.mobile-menu-btn');
+                    if (menuBtn) {
+                        menuBtn.addEventListener('click', this.toggleMobileMenu);
+                    }
+
+                    // Initialize navigation active state
+                    this.setActiveNavLink();
+                },
+
+                toggleMobileMenu() {
+                    const nav = document.querySelector('.nav-menu');
+                    if (nav) {
+                        nav.classList.toggle('active');
+                    }
+                },
+
+                setActiveNavLink() {
+                    const currentPath = window.location.pathname;
+                    const navLinks = document.querySelectorAll('.nav-link');
+                    
+                    navLinks.forEach(link => {
+                        const href = link.getAttribute('href');
+                        if (href === 'bestsellers-coming-soon.html' || 
+                            (currentPath.includes('bestsellers') && href.includes('bestsellers'))) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            };
+
+            // Countdown Timer
+            const countdownManager = {
+                targetDate: new Date(CONFIG.launchDate).getTime(),
+
+                calculateTimeRemaining() {
+                    const now = new Date().getTime();
+                    const distance = this.targetDate - now;
+
+                    return {
+                        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                        seconds: Math.floor((distance % (1000 * 60)) / 1000),
+                        isExpired: distance < 0
+                    };
+                },
+
+                updateDisplay() {
+                    const time = this.calculateTimeRemaining();
+                    
+                    if (time.isExpired) {
+                        this.handleExpired();
+                        return;
+                    }
+
+                    document.getElementById('days').textContent = utils.formatNumber(time.days);
+                    document.getElementById('hours').textContent = utils.formatNumber(time.hours);
+                    document.getElementById('minutes').textContent = utils.formatNumber(time.minutes);
+                    document.getElementById('seconds').textContent = utils.formatNumber(time.seconds);
+                },
+
+                handleExpired() {
+                    document.getElementById('days').textContent = '00';
+                    document.getElementById('hours').textContent = '00';
+                    document.getElementById('minutes').textContent = '00';
+                    document.getElementById('seconds').textContent = '00';
+                    
+                    // Show launch message
+                    const countdownContainer = document.querySelector('.countdown-container');
+                    if (countdownContainer) {
+                        countdownContainer.innerHTML = `
+                            <div class="countdown-item" style="min-width: 200px;">
+                                <div class="countdown-number">LAUNCHED!</div>
+                                <div class="countdown-label">Check Now</div>
+                            </div>
+                        `;
+                    }
+                },
+
+                start() {
+                    this.updateDisplay();
+                    state.countdownInterval = setInterval(() => {
+                        this.updateDisplay();
+                    }, 1000);
+                },
+
+                stop() {
+                    if (state.countdownInterval) {
+                        clearInterval(state.countdownInterval);
+                    }
+                }
+            };
+
+            // Newsletter Management
+            const newsletterManager = {
+                async handleSubmit(event) {
+                    if (event) event.preventDefault();
+
+                    const email = elements.newsletterEmail.value.trim();
+                    
+                    if (!utils.validateEmail(email)) {
+                        utils.showError('Please enter a valid email address');
+                        return;
+                    }
+
+                    this.setLoadingState(true);
+
+                    try {
+                        const success = await this.subscribeEmail(email);
+                        
+                        if (success) {
+                            utils.showSuccess('Thank you! We\'ll notify you when we launch.');
+                            elements.newsletterEmail.value = '';
+                            state.newsletterSubscribed = true;
+                            
+                            // Track subscription
+                            this.trackSubscription(email);
+                        } else {
+                            throw new Error('Subscription failed');
+                        }
+                    } catch (error) {
+                        utils.log('Newsletter subscription failed', 'error');
+                        utils.showError('Something went wrong. Please try again.');
+                    } finally {
+                        this.setLoadingState(false);
+                    }
+                },
+
+                setLoadingState(isLoading) {
+                    if (isLoading) {
+                        elements.newsletterSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+                        elements.newsletterSubmit.disabled = true;
+                        elements.newsletterEmail.disabled = true;
+                    } else {
+                        elements.newsletterSubmit.innerHTML = '<i class="fas fa-paper-plane"></i> Notify Me';
+                        elements.newsletterSubmit.disabled = false;
+                        elements.newsletterEmail.disabled = false;
+                    }
+                },
+
+                async subscribeEmail(email) {
+                    // Simulate API call - Replace with actual API
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve(true);
+                        }, 1000);
+                    });
+                },
+
+                trackSubscription(email) {
+                    // Analytics tracking
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'newsletter_signup', {
+                            'event_category': 'engagement',
+                            'event_label': 'bestsellers_coming_soon',
+                            'value': 1
+                        });
+                    }
+                    
+                    // Store in localStorage
+                    const subscribers = JSON.parse(localStorage.getItem('subscribers') || '[]');
+                    subscribers.push({
+                        email,
+                        timestamp: new Date().toISOString(),
+                        page: 'bestsellers-coming-soon'
+                    });
+                    localStorage.setItem('subscribers', JSON.stringify(subscribers));
+                }
+            };
+
+            // Social Sharing
+            const socialManager = {
+                shareOnFacebook() {
+                    const url = encodeURIComponent(window.location.href);
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'width=600,height=400');
+                },
+
+                shareOnTwitter() {
+                    const url = encodeURIComponent(window.location.href);
+                    const text = encodeURIComponent('Check out the upcoming best sellers at SB Store!');
+                    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
+                },
+
+                shareOnLinkedIn() {
+                    const url = encodeURIComponent(window.location.href);
+                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank', 'width=600,height=400');
+                },
+
+                shareViaEmail() {
+                    const subject = encodeURIComponent('Check out SB Store Best Sellers Coming Soon');
+                    const body = encodeURIComponent(`I thought you might be interested in the upcoming best sellers at SB Store: ${window.location.href}`);
+                    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+                }
+            };
+
+            // Scroll Manager
+            const scrollManager = {
+                handleScroll: utils.debounce(function() {
+                    const scrollY = window.scrollY;
+                    
+                    // Back to top button visibility
+                    if (elements.backToTop) {
+                        if (scrollY > 300) {
+                            elements.backToTop.classList.add('visible');
+                        } else {
+                            elements.backToTop.classList.remove('visible');
+                        }
+                    }
+                }, 100),
+
+                scrollToTop() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            };
+
+            // Page Loader Manager
+            const loaderManager = {
+                hide() {
+                    setTimeout(() => {
+                        if (elements.pageLoader) {
+                            elements.pageLoader.classList.add('fade-out');
+                            setTimeout(() => {
+                                elements.pageLoader.style.display = 'none';
+                            }, 500);
+                        }
+                    }, 800);
+                },
+
+                show() {
+                    if (elements.pageLoader) {
+                        elements.pageLoader.style.display = 'flex';
+                        elements.pageLoader.classList.remove('fade-out');
+                    }
+                }
+            };
+
+            // Analytics Manager
+            const analyticsManager = {
+                trackPageView() {
+                    if (typeof gtag !== 'undefined') {
+                        gtag('config', 'GA_MEASUREMENT_ID', {
+                            'page_title': 'Best Sellers Coming Soon',
+                            'page_path': window.location.pathname
+                        });
+                    }
+                    
+                    // Track in localStorage
+                    const pageViews = JSON.parse(localStorage.getItem('pageViews') || '[]');
+                    pageViews.push({
+                        page: 'bestsellers-coming-soon',
+                        timestamp: new Date().toISOString()
+                    });
+                    localStorage.setItem('pageViews', JSON.stringify(pageViews));
+                },
+
+                trackEngagement(action, label) {
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', action, {
+                            'event_category': 'engagement',
+                            'event_label': label
+                        });
+                    }
+                }
+            };
+
+            // Error Boundary
+            const errorBoundary = {
+                handleError(error, context) {
+                    utils.log(`Error in ${context}: ${error.message}`, 'error');
+                    
+                    // Display user-friendly message
+                    if (context.includes('newsletter')) {
+                        utils.showError('Unable to process request. Please try again.');
+                    }
+                    
+                    // Track error
+                    this.trackError(error, context);
+                },
+
+                trackError(error, context) {
+                    const errors = JSON.parse(localStorage.getItem('errors') || '[]');
+                    errors.push({
+                        context,
+                        message: error.message,
+                        timestamp: new Date().toISOString(),
+                        url: window.location.href
+                    });
+                    localStorage.setItem('errors', JSON.stringify(errors));
+                }
+            };
+
+            // Performance Monitoring
+            const performanceManager = {
+                init() {
+                    if ('performance' in window) {
+                        window.addEventListener('load', () => {
+                            setTimeout(() => {
+                                const perfData = performance.getEntriesByType('navigation')[0];
+                                utils.log(`Page load time: ${perfData.loadEventEnd - perfData.navigationStart}ms`);
+                            }, 0);
+                        });
+                    }
+                },
+
+                trackMetric(name, value) {
+                    const metrics = JSON.parse(localStorage.getItem('performanceMetrics') || '[]');
+                    metrics.push({
+                        name,
+                        value,
+                        timestamp: new Date().toISOString()
+                    });
+                    localStorage.setItem('performanceMetrics', JSON.stringify(metrics));
+                }
+            };
+
+            // Event Listeners Setup
+            function setupEventListeners() {
+                // Newsletter form
+                if (elements.newsletterForm) {
+                    elements.newsletterForm.addEventListener('submit', (e) => 
+                        newsletterManager.handleSubmit(e).catch(error => 
+                            errorBoundary.handleError(error, 'newsletter-submit')
+                        )
+                    );
+                }
+
+                // Back to top
+                if (elements.backToTop) {
+                    elements.backToTop.addEventListener('click', scrollManager.scrollToTop);
+                }
+
+                // Scroll events
+                window.addEventListener('scroll', scrollManager.handleScroll);
+
+                // Shop now button tracking
+                if (elements.shopNowBtn) {
+                    elements.shopNowBtn.addEventListener('click', () => {
+                        analyticsManager.trackEngagement('click', 'shop-now-button');
+                    });
+                }
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        // Close any open modals
+                        const mobileMenu = document.querySelector('.nav-menu.active');
+                        if (mobileMenu) {
+                            mobileMenu.classList.remove('active');
+                        }
+                    }
+                });
+            }
+
+            // Initialize Service Worker
+            function initServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            utils.log('ServiceWorker registered');
+                        })
+                        .catch(error => {
+                            utils.log('ServiceWorker registration failed', 'error');
+                        });
+                }
+            }
+
+            // Initialize everything
+            async function init() {
+                try {
+                    // Show loader
+                    loaderManager.show();
+
+                    // Load header and footer
+                    await componentManager.loadAll();
+
+                    // Start countdown
+                    countdownManager.start();
+
+                    // Set up event listeners
+                    setupEventListeners();
+
+                    // Initialize performance monitoring
+                    performanceManager.init();
+
+                    // Initialize service worker
+                    initServiceWorker();
+
+                    // Track page view
+                    analyticsManager.trackPageView();
+
+                    // Hide loader after everything is ready
+                    loaderManager.hide();
+
+                    // Check for saved email
+                    const savedEmail = localStorage.getItem('subscriberEmail');
+                    if (savedEmail && elements.newsletterEmail) {
+                        elements.newsletterEmail.value = savedEmail;
+                    }
+
+                    utils.log('Page initialized successfully');
+                } catch (error) {
+                    errorBoundary.handleError(error, 'initialization');
+                    loaderManager.hide();
+                }
+            }
+
+            // Start the application
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+            // Cleanup on page unload
+            window.addEventListener('beforeunload', () => {
+                countdownManager.stop();
+            });
+
+            // Expose global functions for social sharing
+            window.shareOnFacebook = () => socialManager.shareOnFacebook();
+            window.shareOnTwitter = () => socialManager.shareOnTwitter();
+            window.shareOnLinkedIn = () => socialManager.shareOnLinkedIn();
+            window.shareViaEmail = () => socialManager.shareViaEmail();
+        })();
+    </script>
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Best Sellers Collection Coming Soon",
+        "description": "Upcoming best-selling products at SB Store",
+        "brand": {
+            "@type": "Brand",
+            "name": "SB Store"
+        },
+        "offers": {
+            "@type": "Offer",
+            "availability": "https://schema.org/PreOrder",
+            "price": "0",
+            "priceCurrency": "USD"
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,786 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Dashboard - SB Store</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* ========== MODERN DASHBOARD STYLES ========== */
+        
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Purple Palette - EXACTLY YOUR COLORS */
+            --primary-900: #1a1a3a;
+            --primary-800: #2a2a5a;
+            --primary-700: #3F2B96;
+            --primary-600: #4a35b0;
+            --primary-500: #6C4AB6;
+            --primary-400: #8b6bc9;
+            --primary-300: #aa8cdb;
+            --primary-200: #c9b5ed;
+            --primary-100: #e8ddff;
+            
+            /* Accent Gold Palette */
+            --accent-900: #8B5F00;
+            --accent-800: #B87C00;
+            --accent-700: #E69A00;
+            --accent-600: #F4B400;
+            --accent-500: #F4C430;
+            --accent-400: #f6cf5a;
+            --accent-300: #f9db84;
+            --accent-200: #fbe7ad;
+            --accent-100: #fef3d6;
+            
+            /* Success Palette */
+            --success-50: #f0fdf4;
+            --success-500: #22c55e;
+            --success-600: #16a34a;
+            
+            /* Danger Palette */
+            --danger-50: #fef2f2;
+            --danger-500: #ef4444;
+            --danger-600: #dc2626;
+            
+            /* Info Palette */
+            --info-50: #eff6ff;
+            --info-500: #3b82f6;
+            --info-600: #2563eb;
+            
+            /* Gray Scale */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            /* Shadows */
+            --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.25rem;
+            --radius-3xl: 1.5rem;
+            --radius-full: 9999px;
+            
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-base: 250ms ease;
+            --transition-slow: 350ms ease;
+            --transition-bounce: 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f6f9fc 0%, #f1f5f9 100%);
+            color: var(--gray-900);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulseSoft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* ===== DASHBOARD HEADER ===== */
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+            color: white;
+            padding: 40px 35px;
+            border-radius: var(--radius-2xl);
+            margin-bottom: 30px;
+            box-shadow: 0 20px 30px -10px rgba(63, 43, 150, 0.3);
+            position: relative;
+            overflow: hidden;
+            animation: slideInLeft 0.6s ease;
+        }
+
+        .dashboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 120%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            transform: rotate(-10deg);
+            pointer-events: none;
+        }
+
+        .dashboard-header::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            right: -10%;
+            width: 120%;
+            height: 200%;
+            background: radial-gradient(circle at 70% 50%, rgba(255,255,255,0.15) 0%, transparent 50%);
+            transform: rotate(10deg);
+            pointer-events: none;
+        }
+
+        .dashboard-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dashboard-header h1 i {
+            font-size: 36px;
+            color: var(--accent-500);
+        }
+
+        .dashboard-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dashboard-header p i {
+            color: var(--accent-500);
+        }
+
+        /* ===== NAVIGATION LINKS ===== */
+        .nav-links {
+            background: white;
+            padding: 20px 25px;
+            border-radius: var(--radius-xl);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border: 1px solid var(--gray-200);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            animation: slideInRight 0.6s ease;
+        }
+
+        .nav-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: var(--radius-full);
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-base);
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-600);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary-600);
+        }
+
+        .nav-links a i {
+            font-size: 16px;
+            transition: var(--transition-base);
+        }
+
+        .nav-links a:hover i {
+            transform: scale(1.1);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-bounce);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .logout-btn i {
+            font-size: 16px;
+        }
+
+        /* ===== DASHBOARD GRID ===== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* ===== DASHBOARD CARDS ===== */
+        .dashboard-card {
+            background: white;
+            padding: 30px 25px;
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: var(--transition-bounce);
+            border: 1px solid var(--gray-200);
+            position: relative;
+            overflow: hidden;
+            animation: scaleIn 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+        .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+        .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-700));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .dashboard-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .dashboard-card i {
+            font-size: 48px;
+            color: var(--primary-600);
+            margin-bottom: 20px;
+            background: var(--primary-100);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: var(--transition-bounce);
+            box-shadow: 0 10px 20px -5px rgba(106, 74, 214, 0.2);
+        }
+
+        .dashboard-card:hover i {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .dashboard-card h3 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .dashboard-card p {
+            color: var(--gray-600);
+            font-size: 15px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== RECENT ACTIVITY SECTION ===== */
+        .recent-activity {
+            background: white;
+            border-radius: var(--radius-2xl);
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--gray-200);
+            margin-top: 30px;
+            animation: fadeIn 0.6s ease 0.4s both;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-header h2 i {
+            color: var(--primary-600);
+            font-size: 22px;
+        }
+
+        .view-all {
+            color: var(--primary-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition-base);
+        }
+
+        .view-all:hover {
+            color: var(--primary-700);
+            gap: 8px;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: var(--radius-lg);
+            background: var(--gray-50);
+            transition: var(--transition-base);
+        }
+
+        .activity-item:hover {
+            background: var(--gray-100);
+            transform: translateX(5px);
+        }
+
+        .activity-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-700);
+            font-size: 18px;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-details h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--gray-800);
+        }
+
+        .activity-details p {
+            font-size: 13px;
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .activity-details p i {
+            font-size: 12px;
+            color: var(--gray-400);
+        }
+
+        .activity-time {
+            color: var(--gray-400);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .dashboard-header {
+                padding: 30px 25px;
+            }
+
+            .dashboard-header h1 {
+                font-size: 28px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-links a {
+                justify-content: center;
+            }
+
+            .logout-btn {
+                margin-left: 0;
+                justify-content: center;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-card {
+                padding: 25px 20px;
+            }
+
+            .dashboard-card i {
+                width: 70px;
+                height: 70px;
+                line-height: 70px;
+                font-size: 32px;
+            }
+
+            .dashboard-card h3 {
+                font-size: 32px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .activity-item {
+                flex-wrap: wrap;
+            }
+
+            .activity-time {
+                width: 100%;
+                text-align: left;
+                margin-left: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-header h1 {
+                font-size: 24px;
+            }
+
+            .dashboard-header p {
+                font-size: 14px;
+            }
+
+            .nav-links a {
+                width: 100%;
+                text-align: center;
+            }
+
+            .recent-activity {
+                padding: 20px;
+            }
+
+            .activity-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .activity-time {
+                margin-left: 0;
+            }
+        }
+
+        /* ===== SCROLLBAR STYLING ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-400);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-500);
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .text-primary { color: var(--primary-600); }
+        .text-success { color: var(--success-500); }
+        .text-danger { color: var(--danger-500); }
+        .text-warning { color: var(--accent-500); }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1>
+                <i class="fas fa-chart-pie"></i>
+                My Dashboard
+            </h1>
+            <p>
+                <i class="fas fa-user-circle"></i>
+                Welcome back! Manage your account here.
+            </p>
+        </div>
+        
+        <!-- Navigation Links -->
+        <div class="nav-links">
+            <a href="../index.html">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+            <a href="profile.html">
+                <i class="fas fa-user-edit"></i>
+                Profile
+            </a>
+            <a href="orders.html">
+                <i class="fas fa-shopping-bag"></i>
+                Orders
+            </a>
+            <a href="wishlist.html">
+                <i class="fas fa-heart"></i>
+                Wishlist
+            </a>
+            <button class="logout-btn" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>0</h3>
+                <p>Total Orders</p>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-heart"></i>
+                <h3 id="wishlistCount">0</h3>
+                <p>Wishlist Items</p>
+            </div>
+            <div class="dashboard-card">
+                <i class="fas fa-user"></i>
+                <h3 id="userName">User</h3>
+                <p>Account</p>
+            </div>
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="recent-activity">
+            <div class="section-header">
+                <h2>
+                    <i class="fas fa-history"></i>
+                    Recent Activity
+                </h2>
+                <a href="#" class="view-all">
+                    View All
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            
+            <div class="activity-list" id="activityList">
+                <!-- Activity items will be loaded dynamically -->
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>New order placed</h4>
+                        <p>
+                            <i class="fas fa-box"></i>
+                            Order #12345
+                        </p>
+                    </div>
+                    <span class="activity-time">2 hours ago</span>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Added to wishlist</h4>
+                        <p>
+                            <i class="fas fa-tag"></i>
+                            Product added to wishlist
+                        </p>
+                    </div>
+                    <span class="activity-time">5 hours ago</span>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>Profile updated</h4>
+                        <p>
+                            <i class="fas fa-check-circle"></i>
+                            Account information updated
+                        </p>
+                    </div>
+                    <span class="activity-time">1 day ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 50
+        });
+
+        // Check if user is logged in - KEEPING EXACT FUNCTIONALITY
+        const user = JSON.parse(localStorage.getItem('sbstore_current_user') || sessionStorage.getItem('sbstore_current_user'));
+        if (!user) {
+            window.location.href = '../login.html';
+        } else {
+            document.getElementById('userName').textContent = user.name || 'User';
+        }
+
+        // Get wishlist count - KEEPING EXACT FUNCTIONALITY
+        const wishlist = JSON.parse(localStorage.getItem('guest_wishlist') || '[]');
+        document.getElementById('wishlistCount').textContent = wishlist.length;
+
+        // Logout - KEEPING EXACT FUNCTIONALITY
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('sbstore_current_user');
+            sessionStorage.removeItem('sbstore_current_user');
+            window.location.href = '../index.html';
+        });
+
+        // Dynamic activity based on user data (optional enhancement - doesn't break existing functionality)
+        function loadActivity() {
+            const activityList = document.getElementById('activityList');
+            const activities = [
+                { icon: 'fa-shopping-bag', title: 'New order placed', detail: 'Order #12345', time: '2 hours ago', color: 'var(--primary-600)' },
+                { icon: 'fa-heart', title: 'Added to wishlist', detail: 'Product added to wishlist', time: '5 hours ago', color: 'var(--danger-500)' },
+                { icon: 'fa-user-edit', title: 'Profile updated', detail: 'Account information updated', time: '1 day ago', color: 'var(--info-500)' }
+            ];
+            
+            // This is just for demonstration - doesn't break existing functionality
+            // You can remove this and keep the static HTML if preferred
+        }
+    </script>
+</body>
+</html>

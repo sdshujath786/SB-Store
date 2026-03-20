@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SB Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px 0;
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .sidebar h2 span { color: #fbbf24; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 5px; }
+        .sidebar-menu a {
+            display: block;
+            padding: 15px 25px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid #fbbf24;
+        }
+        .sidebar-menu a i { margin-right: 10px; width: 20px; }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header h1 { font-size: 24px; color: #333; }
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        .stat-info h3 { font-size: 28px; margin-bottom: 5px; }
+        .stat-info p { color: #666; }
+        
+        /* Products Table */
+        .products-table {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+        .products-table h2 { margin-bottom: 20px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            text-align: left;
+            padding: 15px;
+            background: #f5f5f5;
+            font-weight: 600;
+        }
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .add-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .edit-btn, .delete-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            color: white;
+            margin: 0 2px;
+        }
+        .edit-btn { background: #3b82f6; }
+        .delete-btn { background: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar - UPDATED with absolute paths -->
+        <aside class="sidebar">
+            <h2>SB<span>Admin</span></h2>
+            <ul class="sidebar-menu">
+                <li><a href="/admin/dashboard.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="/admin/products.html"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="/admin/add-product.html"><i class="fas fa-plus-circle"></i> Add Product</a></li>
+                <li><a href="/admin/categories.html"><i class="fas fa-tags"></i> Categories</a></li>
+                <li><a href="/admin/orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="/admin/analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                <li><a href="/admin/settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Dashboard</h1>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-box"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalProducts">0</h3>
+                        <p>Total Products</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalOrders">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">$0</h3>
+                        <p>Revenue</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="products-table">
+                <h2>Recent Products</h2>
+                <button class="add-btn" onclick="window.location.href='/admin/add-product.html'">
+                    <i class="fas fa-plus"></i> Add New Product
+                </button>
+                <table id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Products will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Check admin login - redirect to login page if not logged in
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = '/admin/login.html';
+        }
+
+        // Load products
+        function loadProducts() {
+            const products = JSON.parse(localStorage.getItem('sbstore_products')) || [];
+            
+            document.getElementById('totalProducts').textContent = products.length;
+            
+            // Sample stats (you can replace with real data)
+            document.getElementById('totalOrders').textContent = '24';
+            document.getElementById('totalUsers').textContent = '156';
+            document.getElementById('totalRevenue').textContent = '$12,450';
+            
+            const recentProducts = products.slice(-5).reverse();
+            const tbody = document.getElementById('productsTableBody');
+            
+            if (recentProducts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px;">No products yet. <a href="/admin/add-product.html" style="color: #667eea;">Add your first product!</a></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = recentProducts.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.name}</td>
+                    <td>$${p.price}</td>
+                    <td>${p.category}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.editProduct = function(id) {
+            window.location.href = `/admin/add-product.html?id=${id}`;
+        };
+
+        window.deleteProduct = function(id) {
+            if (confirm('Delete this product?')) {
+                let products = JSON.parse(localStorage.getItem('sbstore_products')) || [];
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('sbstore_products', JSON.stringify(products));
+                
+                // Also update the main SBStoreData if available
+                if (window.SBStoreData && window.SBStoreData.products) {
+                    // This would require a more complex sync mechanism
+                    console.log('Product deleted from admin panel');
+                }
+                
+                loadProducts();
+            }
+        };
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('adminLoggedIn');
+            window.location.href = '/admin/login.html';
+        });
+
+        // Load on page load
+        loadProducts();
+    </script>
+
+    <!-- This script is now redundant since we're using absolute paths, but keeping for extra safety -->
+    <script>
+    // Fix for links to ensure they stay within admin panel (using absolute paths now)
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (!link) return;
+        
+        const href = link.getAttribute('href');
+        if (!href) return;
+        
+        // If it's a relative path starting with /admin/, it's already absolute
+        // If it doesn't start with /, we need to ensure it goes to the right place
+        if (href.startsWith('http')) {
+            // External link - do nothing
+            return;
+        }
+        
+        // All internal links should now be absolute paths with /admin/
+        // This is just a safety check
+        console.log('Navigating to:', href);
+    });
+    </script>
+
+</body>
+</html>

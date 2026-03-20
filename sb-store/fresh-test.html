@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Test - SB Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .test-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin: 20px 0 10px;
+            font-size: 18px;
+        }
+        
+        .account-section {
+            border: 3px solid #667eea;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            background: #f8f9fa;
+        }
+        
+        /* Account Container */
+        .account-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+        }
+        
+        /* Account Icon */
+        #accountIcon {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        #accountIcon:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102,126,234,0.4);
+        }
+        
+        /* Account Dropdown */
+        #accountDropdown {
+            position: absolute;
+            top: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+        }
+        
+        #accountDropdown.show {
+            display: block !important;
+        }
+        
+        .dropdown-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        
+        .dropdown-header h4 {
+            color: #333;
+        }
+        
+        .dropdown-body {
+            padding: 10px 0;
+        }
+        
+        .dropdown-body a {
+            display: block;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.3s;
+            text-align: left;
+        }
+        
+        .dropdown-body a:hover {
+            background: #f5f5f5;
+            color: #667eea;
+        }
+        
+        .dropdown-body a i {
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        hr {
+            margin: 8px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+        
+        .btn-success {
+            background: #10b981;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+        }
+        
+        .result-box {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        
+        .success-text {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        .error-text {
+            color: #ef4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 FRESH ACCOUNT SYSTEM TEST</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">Testing with brand new code - Nothing from your existing site</p>
+        
+        <!-- Account Section - BRAND NEW IMPLEMENTATION -->
+        <div class="account-section">
+            <h2>👇 CLICK THIS BUTTON TO TEST</h2>
+            
+            <div class="account-container">
+                <!-- Account Icon -->
+                <button id="accountIcon">
+                    👤 My Account
+                </button>
+                
+                <!-- Account Dropdown -->
+                <div id="accountDropdown">
+                    <div class="dropdown-header" id="accountHeader">
+                        <h4>Welcome to SB Store!</h4>
+                    </div>
+                    <div class="dropdown-body" id="accountBody">
+                        <a href="#" id="testLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                        <a href="#" id="testRegisterBtn"><i class="fas fa-user-plus"></i> Register</a>
+                    </div>
+                </div>
+            </div>
+            
+            <p style="margin-top: 80px; color: #666; font-size: 14px;">⬆️ Click the purple button above ⬆️</p>
+        </div>
+        
+        <!-- Test Controls -->
+        <div style="text-align: center; margin: 20px 0;">
+            <button class="btn" onclick="forceShowDropdown()">Show Dropdown (Force)</button>
+            <button class="btn" onclick="forceHideDropdown()">Hide Dropdown</button>
+            <button class="btn btn-success" onclick="testLogin()">Test Login</button>
+            <button class="btn btn-danger" onclick="testLogout()">Test Logout</button>
+        </div>
+        
+        <!-- Results -->
+        <div style="background: #f0f0f0; padding: 15px; border-radius: 8px;">
+            <h3>📋 Live Results:</h3>
+            <div id="result" class="result-box">Ready for testing...</div>
+        </div>
+        
+        <!-- Status -->
+        <div style="margin-top: 20px;" id="statusBox">
+            <div class="result-box">
+                <strong>Current Status:</strong><br>
+                <span id="loginStatus">Not logged in</span><br>
+                <span id="dropdownStatus">Dropdown hidden</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== BRAND NEW WORKING CODE ==========
+        
+        // Get elements
+        const accountIcon = document.getElementById('accountIcon');
+        const accountDropdown = document.getElementById('accountDropdown');
+        const accountHeader = document.getElementById('accountHeader');
+        const accountBody = document.getElementById('accountBody');
+        const resultDiv = document.getElementById('result');
+        const loginStatusSpan = document.getElementById('loginStatus');
+        const dropdownStatusSpan = document.getElementById('dropdownStatus');
+        
+        // Log that script is running
+        console.log('✅ Fresh test script loaded!');
+        updateResult('Script initialized');
+        
+        // ========== SIMPLE CLICK HANDLER ==========
+        if (accountIcon) {
+            console.log('✅ Account icon found');
+            
+            // Remove any existing handlers and add new one
+            accountIcon.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('Icon clicked!');
+                
+                // Toggle dropdown
+                if (accountDropdown.classList.contains('show')) {
+                    accountDropdown.classList.remove('show');
+                    dropdownStatusSpan.innerText = 'Dropdown hidden';
+                    updateResult('Dropdown hidden');
+                } else {
+                    accountDropdown.classList.add('show');
+                    dropdownStatusSpan.innerText = 'Dropdown visible';
+                    updateResult('Dropdown shown');
+                }
+            };
+            
+            // Close when clicking outside
+            document.addEventListener('click', function(e) {
+                if (accountIcon && accountDropdown) {
+                    if (!accountIcon.contains(e.target) && !accountDropdown.contains(e.target)) {
+                        accountDropdown.classList.remove('show');
+                        dropdownStatusSpan.innerText = 'Dropdown hidden (outside click)';
+                    }
+                }
+            });
+            
+        } else {
+            console.error('❌ Account icon not found!');
+            updateResult('ERROR: Account icon not found');
+        }
+        
+        // ========== HELPER FUNCTIONS ==========
+        
+        function forceShowDropdown() {
+            accountDropdown.classList.add('show');
+            dropdownStatusSpan.innerText = 'Dropdown forced visible';
+            updateResult('Dropdown forced shown');
+        }
+        
+        function forceHideDropdown() {
+            accountDropdown.classList.remove('show');
+            dropdownStatusSpan.innerText = 'Dropdown forced hidden';
+            updateResult('Dropdown forced hidden');
+        }
+        
+        function testLogin() {
+            // Update header
+            if (accountHeader) {
+                accountHeader.innerHTML = '<h4><span style="color:#10b981;">✓</span> Logged in as Test User</h4>';
+            }
+            
+            // Update body with logged in menu
+            if (accountBody) {
+                accountBody.innerHTML = `
+                    <a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a href="#"><i class="fas fa-user-edit"></i> Profile</a>
+                    <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+                    <hr>
+                    <a href="#" id="testLogoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                `;
+                
+                // Add logout handler
+                document.getElementById('testLogoutBtn')?.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    testLogout();
+                });
+            }
+            
+            loginStatusSpan.innerHTML = '<span class="success-text">✅ Logged in as Test User</span>';
+            updateResult('Login successful! UI updated');
+        }
+        
+        function testLogout() {
+            // Reset header
+            if (accountHeader) {
+                accountHeader.innerHTML = '<h4>Welcome to SB Store!</h4>';
+            }
+            
+            // Reset body with login/register
+            if (accountBody) {
+                accountBody.innerHTML = `
+                    <a href="#" id="testLoginBtn"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="#" id="testRegisterBtn"><i class="fas fa-user-plus"></i> Register</a>
+                `;
+            }
+            
+            loginStatusSpan.innerHTML = '❌ Not logged in';
+            updateResult('Logout successful! UI reset');
+            
+            // Hide dropdown
+            accountDropdown.classList.remove('show');
+            dropdownStatusSpan.innerText = 'Dropdown hidden';
+        }
+        
+        function updateResult(message) {
+            resultDiv.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+        }
+        
+        // Initial check
+        console.log('Test page ready!');
+        updateResult('Test page loaded - Click the purple button!');
+    </script>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>
