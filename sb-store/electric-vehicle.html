@@ -2075,6 +2075,62 @@ color: var(--white-900);
     </style>
 </head>
 <body>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+        apiKey: "AIzaSyAgus5dwm52lyMIe6fwHCuIF_08stWQdGU",
+        authDomain: "sb-store-b6e4b.firebaseapp.com",
+        projectId: "sb-store-b6e4b",
+        storageBucket: "sb-store-b6e4b.firebasestorage.app",
+        messagingSenderId: "983527066671",
+        appId: "1:983527066671:web:6488e1fd814e47f9134ada",
+        measurementId: "G-H4L9XNZ55P"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    // Load EV products from Firebase
+    async function loadEVProducts() {
+        try {
+            const productsRef = collection(db, "products");
+            const q = query(productsRef, where("category", "in", ["Electric Vehicles", "EV", "Electric Vehicle", "car", "bike", "scooter"]));
+            const querySnapshot = await getDocs(q);
+            
+            const evProducts = [];
+            querySnapshot.forEach((doc) => {
+                const product = doc.data();
+                product.id = doc.id;
+                if (product.category === "car" || product.category === "bike" || product.category === "scooter" || 
+                    product.category === "Electric Vehicles" || product.category === "EV") {
+                    evProducts.push(product);
+                }
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('sbstore_ev_products', JSON.stringify(evProducts));
+            localStorage.setItem('sbstore_last_update', new Date().toISOString());
+            
+            console.log(`✅ Loaded ${evProducts.length} EV products from Firebase`);
+            
+            // Trigger reload of the page's data
+            if (window.loadData) {
+                window.loadData();
+            } else {
+                location.reload();
+            }
+        } catch (error) {
+            console.error("Error loading EV products:", error);
+        }
+    }
+    
+    // Load products
+    loadEVProducts();
+</script>
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="container">

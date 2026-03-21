@@ -1007,7 +1007,8 @@
             font-weight: 600;
             color: var(--gray-600);
             transition: var(--transition-base);
-            cursor: default;
+            cursor: pointer;
+            text-decoration: none;
         }
 
         .brand-item:hover {
@@ -1959,6 +1960,42 @@
                 font-size: 16px;
             }
         }
+        
+        /* 🔥 NEW: Loading spinner styles */
+        .loading-spinner {
+            text-align: center;
+            padding: 60px;
+            grid-column: 1/-1;
+        }
+        
+        .loading-spinner .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--primary-600);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-products {
+            text-align: center;
+            padding: 60px;
+            grid-column: 1/-1;
+            background: white;
+            border-radius: var(--radius-xl);
+            color: var(--gray-500);
+        }
+        
+        .empty-products i {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            color: var(--gray-400);
+        }
     </style>
 </head>
 <body>
@@ -2017,7 +2054,6 @@
         <!-- Header Actions -->
         <div class="header-actions">
             <!-- Account Icon with Dropdown -->
-<!-- Account Icon with Dropdown - SIMPLE WORKING VERSION -->
 <div class="account-container" style="position: relative; display: inline-block;">
     <button class="account-btn" id="accountIcon" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px;">
         <i class="far fa-user-circle"></i>
@@ -2088,7 +2124,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/sb-store/electric-vehicle.html" class="nav-link">
+                    <a href="electric-vehicle.html" class="nav-link">
                        <i class="fas fa-car"></i> Electric Vehicles
                     </a>
                 </li>
@@ -2211,7 +2247,10 @@ Best <span class="gradient-text">Products</span>      Special Offers
                 <h2 class="section-title">Trending <span>Now</span></h2>
             </div>
             <div class="products-grid-modern" id="featuredProductsGrid">
-                <!-- Products will load dynamically from admin -->
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading products from store...</p>
+                </div>
             </div>
         </div>
     </section>
@@ -2224,7 +2263,7 @@ Best <span class="gradient-text">Products</span>      Special Offers
                 <h2 class="section-title">Browse <span>Popular Categories</span></h2>
             </div>
             <div class="categories-grid-modern" id="categoriesGrid">
-                <!-- Categories will load dynamically from admin -->
+                <!-- Categories will load dynamically from products -->
             </div>
         </div>
     </section>
@@ -2270,7 +2309,7 @@ Best <span class="gradient-text">Products</span>      Special Offers
             <div class="footer-col">
                 <h4>Categories</h4>
                 <ul id="footerCategories">
-                    <!-- Categories will load dynamically -->
+                    <!-- Categories will load dynamically from products -->
                 </ul>
             </div>
             <div class="footer-col">
@@ -2296,182 +2335,119 @@ Best <span class="gradient-text">Products</span>      Special Offers
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-<script>
-    // ========== PROFESSIONAL HOMEPAGE SCRIPT - CONNECTED TO ALL ADMIN PAGES ==========
-    
-    // Initialize AOS
-    AOS.init({
-        duration: 1000,
-        once: true,
-        offset: 100
-    });
+<script type="module">
+    // ========== FIREBASE CONNECTION - THE ONLY DATA SOURCE FOR PRODUCTS ==========
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // ========== DATA BRIDGE - CONNECTED TO ADMIN ==========
+    // Your Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAgus5dwm52lyMIe6fwHCuIF_08stWQdGU",
+        authDomain: "sb-store-b6e4b.firebaseapp.com",
+        projectId: "sb-store-b6e4b",
+        storageBucket: "sb-store-b6e4b.firebasestorage.app",
+        messagingSenderId: "983527066671",
+        appId: "1:983527066671:web:6488e1fd814e47f9134ada",
+        measurementId: "G-H4L9XNZ55P"
+    };
     
-    // Global data variables
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    console.log("🔥 Firebase connected! Products will load automatically from admin.");
+    
     let allProducts = [];
-    let allCategories = [];
-    let allUsers = [];
-    let allClicks = [];
-    let storeSettings = {};
+    let storeSettings = { currency: 'USD', currencySymbol: '$' };
     
-    // Load all data from localStorage (shared with admin)
-    function loadAllData() {
-        // Load products from admin
-        try {
-            const storedProducts = localStorage.getItem('sbstore_products');
-            allProducts = storedProducts ? JSON.parse(storedProducts) : [];
-            console.log(`📦 Loaded ${allProducts.length} products from admin`);
-        } catch (e) {
-            console.error('Error loading products:', e);
-            allProducts = [];
-        }
+    // ========== REAL-TIME PRODUCTS FROM FIREBASE ==========
+    const productsQuery = query(collection(db, "products"), orderBy("timestamp", "desc"));
+    
+    // Real-time listener for products
+    onSnapshot(productsQuery, (snapshot) => {
+        allProducts = [];
+        snapshot.forEach((doc) => {
+            const product = doc.data();
+            product.id = doc.id;
+            // Ensure timestamp exists for sorting
+            if (!product.timestamp) {
+                product.timestamp = new Date().toISOString();
+            }
+            allProducts.push(product);
+        });
         
-        // Load categories from admin
-        try {
-            const storedCategories = localStorage.getItem('sbstore_categories');
-            allCategories = storedCategories ? JSON.parse(storedCategories) : [];
-            console.log(`🏷️ Loaded ${allCategories.length} categories from admin`);
-        } catch (e) {
-            console.error('Error loading categories:', e);
-            allCategories = [];
-        }
+        console.log(`✅ Loaded ${allProducts.length} products from Firebase`);
         
-        // Load users from admin
-        try {
-            const storedUsers = localStorage.getItem('sbstore_users');
-            allUsers = storedUsers ? JSON.parse(storedUsers) : [];
-            console.log(`👥 Loaded ${allUsers.length} users from admin`);
-        } catch (e) {
-            console.error('Error loading users:', e);
-            allUsers = [];
-        }
-        
-        // Load clicks from admin
-        try {
-            const storedClicks = localStorage.getItem('affiliate_clicks');
-            allClicks = storedClicks ? JSON.parse(storedClicks) : [];
-            console.log(`🔍 Loaded ${allClicks.length} clicks from admin`);
-        } catch (e) {
-            console.error('Error loading clicks:', e);
-            allClicks = [];
-        }
-        
-        // Load settings from admin
-        try {
-            const storedSettings = localStorage.getItem('store_settings');
-            storeSettings = storedSettings ? JSON.parse(storedSettings) : {};
-            console.log(`⚙️ Loaded settings from admin`);
-        } catch (e) {
-            console.error('Error loading settings:', e);
-            storeSettings = {};
-        }
-        
-        // Apply settings to page
-        applySettings();
-        
-        // Render all sections
-        renderCategories();
+        // Update all UI components
         renderFeaturedProducts();
+        updateCategoriesFromProducts();
         renderCategoryDropdown();
         renderMegaMenu();
         renderFooterCategories();
-        updateWishlistCount();
-        updateCartCount();
-    }
-    
-    // Apply settings from admin
-    function applySettings() {
-        // Apply currency settings
-        if (storeSettings.currency) {
-            window.currency = storeSettings.currency;
-            window.currencySymbol = getCurrencySymbol(storeSettings.currency);
-        }
         
-        // Apply color settings (optional)
-        if (storeSettings.primaryColor) {
-            document.documentElement.style.setProperty('--primary-600', storeSettings.primaryColor);
-        }
-        if (storeSettings.accentColor) {
-            document.documentElement.style.setProperty('--accent-500', storeSettings.accentColor);
-        }
-    }
-    
-    // Get currency symbol
-    function getCurrencySymbol(currency) {
-        const symbols = {
-            'USD': '$', 'INR': '₹', 'EUR': '€', 'GBP': '£',
-            'JPY': '¥', 'CAD': 'C$', 'AUD': 'A$', 'CNY': '¥'
-        };
-        return symbols[currency] || '$';
-    }
-    
-    // ========== RENDER FUNCTIONS ==========
-    
-    // Render categories on homepage
-    function renderCategories() {
-        const grid = document.getElementById('categoriesGrid');
-        if (!grid) return;
-
-        // If no categories from admin, use defaults
-        let categories = allCategories.length > 0 ? allCategories : [
-            { name: 'Electronics', icon: 'fa-laptop', count: 156, image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=500' },
-            { name: 'Fashion', icon: 'fa-tshirt', count: 342, image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=500' },
-            { name: 'Home', icon: 'fa-home', count: 89, image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=500' },
-            { name: 'Sports', icon: 'fa-futbol', count: 94, image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500' }
-        ];
-
-        grid.innerHTML = categories.slice(0, 4).map(cat => `
-            <div class="category-card-modern" data-aos="fade-up" onclick="location.href='shop.html?category=${encodeURIComponent(cat.name)}'">
-                <img src="${cat.image || 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=500'}" alt="${cat.name}" class="category-image" loading="lazy">
-                <div class="category-overlay">
-                    <h3>${cat.name}</h3>
-                    <p>${cat.count || 0} Products</p>
+    }, (error) => {
+        console.error("❌ Firebase error:", error);
+        const grid = document.getElementById('featuredProductsGrid');
+        if (grid) {
+            grid.innerHTML = `
+                <div class="empty-products">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Connection Error</h3>
+                    <p>Unable to connect to database. Please refresh the page.</p>
+                    <p style="font-size: 12px; margin-top: 10px;">Check your internet connection and Firebase configuration.</p>
                 </div>
-            </div>
-        `).join('');
-    }
-
-    // Render featured products from admin
+            `;
+        }
+    });
+    
+    // ========== RENDER PRODUCTS ==========
     function renderFeaturedProducts() {
         const grid = document.getElementById('featuredProductsGrid');
         if (!grid) return;
-
-        // If no products from admin, show empty state
+        
         if (allProducts.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">No products yet. Add products in admin!</p>';
+            grid.innerHTML = `
+                <div class="empty-products">
+                    <i class="fas fa-store-slash"></i>
+                    <h3>No Products Yet</h3>
+                    <p>Products will appear here once added from the admin panel.</p>
+                    <p style="font-size: 14px; margin-top: 15px;">✨ Add your first product in the admin dashboard ✨</p>
+                </div>
+            `;
             return;
         }
-
-        // Show first 8 products as featured
+        
         const featured = allProducts.slice(0, 8);
-
+        const currencySymbol = storeSettings.currencySymbol || '$';
+        
         grid.innerHTML = featured.map(product => {
-            const price = product.salePrice || product.price;
-            const currencySymbol = getCurrencySymbol(product.currency || storeSettings.currency || 'USD');
+            const price = product.price || 0;
+            const imageUrl = product.imageUrl || product.image || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400';
+            const category = product.category || 'Featured';
+            const discount = product.discount || null;
             
             return `
-                <div class="product-card-modern" data-aos="fade-up" data-id="${product.id}" onclick="quickView(${product.id})">
-                    ${product.discount ? `<span class="product-badge-modern">-${product.discount}%</span>` : ''}
+                <div class="product-card-modern" data-aos="fade-up" onclick="window.quickView && window.quickView('${product.id}')">
+                    ${discount ? `<span class="product-badge-modern">-${discount}%</span>` : ''}
                     <div class="product-image-modern">
-                        <img src="${product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${product.name}" loading="lazy">
+                        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(product.name)}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Product'">
                     </div>
                     <div class="product-actions-modern">
-                        <button class="action-btn-modern wishlist-btn" onclick="event.stopPropagation(); toggleWishlist(${product.id})">
-                            <i class="${isInWishlist(product.id) ? 'fas' : 'far'} fa-heart" style="${isInWishlist(product.id) ? 'color: #ff6b6b;' : ''}"></i>
+                        <button class="action-btn-modern wishlist-btn" onclick="event.stopPropagation(); window.toggleWishlist && window.toggleWishlist('${product.id}')">
+                            <i class="${window.isInWishlist && window.isInWishlist(product.id) ? 'fas' : 'far'} fa-heart" style="${window.isInWishlist && window.isInWishlist(product.id) ? 'color: #ff6b6b;' : ''}"></i>
                         </button>
-                        <button class="action-btn-modern" onclick="event.stopPropagation(); quickView(${product.id})">
+                        <button class="action-btn-modern" onclick="event.stopPropagation(); window.quickView && window.quickView('${product.id}')">
                             <i class="far fa-eye"></i>
                         </button>
                     </div>
                     <div class="product-info-modern">
-                        <div class="product-category-modern">${product.category || 'Uncategorized'}</div>
-                        <h3 class="product-title-modern">${product.name}</h3>
+                        <div class="product-category-modern">${escapeHtml(category)}</div>
+                        <h3 class="product-title-modern">${escapeHtml(product.name)}</h3>
                         <div class="product-price-modern">
                             <span class="current-price-modern">${currencySymbol}${price.toFixed(2)}</span>
-                            ${product.salePrice ? `<span class="old-price-modern">${currencySymbol}${product.price.toFixed(2)}</span>` : ''}
+                            ${product.oldPrice ? `<span class="old-price-modern">${currencySymbol}${product.oldPrice.toFixed(2)}</span>` : ''}
                         </div>
-                        <button class="view-btn-modern" onclick="event.stopPropagation(); window.open('${product.amazonUrl || '#'}', '_blank')">
+                        <button class="view-btn-modern" onclick="event.stopPropagation(); window.trackClick && window.trackClick('${product.id}')">
                             <i class="fab fa-amazon"></i> View on Amazon
                         </button>
                     </div>
@@ -2479,81 +2455,140 @@ Best <span class="gradient-text">Products</span>      Special Offers
             `;
         }).join('');
     }
-
-    // Render category dropdown in search
-function renderCategoryDropdown() {
-    const dropdown = document.getElementById('categoryDropdown');
-    if (!dropdown) return;
-
-    let categories = allCategories.length > 0 ? allCategories : [
-        { name: 'Electronics' }, { name: 'Fashion' }, { name: 'Home & Living' }, 
-        { name: 'Sports' }, { name: 'Books' }
-    ];
-
-    dropdown.innerHTML = categories.slice(0, 8).map(cat => {
-        // ONLY check for Electric Vehicles - everything else remains exactly the same
-        if (cat.name === 'Electric Vehicles' || cat.name === 'EV' || cat.name === 'Electric Vehicle') {
-            return `<a href="electric-vehicle.html">${cat.name}</a>`;
+    
+    // ========== UPDATE CATEGORIES FROM PRODUCTS ==========
+    function updateCategoriesFromProducts() {
+        const categoriesMap = new Map();
+        
+        allProducts.forEach(product => {
+            if (product.category) {
+                categoriesMap.set(product.category, (categoriesMap.get(product.category) || 0) + 1);
+            }
+        });
+        
+        const categories = Array.from(categoriesMap.entries()).map(([name, count]) => ({ name, count }));
+        
+        // Render categories grid
+        const categoriesGrid = document.getElementById('categoriesGrid');
+        if (categoriesGrid) {
+            if (categories.length === 0) {
+                categoriesGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray-500);">
+                        <i class="fas fa-folder-open" style="font-size: 48px; margin-bottom: 16px;"></i>
+                        <p>No categories yet. Add products with categories!</p>
+                    </div>
+                `;
+            } else {
+                const categoryImages = {
+                    'Electronics': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500',
+                    'Fashion': 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=500',
+                    'Home': 'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=500',
+                    'Beauty': 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500',
+                    'Sports': 'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=500',
+                    'Books': 'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=500'
+                };
+                
+                categoriesGrid.innerHTML = categories.slice(0, 4).map(cat => `
+                    <div class="category-card-modern" data-aos="fade-up" onclick="location.href='shop.html?category=${encodeURIComponent(cat.name)}'">
+                        <img src="${categoryImages[cat.name] || 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=500'}" alt="${escapeHtml(cat.name)}" class="category-image" loading="lazy">
+                        <div class="category-overlay">
+                            <h3>${escapeHtml(cat.name)}</h3>
+                            <p>${cat.count} Products</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
-        // ALL other categories work exactly as before - NO CHANGES
-        return `<a href="shop.html?category=${encodeURIComponent(cat.name)}">${cat.name}</a>`;
-    }).join('');
-}
-
-    // Render mega menu categories
+    }
+    
+    // ========== RENDER CATEGORY DROPDOWN ==========
+    function renderCategoryDropdown() {
+        const dropdown = document.getElementById('categoryDropdown');
+        if (!dropdown) return;
+        
+        const categories = [...new Set(allProducts.map(p => p.category).filter(c => c))];
+        
+        if (categories.length === 0) {
+            dropdown.innerHTML = '<a href="shop.html">All Products</a>';
+            return;
+        }
+        
+        dropdown.innerHTML = categories.slice(0, 8).map(cat => {
+            if (cat === 'Electric Vehicles' || cat === 'EV' || cat === 'Electric Vehicle') {
+                return `<a href="electric-vehicle.html">${escapeHtml(cat)}</a>`;
+            }
+            return `<a href="shop.html?category=${encodeURIComponent(cat)}">${escapeHtml(cat)}</a>`;
+        }).join('');
+    }
+    
+    // ========== RENDER MEGA MENU ==========
     function renderMegaMenu() {
         const megaContent = document.getElementById('megaContent');
         if (!megaContent) return;
-
-        // Group categories (simplified for demo)
+        
+        const categories = [...new Set(allProducts.map(p => p.category).filter(c => c))];
+        
+        if (categories.length === 0) {
+            megaContent.innerHTML = '<div class="mega-col"><h4>Categories</h4><ul><li><a href="shop.html">Shop All</a></li></ul></div>';
+            return;
+        }
+        
         const groups = [
-            { name: 'Electronics', icon: 'fa-mobile-alt', items: ['Mobiles', 'Laptops', 'Audio', 'Cameras'] },
-            { name: 'Fashion', icon: 'fa-tshirt', items: ['Men\'s Wear', 'Women\'s Wear', 'Kids', 'Footwear'] },
-            { name: 'Home & Living', icon: 'fa-couch', items: ['Furniture', 'Appliances', 'Bedding', 'Decor'] }
+            { name: 'Popular', items: categories.slice(0, 4) },
+            { name: 'Trending', items: categories.slice(4, 8) },
+            { name: 'New Arrivals', items: categories.slice(8, 12) }
         ];
-
+        
         megaContent.innerHTML = groups.map(group => `
             <div class="mega-col">
-                <h4><i class="fas ${group.icon}" style="margin-right: 8px;"></i> ${group.name}</h4>
+                <h4>${group.name}</h4>
                 <ul>
                     ${group.items.map(item => `
-                        <li><a href="shop.html?category=${encodeURIComponent(item)}"><i class="fas fa-angle-right"></i> ${item}</a></li>
+                        <li><a href="shop.html?category=${encodeURIComponent(item)}"><i class="fas fa-angle-right"></i> ${escapeHtml(item)}</a></li>
                     `).join('')}
+                    ${group.items.length === 0 ? '<li><a href="shop.html">Shop All</a></li>' : ''}
                 </ul>
             </div>
         `).join('');
     }
-
-    // Render footer categories
+    
+    // ========== RENDER FOOTER CATEGORIES ==========
     function renderFooterCategories() {
         const footer = document.getElementById('footerCategories');
         if (!footer) return;
-
-        let categories = allCategories.length > 0 ? allCategories.slice(0, 4) : [
-            { name: 'Electronics' }, { name: 'Fashion' }, { name: 'Home & Living' }, { name: 'Sports' }
-        ];
-
-        footer.innerHTML = categories.map(cat => `
-            <li><a href="shop.html?category=${encodeURIComponent(cat.name)}">${cat.name}</a></li>
+        
+        const categories = [...new Set(allProducts.map(p => p.category).filter(c => c))];
+        
+        if (categories.length === 0) {
+            footer.innerHTML = '<li><a href="shop.html">All Products</a></li>';
+            return;
+        }
+        
+        footer.innerHTML = categories.slice(0, 4).map(cat => `
+            <li><a href="shop.html?category=${encodeURIComponent(cat)}">${escapeHtml(cat)}</a></li>
         `).join('');
     }
-
-    // ========== WISHLIST FUNCTIONS ==========
     
-    // Get wishlist from storage
+    // ========== HELPER FUNCTIONS ==========
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // ========== WISHLIST FUNCTIONS ==========
     function getWishlist() {
         const wishlist = localStorage.getItem('sbstore_wishlist');
         return wishlist ? JSON.parse(wishlist) : [];
     }
-
-    // Check if product is in wishlist
+    
     function isInWishlist(productId) {
         const wishlist = getWishlist();
         return wishlist.includes(productId);
     }
-
-    // Toggle wishlist
-    function toggleWishlist(productId) {
+    
+    window.toggleWishlist = function(productId) {
         let wishlist = getWishlist();
         
         if (wishlist.includes(productId)) {
@@ -2566,10 +2601,9 @@ function renderCategoryDropdown() {
         
         localStorage.setItem('sbstore_wishlist', JSON.stringify(wishlist));
         updateWishlistCount();
-        renderFeaturedProducts(); // Re-render to update heart icons
-    }
-
-    // Update wishlist count
+        renderFeaturedProducts();
+    };
+    
     function updateWishlistCount() {
         const wishlist = getWishlist();
         const countEl = document.getElementById('wishlistCount');
@@ -2578,25 +2612,25 @@ function renderCategoryDropdown() {
             countEl.style.display = wishlist.length > 0 ? 'flex' : 'none';
         }
     }
-
-    // Update cart count
+    
     function updateCartCount() {
         const cart = JSON.parse(localStorage.getItem('sbstore_cart')) || { items: [] };
-        const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+        const count = cart.items ? cart.items.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0;
         const countEl = document.getElementById('cartCount');
         if (countEl) {
             countEl.textContent = count;
             countEl.style.display = count > 0 ? 'flex' : 'none';
         }
     }
-
-    // ========== QUICK VIEW FUNCTION ==========
+    
+    // ========== QUICK VIEW ==========
     window.quickView = function(productId) {
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
         
-        const currencySymbol = getCurrencySymbol(product.currency || storeSettings.currency || 'USD');
-        const price = product.salePrice || product.price;
+        const currencySymbol = storeSettings.currencySymbol || '$';
+        const price = product.price || 0;
+        const imageUrl = product.imageUrl || product.image || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400';
         
         const modal = document.createElement('div');
         modal.className = 'quick-view-modal';
@@ -2606,19 +2640,19 @@ function renderCategoryDropdown() {
                 <button class="modal-close" onclick="this.closest('.quick-view-modal').remove()">&times;</button>
                 <div class="modal-body">
                     <div class="modal-image">
-                        <img src="${product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${product.name}">
+                        <img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(product.name)}" onerror="this.src='https://via.placeholder.com/400x400?text=Product'">
                     </div>
                     <div class="modal-details">
-                        <h2>${product.name}</h2>
-                        <div class="rating">${renderStars(product.rating || 4.5)} (${product.reviews || 0} reviews)</div>
+                        <h2>${escapeHtml(product.name)}</h2>
+                        <div class="rating">${renderStars(4.5)} (0 reviews)</div>
                         <div class="price">${currencySymbol}${price.toFixed(2)}</div>
-                        <p class="description">${product.description || 'No description available.'}</p>
+                        <p class="description">${escapeHtml(product.description || 'No description available.')}</p>
                         <div class="modal-actions">
-                            <button class="wishlist-btn" onclick="toggleWishlist(${product.id}); this.closest('.quick-view-modal').remove()">
+                            <button class="wishlist-btn" onclick="window.toggleWishlist('${product.id}'); this.closest('.quick-view-modal').remove()">
                                 <i class="${isInWishlist(product.id) ? 'fas' : 'far'} fa-heart"></i>
                                 ${isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
                             </button>
-                            <a href="${product.amazonUrl || '#'}" target="_blank" class="amazon-btn" onclick="trackClick(${product.id})">
+                            <a href="${product.affiliateLink || '#'}" target="_blank" class="amazon-btn" onclick="window.trackClick('${product.id}')">
                                 <i class="fab fa-amazon"></i> View on Amazon
                             </a>
                         </div>
@@ -2629,66 +2663,46 @@ function renderCategoryDropdown() {
         
         document.body.appendChild(modal);
     };
-
-    // Render star ratings
+    
     function renderStars(rating) {
         const fullStars = Math.floor(rating);
-        const hasHalf = rating % 1 >= 0.5;
         let stars = '';
-        
-        for (let i = 0; i < fullStars; i++) {
-            stars += '<i class="fas fa-star"></i>';
-        }
-        if (hasHalf) {
-            stars += '<i class="fas fa-star-half-alt"></i>';
-        }
-        const emptyStars = 5 - Math.ceil(rating);
-        for (let i = 0; i < emptyStars; i++) {
-            stars += '<i class="far fa-star"></i>';
-        }
-        
+        for (let i = 0; i < fullStars; i++) stars += '<i class="fas fa-star"></i>';
+        const emptyStars = 5 - fullStars;
+        for (let i = 0; i < emptyStars; i++) stars += '<i class="far fa-star"></i>';
         return stars;
     }
-
-    // Track click for analytics
+    
     window.trackClick = function(productId) {
         const product = allProducts.find(p => p.id === productId);
-        if (!product) return;
-        
-        let clicks = JSON.parse(localStorage.getItem('affiliate_clicks')) || [];
-        clicks.push({
-            productId: productId,
-            productName: product.name,
-            timestamp: new Date().toISOString(),
-            url: product.amazonUrl,
-            page: 'homepage'
-        });
-        localStorage.setItem('affiliate_clicks', JSON.stringify(clicks));
+        if (product && product.affiliateLink) {
+            window.open(product.affiliateLink, '_blank');
+        }
     };
-
+    
     // ========== NOTIFICATION SYSTEM ==========
     function showNotification(message, type = 'success') {
         const container = document.getElementById('toastContainer');
+        if (!container) return;
+        
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.innerHTML = `
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'info' ? 'fa-info-circle' : 'fa-exclamation-circle'}"></i>
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
             <span>${message}</span>
             <span class="notification-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></span>
         `;
         
         container.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.classList.add('show');
-        }, 10);
-        
+        setTimeout(() => notification.classList.add('show'), 10);
         setTimeout(() => {
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
-
+    
+    window.showNotification = showNotification;
+    
     // ========== SEARCH FUNCTIONALITY ==========
     document.getElementById('searchBtn')?.addEventListener('click', function() {
         const query = document.getElementById('searchInput').value.trim();
@@ -2696,175 +2710,105 @@ function renderCategoryDropdown() {
             window.location.href = `shop.html?search=${encodeURIComponent(query)}`;
         }
     });
-
+    
     document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             document.getElementById('searchBtn').click();
         }
     });
-
+    
     // ========== NEWSLETTER SIGNUP ==========
     document.getElementById('newsletterBtn')?.addEventListener('click', function() {
         const email = document.getElementById('newsletterEmail').value.trim();
         if (email && email.includes('@') && email.includes('.')) {
-            // Save to users in localStorage
-            let users = JSON.parse(localStorage.getItem('sbstore_users')) || [];
-            users.push({
-                id: Date.now(),
-                email: email,
-                subscribed: true,
-                date: new Date().toISOString(),
-                source: 'homepage_newsletter'
-            });
-            localStorage.setItem('sbstore_users', JSON.stringify(users));
-            
             showNotification('Thanks for subscribing!', 'success');
             document.getElementById('newsletterEmail').value = '';
+            // Save to localStorage
+            const subscribers = JSON.parse(localStorage.getItem('sbstore_newsletter') || '[]');
+            if (!subscribers.includes(email)) {
+                subscribers.push(email);
+                localStorage.setItem('sbstore_newsletter', JSON.stringify(subscribers));
+            }
         } else {
             showNotification('Please enter a valid email', 'error');
         }
     });
-
+    
     document.getElementById('footerNewsletterBtn')?.addEventListener('click', function() {
         const email = document.getElementById('footerNewsletterEmail').value.trim();
         if (email && email.includes('@') && email.includes('.')) {
-            let users = JSON.parse(localStorage.getItem('sbstore_users')) || [];
-            users.push({
-                id: Date.now(),
-                email: email,
-                subscribed: true,
-                date: new Date().toISOString(),
-                source: 'footer_newsletter'
-            });
-            localStorage.setItem('sbstore_users', JSON.stringify(users));
-            
             showNotification('Thanks for subscribing!', 'success');
             document.getElementById('footerNewsletterEmail').value = '';
+            const subscribers = JSON.parse(localStorage.getItem('sbstore_newsletter') || '[]');
+            if (!subscribers.includes(email)) {
+                subscribers.push(email);
+                localStorage.setItem('sbstore_newsletter', JSON.stringify(subscribers));
+            }
         } else {
             showNotification('Please enter a valid email', 'error');
         }
     });
-
-    // ========== ACCOUNT BUTTON - FULLY FIXED AND WORKING ==========
+    
+    // ========== ACCOUNT BUTTON ==========
     function initAccountSystem() {
-        console.log('🚀 Initializing account system...');
-        
         const accountIcon = document.getElementById('accountIcon');
         const accountDropdown = document.getElementById('accountDropdown');
-        const accountHeader = document.getElementById('accountHeader');
-        const accountBody = document.getElementById('accountBody');
         
-        if (!accountIcon) {
-            console.error('❌ Account button not found!');
-            return;
-        }
-        
-        if (!accountDropdown) {
-            console.error('❌ Account dropdown not found!');
-            return;
-        }
-        
-        console.log('✅ Account elements found');
-        
-        // Remove any existing event listeners by cloning and replacing
-        const newBtn = accountIcon.cloneNode(true);
-        if (accountIcon.parentNode) {
-            accountIcon.parentNode.replaceChild(newBtn, accountIcon);
-        }
-        
-        // Get fresh reference
-        const freshBtn = document.getElementById('accountIcon');
-        
-        // CLICK HANDLER - THIS IS THE MAIN FIX
-        freshBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        if (accountIcon && accountDropdown) {
+            accountIcon.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (accountDropdown.classList.contains('show')) {
+                    accountDropdown.classList.remove('show');
+                } else {
+                    accountDropdown.classList.add('show');
+                }
+            });
             
-            console.log('👆 Account button clicked');
+            document.addEventListener('click', function(e) {
+                if (!accountIcon.contains(e.target) && !accountDropdown.contains(e.target)) {
+                    accountDropdown.classList.remove('show');
+                }
+            });
             
-            // Toggle dropdown with class
-            if (accountDropdown.classList.contains('show')) {
-                accountDropdown.classList.remove('show');
-                console.log('🔽 Dropdown closed');
-            } else {
-                accountDropdown.classList.add('show');
-                console.log('🔼 Dropdown opened');
-                
-                // Close any other open dropdowns
-                document.querySelectorAll('.account-dropdown.show').forEach(drop => {
-                    if (drop !== accountDropdown) {
-                        drop.classList.remove('show');
-                    }
-                });
-            }
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!freshBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
-                accountDropdown.classList.remove('show');
-            }
-        });
-        
-        // Close dropdown on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                accountDropdown.classList.remove('show');
-            }
-        });
-        
-        // Check if user is logged in
-        const user = localStorage.getItem('sbstore_current_user') || sessionStorage.getItem('sbstore_current_user');
-        
-        if (user && accountHeader && accountBody) {
-            try {
-                const userData = JSON.parse(user);
-                console.log('👤 User logged in:', userData.name || userData.email);
-                
-                // Update dropdown for logged in user
-                accountHeader.innerHTML = `
-                    <div class="user-info">
-                        <div class="user-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="user-details">
-                            <h4>${userData.name || 'User'}</h4>
-                            <p>${userData.email || ''}</p>
-                        </div>
-                    </div>
-                `;
-                
-                accountBody.innerHTML = `
-                    <a href="account/dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    <a href="account/profile.html"><i class="fas fa-user-edit"></i> Profile</a>
-                    <a href="account/orders.html"><i class="fas fa-box"></i> Orders</a>
-                    <a href="account/wishlist.html"><i class="fas fa-heart"></i> Wishlist</a>
-                    <hr>
-                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                `;
-                
-                // Add logout handler
-                const logoutBtn = document.getElementById('logoutBtn');
-                if (logoutBtn) {
-                    logoutBtn.addEventListener('click', function(e) {
+            const user = localStorage.getItem('sbstore_current_user') || sessionStorage.getItem('sbstore_current_user');
+            const accountHeader = document.getElementById('accountHeader');
+            const accountBody = document.getElementById('accountBody');
+            
+            if (user && accountHeader && accountBody) {
+                try {
+                    const userData = JSON.parse(user);
+                    accountHeader.innerHTML = `<h4 style="margin: 0; color: #333;">👋 Hello, ${escapeHtml(userData.name || 'User')}!</h4>`;
+                    accountBody.innerHTML = `
+                        <a href="account/dashboard.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                            <i class="fas fa-tachometer-alt" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Dashboard
+                        </a>
+                        <a href="account/profile.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                            <i class="fas fa-user-edit" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Profile
+                        </a>
+                        <a href="wishlist.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                            <i class="fas fa-heart" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Wishlist
+                        </a>
+                        <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+                        <a href="#" id="logoutBtnAccount" style="display: block; padding: 12px 20px; color: #ef4444; text-decoration: none;">
+                            <i class="fas fa-sign-out-alt" style="width: 20px; margin-right: 10px;"></i> Logout
+                        </a>
+                    `;
+                    
+                    document.getElementById('logoutBtnAccount')?.addEventListener('click', function(e) {
                         e.preventDefault();
                         localStorage.removeItem('sbstore_current_user');
                         sessionStorage.removeItem('sbstore_current_user');
                         window.location.reload();
-                        
-                        // Show notification
-                        if (typeof showNotification === 'function') {
-                            showNotification('Logged out successfully', 'success');
-                        }
                     });
+                } catch (e) {
+                    console.error('Error parsing user data', e);
                 }
-                
-            } catch (e) {
-                console.error('Error parsing user data:', e);
             }
         }
     }
-
+    
     // ========== MOBILE MENU ==========
     function initMobileMenu() {
         const mobileBtn = document.getElementById('mobileMenuBtn');
@@ -2889,7 +2833,6 @@ function renderCategoryDropdown() {
                 }
             });
             
-            // Make all nav links clickable
             navMenu.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', function() {
                     mobileBtn.classList.remove('active');
@@ -2899,7 +2842,6 @@ function renderCategoryDropdown() {
                 });
             });
             
-            // Handle categories dropdown on mobile
             if (categoriesLink && megaDropdown) {
                 categoriesLink.addEventListener('click', function(e) {
                     if (window.innerWidth <= 768) {
@@ -2919,129 +2861,30 @@ function renderCategoryDropdown() {
             }
         }
     }
-
-    // ========== ADMIN ACCESS ==========
-    window.goToAdmin = function() {
-        window.location.href = 'admin/login.html';
-    };
-    console.log('🔐 Admin access ready! Type "goToAdmin()" in console to enter admin panel');
-
-    // Debug function to test dropdown
-    window.testAccount = function() {
-        const dropdown = document.getElementById('accountDropdown');
-        if (dropdown) {
-            dropdown.classList.toggle('show');
-            console.log('Dropdown toggled:', dropdown.classList.contains('show') ? 'OPEN' : 'CLOSED');
-        }
-    };
-    console.log('ℹ️ Type "testAccount()" in console to test dropdown');
-
-    // ========== AUTO-SYNC WITH ADMIN ==========
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'sbstore_products' || e.key === 'sbstore_categories' || e.key === 'sbstore_last_update') {
-            console.log('🔄 Data updated from admin, reloading...');
-            loadAllData();
-            if (typeof showNotification === 'function') {
-                showNotification('Products updated from admin!', 'info');
-            }
-        }
-    });
-
-    // ========== INITIALIZE EVERYTHING ==========
+    
+    // ========== INITIALIZE ==========
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🚀 Page loaded, initializing...');
-        loadAllData();
-        initAccountSystem(); // This is the fixed account button function
+        console.log('🚀 SB Store page loaded, initializing...');
+        
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+        
+        initAccountSystem();
         initMobileMenu();
+        updateWishlistCount();
+        updateCartCount();
         
-        // Set up periodic refresh (every 30 seconds)
-        setInterval(function() {
-            const lastUpdate = localStorage.getItem('sbstore_last_update');
-            if (lastUpdate && lastUpdate > (window._lastChecked || 0)) {
-                window._lastChecked = lastUpdate;
-                loadAllData();
-            }
-        }, 30000);
+        // Make functions available globally
+        window.isInWishlist = isInWishlist;
+        window.getWishlist = getWishlist;
+        window.updateWishlistCount = updateWishlistCount;
+        
+        console.log('✅ Website ready! Products will appear automatically when admin adds them.');
+        console.log('🔥 Firebase is listening for real-time updates...');
     });
-</script>
-
-<script>
-// ========== SIMPLE ACCOUNT BUTTON FIX ==========
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Setting up account button...');
-    
-    const accountBtn = document.getElementById('accountIcon');
-    const accountDropdown = document.getElementById('accountDropdown');
-    
-    if (accountBtn && accountDropdown) {
-        console.log('Account button found, adding click handler');
-        
-        // Click handler for account button
-        accountBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Toggle dropdown
-            if (accountDropdown.style.display === 'block') {
-                accountDropdown.style.display = 'none';
-                console.log('Dropdown closed');
-            } else {
-                accountDropdown.style.display = 'block';
-                console.log('Dropdown opened');
-            }
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!accountBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
-                accountDropdown.style.display = 'none';
-            }
-        });
-        
-        // Check if user is logged in
-        const user = localStorage.getItem('sbstore_current_user') || sessionStorage.getItem('sbstore_current_user');
-        const accountHeader = document.getElementById('accountHeader');
-        const accountBody = document.getElementById('accountBody');
-        
-        if (user && accountHeader && accountBody) {
-            try {
-                const userData = JSON.parse(user);
-                console.log('User logged in:', userData.name);
-                
-                // Update for logged in user
-                accountHeader.innerHTML = `<h4 style="margin: 0; color: #333;">👋 Hello, ${userData.name || 'User'}!</h4>`;
-                accountBody.innerHTML = `
-                    <a href="account/dashboard.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
-                        <i class="fas fa-tachometer-alt" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Dashboard
-                    </a>
-                    <a href="account/profile.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
-                        <i class="fas fa-user-edit" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Profile
-                    </a>
-                    <a href="account/wishlist.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
-                        <i class="fas fa-heart" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Wishlist
-                    </a>
-                    <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
-                    <a href="#" id="logoutBtn" style="display: block; padding: 12px 20px; color: #ef4444; text-decoration: none;">
-                        <i class="fas fa-sign-out-alt" style="width: 20px; margin-right: 10px;"></i> Logout
-                    </a>
-                `;
-                
-                // Add logout handler
-                document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    localStorage.removeItem('sbstore_current_user');
-                    sessionStorage.removeItem('sbstore_current_user');
-                    window.location.reload();
-                });
-                
-            } catch (e) {
-                console.error('Error parsing user data', e);
-            }
-        }
-    } else {
-        console.error('Account button or dropdown not found!');
-    }
-});
 </script>
 
 </body>

@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    {
+      "source": "/sb-store/electric-vehicle.html",
+      "destination": "/electric-vehicle.html"
+    },
+    {
+      "source": "/sb-store/electric-vehicle",
+      "destination": "/electric-vehicle.html"
+    }
+  ],
+  "cleanUrls": true
+}
