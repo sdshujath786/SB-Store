@@ -1150,53 +1150,9 @@
                 opacity: 1;
             }
         }
-
-        /* 🔥 NEW: Loading overlay for product upload */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            backdrop-filter: blur(4px);
-        }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .loading-content {
-            background: white;
-            padding: 32px;
-            border-radius: var(--radius-xl);
-            text-align: center;
-            box-shadow: var(--shadow-2xl);
-        }
-
-        .loading-content .spinner {
-            margin: 0 auto 16px;
-        }
-
-        .loading-content p {
-            color: var(--gray-700);
-            margin-top: 16px;
-        }
     </style>
 </head>
 <body>
-    <!-- 🔥 NEW: Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-content">
-            <div class="spinner"></div>
-            <p>Uploading product to live site...</p>
-        </div>
-    </div>
-
     <div class="admin-container">
         <!-- Sidebar -->
         <aside class="admin-sidebar" id="adminSidebar">
@@ -1208,7 +1164,7 @@
             <nav class="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="adminpage.html" class="active">
+                        <a href="index.html" class="active">
                             <i class="fas fa-home"></i>
                             <span>Dashboard</span>
                             <span class="badge" id="menuUpdates">3</span>
@@ -1491,11 +1447,10 @@
                     <small>Upload images</small>
                 </a>
                 
-                <!-- 🔥 NEW: Updated Sync button with Firebase functionality -->
-                <a href="#" class="quick-action-card" id="syncButton">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Sync to Live Site</p>
-                    <small>Upload products to main site</small>
+                <a href="#" class="quick-action-card" onclick="triggerSync(); return false;">
+                    <i class="fas fa-sync-alt"></i>
+                    <p>Sync Site</p>
+                    <small>Update live site</small>
                 </a>
             </div>
         </main>
@@ -1503,65 +1458,6 @@
 
     <!-- Toast Container for Notifications -->
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- 🔥 NEW: Firebase SDK and Configuration -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-        
-        // Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyAgus5dwm52lyMIe6fwHCuIF_08stWQdGU",
-        authDomain: "sb-store-b6e4b.firebaseapp.com",
-        projectId: "sb-store-b6e4b",
-        storageBucket: "sb-store-b6e4b.firebasestorage.app",
-        messagingSenderId: "983527066671",
-        appId: "1:983527066671:web:6488e1fd814e47f9134ada",
-        measurementId: "G-H4L9XNZ55P"
-    };
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-        
-        // Make db available globally
-        window.db = db;
-        
-        // Function to upload product to Firebase
-        window.uploadProductToFirebase = async function(product) {
-            try {
-                // Add timestamp for sorting
-                product.timestamp = Date.now();
-                product.createdAt = new Date().toISOString();
-                
-                // Upload to Firebase
-                const docRef = await addDoc(collection(db, "products"), product);
-                console.log("✅ Product uploaded to Firebase with ID:", docRef.id);
-                return { success: true, id: docRef.id };
-            } catch (error) {
-                console.error("❌ Error uploading to Firebase:", error);
-                return { success: false, error: error.message };
-            }
-        };
-        
-        // Function to get all products (for display)
-        window.getAllProducts = async function() {
-            try {
-                const q = query(collection(db, "products"), orderBy("timestamp", "desc"), limit(50));
-                const querySnapshot = await getDocs(q);
-                const products = [];
-                querySnapshot.forEach((doc) => {
-                    products.push({ id: doc.id, ...doc.data() });
-                });
-                return products;
-            } catch (error) {
-                console.error("Error fetching products:", error);
-                return [];
-            }
-        };
-        
-        console.log("🔥 Firebase initialized successfully!");
-    </script>
 
     <script>
         // ========== PROFESSIONAL DASHBOARD SCRIPT - 5000+ LINES ==========
@@ -1946,103 +1842,13 @@ const analytics = getAnalytics(app);
         // Initialize data manager
         const dataManager = new DataManager();
 
-        // ========== 🔥 NEW: Firebase Sync Function ==========
-        async function syncAllProductsToFirebase() {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.classList.add('active');
-            
-            try {
-                const products = JSON.parse(localStorage.getItem('sbstore_products')) || dataManager.getSampleProducts();
-                
-                if (products.length === 0) {
-                    dataManager.showToast('No products to sync!', 'warning');
-                    loadingOverlay.classList.remove('active');
-                    return;
-                }
-                
-                let successCount = 0;
-                let errorCount = 0;
-                
-                for (const product of products) {
-                    const productData = {
-                        name: product.name,
-                        price: product.price,
-                        description: product.description || 'No description available',
-                        imageUrl: product.images?.[0] || 'https://via.placeholder.com/300x200?text=Product+Image',
-                        category: product.category || 'Uncategorized',
-                        affiliateLink: product.affiliateLink || '#',
-                        createdAt: new Date().toISOString(),
-                        timestamp: Date.now()
-                    };
-                    
-                    const result = await window.uploadProductToFirebase(productData);
-                    if (result.success) {
-                        successCount++;
-                    } else {
-                        errorCount++;
-                    }
-                }
-                
-                if (successCount > 0) {
-                    dataManager.showToast(`✅ Synced ${successCount} products to live site!`, 'success');
-                }
-                if (errorCount > 0) {
-                    dataManager.showToast(`⚠️ Failed to sync ${errorCount} products`, 'warning');
-                }
-                
-            } catch (error) {
-                console.error('Sync error:', error);
-                dataManager.showToast('Error syncing products. Please try again.', 'error');
-            } finally {
-                loadingOverlay.classList.remove('active');
-            }
-        }
-        
-        // ========== 🔥 NEW: Add Product to Firebase (for add-product page) ==========
-        window.addNewProductAndSync = async function(productData) {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.classList.add('active');
-            
-            try {
-                const result = await window.uploadProductToFirebase(productData);
-                
-                if (result.success) {
-                    // Also save to localStorage for backward compatibility
-                    const existingProducts = JSON.parse(localStorage.getItem('sbstore_products')) || [];
-                    existingProducts.push({
-                        ...productData,
-                        id: result.id,
-                        images: [productData.imageUrl]
-                    });
-                    localStorage.setItem('sbstore_products', JSON.stringify(existingProducts));
-                    
-                    dataManager.showToast('✅ Product uploaded and synced to live site!', 'success');
-                    return true;
-                } else {
-                    dataManager.showToast('Failed to upload product', 'error');
-                    return false;
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                dataManager.showToast('Error uploading product', 'error');
-                return false;
-            } finally {
-                loadingOverlay.classList.remove('active');
-            }
-        };
-        
         // ========== GLOBAL FUNCTIONS ==========
         
-        // 🔥 UPDATED: Trigger sync with main site
+        // Trigger sync with main site
         window.triggerSync = function() {
-            syncAllProductsToFirebase();
+            localStorage.setItem('sbstore_last_update', Date.now().toString());
+            dataManager.showToast('✅ Sync triggered! Products will update on the main site.', 'success');
         };
-        
-        // 🔥 NEW: Sync button click handler
-        document.getElementById('syncButton')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            syncAllProductsToFirebase();
-        });
 
         // Global search
         document.getElementById('globalSearch').addEventListener('input', function(e) {
@@ -2103,13 +1909,6 @@ const analytics = getAnalytics(app);
                 e.preventDefault();
                 window.location.href = 'add-product.html';
             }
-            
-            // 🔥 NEW: Ctrl/Cmd + S to sync
-            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                e.preventDefault();
-                syncAllProductsToFirebase();
-                dataManager.showToast('Syncing products...', 'info');
-            }
         });
 
         // Welcome message based on time
@@ -2168,41 +1967,6 @@ const analytics = getAnalytics(app);
         localStorage.setItem('admin_page_views', JSON.stringify(pageViews.slice(-50)));
 
         console.log('✅ Professional Dashboard initialized successfully!');
-        console.log('🔥 Firebase integration active - Products will sync to live site!');
     </script>
-
-<script type="module">
-  import { addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  window.uploadProduct = async function () {
-    // Keep your existing code for reading input fields
-    const name = document.getElementById("name").value;
-    const price = document.getElementById("price").value;
-    const image = document.getElementById("image").value;
-
-    if (!name || !price || !image) {
-      alert("Fill all fields");
-      return;
-    }
-
-    // ✅ Add product to Firebase
-    await addDoc(collection(window.db, "products"), {
-      name,
-      price,
-      image,
-      createdAt: new Date()
-    });
-
-    alert("✅ Product Uploaded Successfully");
-
-    // Keep your existing code to reset input fields
-    document.getElementById("name").value = "";
-    document.getElementById("price").value = "";
-    document.getElementById("image").value = "";
-  };
-</script>
-
-window.db = getFirestore(app)
-
 </body>
 </html>
