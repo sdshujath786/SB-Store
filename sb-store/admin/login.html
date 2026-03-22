@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - SB Store</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -18,104 +20,72 @@
         }
         .login-container {
             background: white;
-            border-radius: 20px;
             padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
             width: 100%;
             max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        h2 { text-align: center; margin-bottom: 30px; color: #333; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
-        .form-group input {
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        input {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             font-size: 16px;
         }
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .login-btn {
+        button {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
         }
-        .login-btn:hover {
+        button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
         }
-        .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        .back-link {
+        .error {
+            color: red;
             text-align: center;
-            margin-top: 20px;
-        }
-        .back-link a {
-            color: #667eea;
-            text-decoration: none;
+            margin-top: 10px;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h2>Admin Login</h2>
-        
-        <div id="errorMessage" class="error-message"></div>
-        
         <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" value="admin@sbstore.com" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" value="Admin@123" required>
-            </div>
-            <button type="submit" class="login-btn">Login to Admin</button>
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+            <div class="error" id="errorMsg">Invalid credentials</div>
         </form>
-        
-        <div class="back-link">
-            <a href="../index.html">← Back to Store</a>
-        </div>
     </div>
-
+    
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Admin credentials
-            if (email === 'admin@sbstore.com' && password === 'Admin@123') {
-                localStorage.setItem('adminLoggedIn', 'true');
-                localStorage.setItem('adminEmail', email);
-                window.location.href = 'dashboard.html';
+            // Simple authentication (change these credentials)
+            if (username === 'admin' && password === 'admin123') {
+                localStorage.setItem('sbstore_admin_logged_in', 'true');
+                window.location.href = 'index.html';
             } else {
-                document.getElementById('errorMessage').style.display = 'block';
-                document.getElementById('errorMessage').textContent = 'Invalid admin credentials';
+                document.getElementById('errorMsg').style.display = 'block';
             }
         });
-        
-        // Check if already logged in
-        if (localStorage.getItem('adminLoggedIn') === 'true') {
-            window.location.href = 'dashboard.html';
-        }
     </script>
 </body>
 </html>
