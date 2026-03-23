@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Sync</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h2>Test Admin to Website Sync</h2>
+    
+    <button onclick="testAddProduct()">Add Test Product</button>
+    <button onclick="testUpdateProduct()">Update Test Product</button>
+    <button onclick="testDeleteProduct()">Delete Test Product</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        function showResult(msg, type) {
+            document.getElementById('result').innerHTML = 
+                `<p class="${type}">${msg}</p>`;
+        }
+        
+        function testAddProduct() {
+            const products = JSON.parse(localStorage.getItem('sbstore_products')) || [];
+            
+            const testProduct = {
+                id: Date.now(),
+                name: "Test Product " + new Date().toLocaleTimeString(),
+                price: 99.99,
+                category: "electronics",
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
+                amazonUrl: "https://amazon.com/dp/TEST",
+                inStock: true
+            };
+            
+            products.push(testProduct);
+            localStorage.setItem('sbstore_products', JSON.stringify(products));
+            
+            // Trigger update
+            localStorage.setItem('sbstore_last_update', Date.now().toString());
+            
+            showResult('✅ Test product added! Check your website.', 'success');
+        }
+        
+        function testUpdateProduct() {
+            const products = JSON.parse(localStorage.getItem('sbstore_products')) || [];
+            
+            if (products.length > 0) {
+                products[0].name = "Updated Product " + new Date().toLocaleTimeString();
+                localStorage.setItem('sbstore_products', JSON.stringify(products));
+                localStorage.setItem('sbstore_last_update', Date.now().toString());
+                showResult('✅ First product updated!', 'success');
+            } else {
+                showResult('❌ No products to update', 'error');
+            }
+        }
+        
+        function testDeleteProduct() {
+            const products = JSON.parse(localStorage.getItem('sbstore_products')) || [];
+            
+            if (products.length > 0) {
+                products.shift();
+                localStorage.setItem('sbstore_products', JSON.stringify(products));
+                localStorage.setItem('sbstore_last_update', Date.now().toString());
+                showResult('✅ First product deleted!', 'success');
+            } else {
+                showResult('❌ No products to delete', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
