@@ -1,0 +1,38 @@
+{
+  "builds": [
+    {
+      "src": "sb-store/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/sb-store/index.html"
+    },
+    {
+      "src": "/index.html",
+      "dest": "/sb-store/index.html"
+    },
+    {
+      "src": "/electric-vehicle.html",
+      "dest": "/sb-store/electric-vehicle.html"
+    },
+    {
+      "src": "/admin",
+      "dest": "/sb-store/admin/index.html"
+    },
+    {
+      "src": "/admin/index.html",
+      "dest": "/sb-store/admin/index.html"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/sb-store/admin/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/sb-store/$1"
+    }
+  ]
+}
