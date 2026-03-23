@@ -2472,7 +2472,7 @@ Best <span class="gradient-text">Products</span>      Special Offers
                             ${product.salePrice ? `<span class="old-price-modern">${currencySymbol}${product.price.toFixed(2)}</span>` : ''}
                         </div>
                         <button class="view-btn-modern" onclick="event.stopPropagation(); window.open('${product.amazonUrl || '#'}', '_blank')">
-                            <i class="fab fa-amazon"></i> View on Amazon
+                         View Product
                         </button>
                     </div>
                 </div>
@@ -2493,7 +2493,7 @@ function renderCategoryDropdown() {
     dropdown.innerHTML = categories.slice(0, 8).map(cat => {
         // ONLY check for Electric Vehicles - everything else remains exactly the same
         if (cat.name === 'Electric Vehicles' || cat.name === 'EV' || cat.name === 'Electric Vehicle') {
-            return `<a href="electric-vehicle.html">${cat.name}</a>`;
+        return `<a href="/electric-vehicle.html">${cat.name}</a>`;
         }
         // ALL other categories work exactly as before - NO CHANGES
         return `<a href="shop.html?category=${encodeURIComponent(cat.name)}">${cat.name}</a>`;
