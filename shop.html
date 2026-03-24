@@ -2687,48 +2687,65 @@ html {
             }
         };
 
-        // ==================================================================
-        // FIREBASE DATA MANAGER
-        // ==================================================================
-        const FirebaseManager = {
-            async loadProducts() {
-                try {
-                    const productsCollection = collection(window.db, 'products');
-                    const productsSnapshot = await getDocs(productsCollection);
-                    const products = [];
-                    productsSnapshot.forEach((doc) => {
-                        const data = doc.data();
-                        products.push({
-                            id: parseInt(doc.id) || doc.id,
-                            name: data.name || 'Unnamed Product',
-                            comparePrice: data.comparePrice || data.price || 0,
-                            currentPrice: data.currentPrice || data.salePrice || data.price || 0,
-                            discountPercent: data.discountPercent || '',
-                            image: Utils.getValidImage(data),
-                            category: data.category || 'Uncategorized',
-                            brand: data.brand || 'Generic',
-                            rating: data.rating || 4.5,
-                            reviews: data.reviews || Math.floor(Math.random() * 100) + 10,
-                            stock: data.stock !== undefined ? data.stock : 100,
-                            freeShipping: data.freeShipping || false,
-                            featured: data.featured || false,
-                            isNew: data.isNew || false,
-                            description: Utils.getProductDescription(data),
-                            amazonUrl: data.amazonUrl || '#',
-                            videoUrl: data.videoUrl || ''
-                        });
-                    });
-                    State.products = products;
-                    State.products.sort((a,b) => b.id - a.id);
-                    State.filteredProducts = [...State.products];
-                    return true;
-                } catch (error) {
-                    console.error('Error loading products from Firebase:', error);
-                    Utils.showNotification('Failed to load products. Using demo data.', 'error');
-                    this.loadDemoProducts();
-                    return false;
-                }
-            },
+// ==================================================================
+// FIREBASE DATA MANAGER - DEMO PRODUCTS REMOVED
+// ==================================================================
+const FirebaseManager = {
+    async loadProducts() {
+        try {
+            const productsCollection = collection(window.db, 'products');
+            const productsSnapshot = await getDocs(productsCollection);
+            
+            if (productsSnapshot.empty) {
+                console.log('No products found in Firebase.');
+                Utils.showNotification('No products available. Please add products to the database.', 'info');
+                State.products = [];
+                State.filteredProducts = [];
+                ProductRenderer.render();
+                return false;
+            }
+            
+            const products = [];
+            productsSnapshot.forEach((doc) => {
+                const data = doc.data();
+                products.push({
+                    id: doc.id,
+                    name: data.name || 'Unnamed Product',
+                    comparePrice: data.comparePrice || data.price || 0,
+                    currentPrice: data.currentPrice || data.salePrice || data.price || 0,
+                    discountPercent: data.discountPercent || '',
+                    image: Utils.getValidImage(data),
+                    category: data.category || 'Uncategorized',
+                    brand: data.brand || 'Generic',
+                    rating: data.rating || 4.5,
+                    reviews: data.reviews || Math.floor(Math.random() * 100) + 10,
+                    stock: data.stock !== undefined ? data.stock : 100,
+                    freeShipping: data.freeShipping || false,
+                    featured: data.featured || false,
+                    isNew: data.isNew || false,
+                    description: Utils.getProductDescription(data),
+                    amazonUrl: data.amazonUrl || '#',
+                    videoUrl: data.videoUrl || ''
+                });
+            });
+            
+            State.products = products;
+            State.products.sort((a,b) => b.id.localeCompare(a.id));
+            State.filteredProducts = [...State.products];
+            
+            console.log(`Loaded ${State.products.length} products from Firebase`);
+            return true;
+        } catch (error) {
+            console.error('Error loading products from Firebase:', error);
+            Utils.showNotification('Failed to load products. Please check your Firebase connection.', 'error');
+            State.products = [];
+            State.filteredProducts = [];
+            ProductRenderer.render();
+            return false;
+        }
+    },
+
+    // ... rest of the code remains exactly the same
 
             loadDemoProducts() {
                 State.products = [
