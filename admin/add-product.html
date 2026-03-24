@@ -1205,18 +1205,6 @@
 </head>
 <body>
 
-
-<script>
-// Auto-login
-localStorage.setItem('adminLoggedIn', 'true');
-localStorage.setItem('sbstore_admin_logged_in', 'true');
-localStorage.setItem('sbstore_current_user', JSON.stringify({
-    id: 1, name: 'Admin', email: 'admin@sbstore.com', role: 'admin'
-}));
-</script>
-
-
-
     <div class="admin-container">
         <!-- Sidebar -->
         <aside class="admin-sidebar" id="adminSidebar">
@@ -1705,6 +1693,45 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
+            authDomain: "sb-store-719d5.firebaseapp.com",
+            projectId: "sb-store-719d5",
+            storageBucket: "sb-store-719d5.firebasestorage.app",
+            messagingSenderId: "501493533680",
+            appId: "1:501493533680:web:7b1409406b95006df62b35"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        // Make db and functions available globally
+        window.db = db;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.addDoc = addDoc;
+        window.updateDoc = updateDoc;
+        window.collection = collection;
+        window.query = query;
+        window.where = where;
+        
+        // Auto-login flag (kept for compatibility, but Firebase auth can be added later)
+        localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('sbstore_admin_logged_in', 'true');
+        localStorage.setItem('sbstore_current_user', JSON.stringify({
+            id: 1, name: 'Admin', email: 'admin@sbstore.com', role: 'admin'
+        }));
+    </script>
+    
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -1714,10 +1741,10 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
     <script>
         // ========== PROFESSIONAL ADD PRODUCT SCRIPT ==========
         
-        // // Check admin login
-        // if (localStorage.getItem('adminLoggedIn') !== 'true') {
-        //     window.location.href = 'login.html';
-        // }
+        // Check admin login
+        if (localStorage.getItem('adminLoggedIn') !== 'true') {
+            window.location.href = 'login.html';
+        }
 
         // Initialize Quill editor
         const quill = new Quill('#fullDescriptionEditor', {
@@ -1802,9 +1829,6 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
                 updateSeoPreview();
             }
         });
-
-        // NO AUTOMATIC CALCULATIONS - ALL PRICING FIELDS ARE COMPLETELY INDEPENDENT
-        // All price fields can be entered manually without affecting each other
 
         // Update progress bar
         function updateProgress() {
@@ -1956,6 +1980,104 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
             document.getElementById('variationsTable').style.display = 'table';
         }
 
+        // Firebase CRUD Functions
+        async function loadProductFromFirebase(productId) {
+            try {
+                const productRef = doc(window.db, 'products', productId);
+                const productSnap = await getDoc(productRef);
+                
+                if (productSnap.exists()) {
+                    const product = productSnap.data();
+                    document.getElementById('productId').value = productId;
+                    document.getElementById('productName').value = product.name || '';
+                    document.getElementById('productCategory').value = product.category || '';
+                    document.getElementById('productBrand').value = product.brand || '';
+                    document.getElementById('productSku').value = product.sku || '';
+                    document.getElementById('productBarcode').value = product.barcode || '';
+                    
+                    // Pricing - all fields loaded independently
+                    document.getElementById('currency').value = product.currency || 'INR';
+                    document.getElementById('productPrice').value = product.price || '';
+                    document.getElementById('productSalePrice').value = product.salePrice || '';
+                    document.getElementById('productCost').value = product.cost || '';
+                    document.getElementById('productDiscount').value = product.discount || '';
+                    
+                    // Inventory
+                    document.getElementById('stockQuantity').value = product.stock || 100;
+                    document.getElementById('stockStatus').value = product.inStock ? 'true' : 'false';
+                    
+                    // Description
+                    document.getElementById('shortDescription').value = product.shortDesc || '';
+                    quill.root.innerHTML = product.description || '';
+                    document.getElementById('features').value = product.features ? product.features.join('\n') : '';
+                    
+                    // SEO
+                    document.getElementById('metaTitle').value = product.metaTitle || '';
+                    document.getElementById('metaDescription').value = product.metaDesc || '';
+                    document.getElementById('metaKeywords').value = product.metaKeywords || '';
+                    document.getElementById('productSlug').value = product.slug || '';
+                    
+                    // Media
+                    if (product.images && product.images.length > 0) {
+                        uploadedImages = product.images.map((url, index) => ({ 
+                            data: url, 
+                            name: 'image-' + (index + 1),
+                            featured: index === 0
+                        }));
+                        updateImagePreview();
+                    }
+                    
+                    document.getElementById('videoUrl').value = product.videoUrl || '';
+                    document.getElementById('amazonUrl').value = product.amazonUrl || '';
+                    document.getElementById('primeEligible').checked = product.prime || false;
+                    
+                    // Shipping
+                    document.getElementById('weight').value = product.weight || '';
+                    if (product.dimensions) {
+                        document.getElementById('length').value = product.dimensions.length || '';
+                        document.getElementById('width').value = product.dimensions.width || '';
+                        document.getElementById('height').value = product.dimensions.height || '';
+                    }
+                    
+                    // Status
+                    document.getElementById('productStatus').value = product.status || 'active';
+                    document.getElementById('featuredProduct').checked = product.featured || false;
+                    
+                    // Tags
+                    if (product.tags) {
+                        tagify.removeAllTags();
+                        tagify.addTags(product.tags);
+                    }
+                    
+                    updateSeoPreview();
+                    updateProgress();
+                }
+            } catch (error) {
+                console.error('Error loading product:', error);
+                showToast('Error loading product data', 'error');
+            }
+        }
+        
+        async function saveProductToFirebase(productData, productId) {
+            try {
+                if (productId) {
+                    // Update existing product
+                    const productRef = doc(window.db, 'products', productId);
+                    await updateDoc(productRef, productData);
+                    showToast('Product updated successfully!', 'success');
+                } else {
+                    // Add new product
+                    const docRef = await addDoc(collection(window.db, 'products'), productData);
+                    showToast('Product added successfully!', 'success');
+                }
+                return true;
+            } catch (error) {
+                console.error('Error saving product:', error);
+                showToast('Error saving product: ' + error.message, 'error');
+                return false;
+            }
+        }
+
         // Check if editing
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');
@@ -1963,90 +2085,32 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
         if (productId) {
             document.getElementById('formTitle').textContent = 'Edit Product';
             document.getElementById('submitText').textContent = 'Update Product';
-            
-            const products = JSON.parse(localStorage.getItem('sbstore_products')) || [];
-            const product = products.find(p => p.id == productId);
-            
-            if (product) {
-                document.getElementById('productId').value = product.id;
-                document.getElementById('productName').value = product.name || '';
-                document.getElementById('productCategory').value = product.category || '';
-                document.getElementById('productBrand').value = product.brand || '';
-                document.getElementById('productSku').value = product.sku || '';
-                document.getElementById('productBarcode').value = product.barcode || '';
-                
-                // Pricing - all fields loaded independently
-                document.getElementById('currency').value = product.currency || 'INR';
-                document.getElementById('productPrice').value = product.price || '';
-                document.getElementById('productSalePrice').value = product.salePrice || '';
-                document.getElementById('productCost').value = product.cost || '';
-                document.getElementById('productDiscount').value = product.discount || '';
-                
-                // Inventory
-                document.getElementById('stockQuantity').value = product.stock || 100;
-                document.getElementById('stockStatus').value = product.inStock ? 'true' : 'false';
-                
-                // Description
-                document.getElementById('shortDescription').value = product.shortDesc || '';
-                quill.root.innerHTML = product.description || '';
-                document.getElementById('features').value = product.features ? product.features.join('\n') : '';
-                
-                // SEO
-                document.getElementById('metaTitle').value = product.metaTitle || '';
-                document.getElementById('metaDescription').value = product.metaDesc || '';
-                document.getElementById('metaKeywords').value = product.metaKeywords || '';
-                document.getElementById('productSlug').value = product.slug || '';
-                
-                // Media
-                if (product.images && product.images.length > 0) {
-                    uploadedImages = product.images.map((url, index) => ({ 
-                        data: url, 
-                        name: 'image-' + (index + 1),
-                        featured: index === 0
-                    }));
-                    updateImagePreview();
-                }
-                
-                document.getElementById('videoUrl').value = product.videoUrl || '';
-                document.getElementById('amazonUrl').value = product.amazonUrl || '';
-                document.getElementById('primeEligible').checked = product.prime || false;
-                
-                // Shipping
-                document.getElementById('weight').value = product.weight || '';
-                document.getElementById('length').value = product.length || '';
-                document.getElementById('width').value = product.width || '';
-                document.getElementById('height').value = product.height || '';
-                
-                // Status
-                document.getElementById('productStatus').value = product.status || 'active';
-                document.getElementById('featuredProduct').checked = product.featured || false;
-                
-                // Tags
-                if (product.tags) {
-                    tagify.addTags(product.tags);
-                }
-                
-                updateSeoPreview();
-            }
+            loadProductFromFirebase(productId);
         }
 
         // Handle form submission
-        document.getElementById('productForm').addEventListener('submit', function(e) {
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
-            const products = JSON.parse(localStorage.getItem('sbstore_products')) || [];
-            const productId = document.getElementById('productId').value;
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            submitBtn.disabled = true;
             
             // Get all form values
             const name = document.getElementById('productName').value.trim();
             if (!name) {
                 showToast('Product name is required', 'error');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
                 return;
             }
             
             const price = parseFloat(document.getElementById('productPrice').value);
             if (isNaN(price) || price <= 0) {
                 showToast('Valid price is required', 'error');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
                 return;
             }
 
@@ -2060,7 +2124,6 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
             const tags = tagify.value.map(t => t.value);
 
             const productData = {
-                id: productId ? parseInt(productId) : Date.now(),
                 name: name,
                 category: document.getElementById('productCategory').value,
                 subcategory: document.getElementById('productSubcategory').value,
@@ -2095,7 +2158,7 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
                 
                 // SEO
                 metaTitle: document.getElementById('metaTitle').value,
-                metaDescription: document.getElementById('metaDescription').value,
+                metaDesc: document.getElementById('metaDescription').value,
                 metaKeywords: document.getElementById('metaKeywords').value,
                 slug: document.getElementById('productSlug').value,
                 
@@ -2107,41 +2170,39 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
                     height: parseFloat(document.getElementById('height').value) || null
                 },
                 freeShipping: document.getElementById('freeShipping').checked,
+                shippingClass: document.getElementById('shippingClass').value,
                 
                 // Status
                 status: document.getElementById('productStatus').value,
+                visibility: document.getElementById('productVisibility').value,
                 featured: document.getElementById('featuredProduct').checked,
+                taxClass: document.getElementById('taxClass').value,
                 tags: tags,
                 
                 // Timestamps
-                createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
-
-            // Save to localStorage
-            if (productId) {
-                // Update existing product
-                const index = products.findIndex(p => p.id == productId);
-                if (index !== -1) {
-                    productData.createdAt = products[index].createdAt;
-                    products[index] = productData;
-                }
-                showToast('Product updated successfully!', 'success');
-            } else {
-                // Add new product
-                products.push(productData);
-                showToast('Product added successfully!', 'success');
+            
+            // Add createdAt for new products
+            if (!productId) {
+                productData.createdAt = new Date().toISOString();
             }
 
-            localStorage.setItem('sbstore_products', JSON.stringify(products));
+            // Save to Firebase
+            const success = await saveProductToFirebase(productData, productId);
             
-            // Trigger update on main site
-            localStorage.setItem('sbstore_last_update', Date.now().toString());
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
             
-            // Redirect after delay
-            setTimeout(() => {
-                window.location.href = 'products.html';
-            }, 1500);
+            if (success) {
+                // Trigger update on main site
+                localStorage.setItem('sbstore_last_update', Date.now().toString());
+                
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = 'products.html';
+                }, 1500);
+            }
         });
 
         // Preview function
@@ -2169,6 +2230,18 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
         window.closePreview = function() {
             document.getElementById('previewModal').classList.remove('active');
         };
+        
+        window.duplicateProduct = function() {
+            showToast('Duplicate feature coming soon', 'info');
+        };
+        
+        window.chooseVariationImage = function(index) {
+            showToast('Variation image upload coming soon', 'info');
+        };
+        
+        window.removeVariation = function(index) {
+            showToast('Variation removal coming soon', 'info');
+        };
 
         // Toast notification function
         function showToast(message, type = 'success') {
@@ -2179,7 +2252,8 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
             const icons = {
                 success: 'fa-check-circle',
                 error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle'
+                warning: 'fa-exclamation-triangle',
+                info: 'fa-info-circle'
             };
             
             toast.innerHTML = `
@@ -2206,12 +2280,17 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
             showToast('Logging out...', 'warning');
             setTimeout(() => {
                 localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('sbstore_admin_logged_in');
                 window.location.href = 'login.html';
             }, 1500);
         });
 
         // Initialize
         updateSeoPreview();
+        updateProgress();
+        
+        // Make showToast available globally
+        window.showToast = showToast;
     </script>
 </body>
 </html>

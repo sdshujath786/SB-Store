@@ -2095,27 +2095,6 @@ color: var(--white-900);
   console.log("🔥 Firebase Connected");
 </script>
     
-async function loadEVProducts() {
-    const container = document.getElementById("ev-products-container");
-    container.innerHTML = "Loading...";
-
-    const snapshot = await db.collection("ev_products").get();
-
-    container.innerHTML = "";
-
-    snapshot.forEach(doc => {
-        const product = doc.data();
-
-        container.innerHTML += `
-            <div class="product">
-                <img src="${product.image}" width="200">
-                <h3>${product.name}</h3>
-                <p>${product.price}</p>
-            </div>
-        `;
-    });
-}
-
 loadEVProducts();
 </script>
     <!-- Top Bar -->

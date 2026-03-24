@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>SB Store – Premium Affiliate Shop</title>
+    <title>SB Store – Affiliate Best offers and Deals</title>
     
     <!-- Preconnect for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2394,7 +2394,7 @@ html {
         <div class="container">
             <div class="shop-layout">
                 <!-- Sidebar Filters (identical to original) -->
-                <aside class="shop-sidebar animate-fade-in-left">
+                <aside class="shop-sidebar" id="shopSidebar">
                     <div class="filter-card">
                         <h3><i class="fas fa-tags"></i> Categories</h3>
                         <div class="filter-group" id="categoryFilters"></div>
@@ -2538,7 +2538,7 @@ html {
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 SB Store. All rights reserved.</p>
+                <p>&copy; 2026 SB Store. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -2549,6 +2549,36 @@ html {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
+            authDomain: "sb-store-719d5.firebaseapp.com",
+            projectId: "sb-store-719d5",
+            storageBucket: "sb-store-719d5.firebasestorage.app",
+            messagingSenderId: "501493533680",
+            appId: "1:501493533680:web:7b1409406b95006df62b35"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        window.db = db;
+        window.collection = collection;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.getDoc = getDoc;
+        window.setDoc = setDoc;
+        window.deleteDoc = deleteDoc;
+        window.query = query;
+        window.where = where;
+        
+        console.log('Firebase initialized successfully');
+    </script>
 
 <script>
     (function() {
@@ -2558,20 +2588,18 @@ html {
         // CONFIGURATION
         // ==================================================================
         const CONFIG = {
-            productsPerPage: 10,          // slightly fewer for single‑column layout
+            productsPerPage: 10,
             storageKeys: {
-                products: 'sbstore_products',
-                categories: 'sbstore_categories',
                 wishlist: 'sb_wishlist',
                 cart: 'sb_cart',
-                lastUpdate: 'sbstore_last_update'
+                userId: 'sb_user_id'
             },
             defaultImage: 'https://via.placeholder.com/600x600?text=No+Image',
             maxDescriptionLength: 120
         };
 
         // ==================================================================
-        // STATE – STATIC PRICES ONLY (NO CALCULATIONS)
+        // STATE
         // ==================================================================
         const State = {
             products: [],
@@ -2591,11 +2619,12 @@ html {
                 maxPrice: 100000
             },
             sortBy: 'newest',
-            searchQuery: ''
+            searchQuery: '',
+            userId: null
         };
 
         // ==================================================================
-        // UTILITIES – NO DISCOUNT CALCULATION
+        // UTILITIES
         // ==================================================================
         const Utils = {
             debounce(func, wait) {
@@ -2641,29 +2670,13 @@ html {
                 return stars;
             },
 
-            // NO discount calculation – values come directly from product data
-
-            saveToStorage(key, data) {
-                try {
-                    localStorage.setItem(key, JSON.stringify(data));
-                    if (key === CONFIG.storageKeys.products) {
-                        localStorage.setItem(CONFIG.storageKeys.lastUpdate, Date.now().toString());
-                    }
-                    return true;
-                } catch (e) {
-                    console.error('Storage error:', e);
-                    return false;
+            generateUserId() {
+                let userId = localStorage.getItem(CONFIG.storageKeys.userId);
+                if (!userId) {
+                    userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem(CONFIG.storageKeys.userId, userId);
                 }
-            },
-
-            loadFromStorage(key, defaultValue = null) {
-                try {
-                    const data = localStorage.getItem(key);
-                    return data ? JSON.parse(data) : defaultValue;
-                } catch (e) {
-                    console.error('Storage error:', e);
-                    return defaultValue;
-                }
+                return userId;
             },
 
             showNotification(message, type = 'success', title = null) {
@@ -2675,60 +2688,144 @@ html {
         };
 
         // ==================================================================
-        // DATA MANAGER – USES ONLY STATIC FIELDS
+        // FIREBASE DATA MANAGER
         // ==================================================================
-        const DataManager = {
-            init() {
-                this.loadProducts();
-                this.loadWishlist();
-                this.loadCart();
+        const FirebaseManager = {
+            async loadProducts() {
+                try {
+                    const productsCollection = collection(window.db, 'products');
+                    const productsSnapshot = await getDocs(productsCollection);
+                    const products = [];
+                    productsSnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        products.push({
+                            id: parseInt(doc.id) || doc.id,
+                            name: data.name || 'Unnamed Product',
+                            comparePrice: data.comparePrice || data.price || 0,
+                            currentPrice: data.currentPrice || data.salePrice || data.price || 0,
+                            discountPercent: data.discountPercent || '',
+                            image: Utils.getValidImage(data),
+                            category: data.category || 'Uncategorized',
+                            brand: data.brand || 'Generic',
+                            rating: data.rating || 4.5,
+                            reviews: data.reviews || Math.floor(Math.random() * 100) + 10,
+                            stock: data.stock !== undefined ? data.stock : 100,
+                            freeShipping: data.freeShipping || false,
+                            featured: data.featured || false,
+                            isNew: data.isNew || false,
+                            description: Utils.getProductDescription(data),
+                            amazonUrl: data.amazonUrl || '#',
+                            videoUrl: data.videoUrl || ''
+                        });
+                    });
+                    State.products = products;
+                    State.products.sort((a,b) => b.id - a.id);
+                    State.filteredProducts = [...State.products];
+                    return true;
+                } catch (error) {
+                    console.error('Error loading products from Firebase:', error);
+                    Utils.showNotification('Failed to load products. Using demo data.', 'error');
+                    this.loadDemoProducts();
+                    return false;
+                }
             },
 
-            loadProducts() {
-                const stored = Utils.loadFromStorage(CONFIG.storageKeys.products, []);
-                State.products = stored.map(p => ({
-                    id: p.id,
-                    name: p.name || 'Unnamed Product',
-                    // STATIC PRICES ONLY – no calculations
-                    comparePrice: p.comparePrice || p.price || 0,    // original price (strikethrough)
-                    currentPrice: p.currentPrice || p.salePrice || p.price || 0,  // selling price
-                    discountPercent: p.discountPercent || '',        // optional discount badge
-                    image: Utils.getValidImage(p),
-                    category: p.category || 'Uncategorized',
-                    brand: p.brand || 'Generic',
-                    rating: p.rating || 4.5,
-                    reviews: p.reviews || Math.floor(Math.random() * 100) + 10,
-                    stock: p.stock !== undefined ? p.stock : 100,
-                    freeShipping: p.freeShipping || false,
-                    featured: p.featured || false,
-                    isNew: p.isNew || false,
-                    description: Utils.getProductDescription(p),
-                    amazonUrl: p.amazonUrl || '#',
-                    videoUrl: p.videoUrl || ''  // Added videoUrl field
-                }));
-                // Default sort: newest first
-                State.products.sort((a,b) => b.id - a.id);
+            loadDemoProducts() {
+                State.products = [
+                    {
+                        id: 1,
+                        name: 'Premium Wireless Headphones',
+                        comparePrice: 9999,
+                        currentPrice: 6999,
+                        discountPercent: '30',
+                        image: 'https://via.placeholder.com/600x600?text=Headphones',
+                        category: 'Electronics',
+                        brand: 'Sony',
+                        rating: 4.8,
+                        reviews: 245,
+                        stock: 50,
+                        freeShipping: true,
+                        featured: true,
+                        isNew: true,
+                        description: 'High-quality wireless headphones with noise cancellation.',
+                        amazonUrl: '#',
+                        videoUrl: ''
+                    },
+                    {
+                        id: 2,
+                        name: 'Smart Watch Pro',
+                        comparePrice: 14999,
+                        currentPrice: 10999,
+                        discountPercent: '27',
+                        image: 'https://via.placeholder.com/600x600?text=Smart+Watch',
+                        category: 'Electronics',
+                        brand: 'Apple',
+                        rating: 4.9,
+                        reviews: 189,
+                        stock: 30,
+                        freeShipping: true,
+                        featured: true,
+                        isNew: true,
+                        description: 'Advanced smartwatch with health tracking features.',
+                        amazonUrl: '#',
+                        videoUrl: ''
+                    }
+                ];
                 State.filteredProducts = [...State.products];
             },
 
-            loadWishlist() {
-                State.wishlist = Utils.loadFromStorage(CONFIG.storageKeys.wishlist, []);
+            async loadWishlist() {
+                State.userId = Utils.generateUserId();
+                try {
+                    const wishlistDoc = doc(window.db, 'wishlists', State.userId);
+                    const docSnap = await getDoc(wishlistDoc);
+                    if (docSnap.exists()) {
+                        State.wishlist = docSnap.data().products || [];
+                    } else {
+                        State.wishlist = [];
+                    }
+                } catch (error) {
+                    console.error('Error loading wishlist:', error);
+                    State.wishlist = [];
+                }
                 this.updateWishlistCount();
             },
 
-            loadCart() {
-                State.cart = Utils.loadFromStorage(CONFIG.storageKeys.cart, []);
+            async saveWishlist() {
+                if (!State.userId) return;
+                try {
+                    const wishlistDoc = doc(window.db, 'wishlists', State.userId);
+                    await setDoc(wishlistDoc, { products: State.wishlist, updatedAt: new Date() });
+                    this.updateWishlistCount();
+                } catch (error) {
+                    console.error('Error saving wishlist:', error);
+                }
+            },
+
+            async loadCart() {
+                try {
+                    const cartDoc = doc(window.db, 'carts', State.userId);
+                    const docSnap = await getDoc(cartDoc);
+                    if (docSnap.exists()) {
+                        State.cart = docSnap.data().items || [];
+                    } else {
+                        State.cart = [];
+                    }
+                } catch (error) {
+                    console.error('Error loading cart:', error);
+                    State.cart = [];
+                }
                 this.updateCartCount();
             },
 
-            saveWishlist() {
-                Utils.saveToStorage(CONFIG.storageKeys.wishlist, State.wishlist);
-                this.updateWishlistCount();
-            },
-
-            saveCart() {
-                Utils.saveToStorage(CONFIG.storageKeys.cart, State.cart);
-                this.updateCartCount();
+            async saveCart() {
+                try {
+                    const cartDoc = doc(window.db, 'carts', State.userId);
+                    await setDoc(cartDoc, { items: State.cart, updatedAt: new Date() });
+                    this.updateCartCount();
+                } catch (error) {
+                    console.error('Error saving cart:', error);
+                }
             },
 
             updateWishlistCount() {
@@ -2750,7 +2847,7 @@ html {
         };
 
         // ==================================================================
-        // FILTER MANAGER – USES CURRENT PRICE FOR FILTERING
+        // FILTER MANAGER
         // ==================================================================
         const FilterManager = {
             init() {
@@ -2785,7 +2882,6 @@ html {
             },
 
             updateFilterCounts() {
-                // Categories
                 const catCounts = {};
                 State.products.forEach(p => catCounts[p.category] = (catCounts[p.category] || 0) + 1);
                 const catEl = document.getElementById('categoryFilters');
@@ -2795,7 +2891,6 @@ html {
                     `).join('');
                 }
 
-                // Brands
                 const brandCounts = {};
                 State.products.forEach(p => { if (p.brand) brandCounts[p.brand] = (brandCounts[p.brand] || 0) + 1; });
                 const brandEl = document.getElementById('brandFilters');
@@ -2805,19 +2900,15 @@ html {
                     `).join('');
                 }
 
-                // Ratings
                 document.getElementById('ratingFilters').innerHTML = `
                     <label><input type="checkbox" value="4"> <span class="rating-stars">★★★★☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 4).length}</span></label>
                     <label><input type="checkbox" value="3"> <span class="rating-stars">★★★☆☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 3 && p.rating < 4).length}</span></label>
                     <label><input type="checkbox" value="2"> <span class="rating-stars">★★☆☆☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 2 && p.rating < 3).length}</span></label>
                 `;
 
-                // Availability
                 document.getElementById('inStockCount').textContent = State.products.filter(p => p.stock > 0).length;
                 document.getElementById('outOfStockCount').textContent = State.products.filter(p => p.stock <= 0).length;
                 document.getElementById('freeShippingCount').textContent = State.products.filter(p => p.freeShipping).length;
-
-                // Features
                 document.getElementById('featuredCount').textContent = State.products.filter(p => p.featured).length;
                 document.getElementById('newCount').textContent = State.products.filter(p => p.isNew).length;
             },
@@ -2847,7 +2938,6 @@ html {
                         if (features.includes('featured') && !p.featured) return false;
                         if (features.includes('new') && !p.isNew) return false;
                     }
-                    // use currentPrice for filtering
                     return p.currentPrice >= minPrice && p.currentPrice <= maxPrice;
                 });
 
@@ -2905,7 +2995,7 @@ html {
         };
 
         // ==================================================================
-        // PRODUCT RENDERER – MODERN SHOWCASE WITH STATIC PRICES
+        // PRODUCT RENDERER
         // ==================================================================
         const ProductRenderer = {
             render() {
@@ -3001,7 +3091,7 @@ html {
         };
 
         // ==================================================================
-        // PAGINATION (unchanged)
+        // PAGINATION
         // ==================================================================
         const Pagination = {
             update(totalItems) {
@@ -3049,10 +3139,10 @@ html {
         };
 
         // ==================================================================
-        // WISHLIST SYSTEM (unchanged)
+        // WISHLIST SYSTEM
         // ==================================================================
         const WishlistSystem = {
-            toggle(productId, event) {
+            async toggle(productId, event) {
                 if (event) { event.preventDefault(); event.stopPropagation(); }
                 const id = Number(productId);
                 const product = State.products.find(p => p.id === id);
@@ -3066,7 +3156,7 @@ html {
                     State.wishlist.splice(idx, 1);
                     Utils.showNotification(`${product.name} removed from wishlist`, 'info', 'Wishlist');
                 }
-                DataManager.saveWishlist();
+                await FirebaseManager.saveWishlist();
                 this.updateAllButtons(id);
             },
 
@@ -3093,85 +3183,8 @@ html {
         };
 
         // ==================================================================
-        // QUICK VIEW MANAGER – STATIC PRICES ONLY
+        // QUICK VIEW MANAGER
         // ==================================================================
-       
-       
-       
-       // Mobile Menu Toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const navMenu = document.querySelector('.nav-menu');
-    const filterToggle = document.getElementById('mobileFilterToggle');
-    const shopSidebar = document.getElementById('shopSidebar');
-    const filterOverlay = document.getElementById('filterOverlay');
-    
-    if (mobileMenuToggle) {
-        mobileMenuToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-            this.querySelector('i').classList.toggle('fa-bars');
-            this.querySelector('i').classList.toggle('fa-times');
-        });
-    }
-    
-    if (filterToggle && shopSidebar) {
-        filterToggle.addEventListener('click', function() {
-            shopSidebar.classList.add('active');
-            if (filterOverlay) filterOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-    }
-    
-    if (filterOverlay) {
-        filterOverlay.addEventListener('click', function() {
-            shopSidebar.classList.remove('active');
-            filterOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        });
-    }
-    
-    // Close sidebar on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            if (shopSidebar && shopSidebar.classList.contains('active')) {
-                shopSidebar.classList.remove('active');
-                if (filterOverlay) filterOverlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-            if (navMenu && navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                if (mobileMenuToggle) {
-                    mobileMenuToggle.querySelector('i').classList.remove('fa-times');
-                    mobileMenuToggle.querySelector('i').classList.add('fa-bars');
-                }
-            }
-        }
-    });
-    
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
-            if (navMenu) navMenu.classList.remove('active');
-            if (shopSidebar) shopSidebar.classList.remove('active');
-            if (filterOverlay) filterOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-            if (mobileMenuToggle) {
-                mobileMenuToggle.querySelector('i').classList.remove('fa-times');
-                mobileMenuToggle.querySelector('i').classList.add('fa-bars');
-            }
-        }
-    });
-});
-       
-       
-       
-       
-       
-       
-       
-       
-       
-       
         const QuickViewManager = {
             init() {
                 const modal = document.getElementById('quickViewModal');
@@ -3207,7 +3220,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('quickViewDescription').textContent = Utils.getProductDescription(product);
                 document.getElementById('quickViewAmazonBtn').href = product.amazonUrl || '#';
 
-                // Add video button if video exists
                 const modalBody = document.querySelector('#quickViewModal .modal-details');
                 const existingVideoBtn = document.getElementById('quickViewVideoBtn');
                 
@@ -3221,7 +3233,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             App.playVideo(product.videoUrl, product.name);
                             QuickViewManager.close();
                         };
-                        // Insert after description
                         const descEl = document.getElementById('quickViewDescription');
                         if (descEl && descEl.parentNode) {
                             descEl.insertAdjacentElement('afterend', videoBtn);
@@ -3257,35 +3268,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Check if it's a YouTube URL
                 let embedUrl = videoUrl;
-                let isYouTube = false;
-                let isVimeo = false;
-                
-                // YouTube URL conversion
                 const youtubeRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/;
                 const youtubeMatch = videoUrl.match(youtubeRegex);
                 if (youtubeMatch) {
                     embedUrl = `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1`;
-                    isYouTube = true;
                 }
                 
-                // Vimeo URL conversion
                 const vimeoRegex = /vimeo\.com\/(\d+)/;
                 const vimeoMatch = videoUrl.match(vimeoRegex);
                 if (vimeoMatch) {
                     embedUrl = `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
-                    isVimeo = true;
                 }
                 
-                // Create modal
                 const modal = document.createElement('div');
                 modal.className = 'video-modal';
                 modal.innerHTML = `
                     <div class="video-modal-overlay" onclick="this.parentElement.remove()"></div>
                     <div class="video-modal-content">
                         <button class="video-modal-close" onclick="this.closest('.video-modal').remove()">&times;</button>
-                        ${isYouTube || isVimeo ? 
+                        ${youtubeMatch || vimeoMatch ? 
                             `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>` : 
                             `<video controls autoplay src="${videoUrl}"></video>`
                         }
@@ -3295,7 +3297,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.body.appendChild(modal);
                 modal.classList.add('active');
                 
-                // Close on escape key
                 const closeModal = (e) => {
                     if (e.key === 'Escape') {
                         modal.remove();
@@ -3307,16 +3308,87 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // ==================================================================
+        // MOBILE MENU TOGGLE
+        // ==================================================================
+        const MobileMenuManager = {
+            init() {
+                const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+                const navMenu = document.querySelector('.nav-menu');
+                const filterToggle = document.getElementById('mobileFilterToggle');
+                const shopSidebar = document.getElementById('shopSidebar');
+                const filterOverlay = document.getElementById('filterOverlay');
+                
+                if (mobileMenuToggle) {
+                    mobileMenuToggle.addEventListener('click', function() {
+                        navMenu.classList.toggle('active');
+                        this.querySelector('i').classList.toggle('fa-bars');
+                        this.querySelector('i').classList.toggle('fa-times');
+                    });
+                }
+                
+                if (filterToggle && shopSidebar) {
+                    filterToggle.addEventListener('click', function() {
+                        shopSidebar.classList.add('active');
+                        if (filterOverlay) filterOverlay.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    });
+                }
+                
+                if (filterOverlay) {
+                    filterOverlay.addEventListener('click', function() {
+                        shopSidebar.classList.remove('active');
+                        filterOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    });
+                }
+                
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        if (shopSidebar && shopSidebar.classList.contains('active')) {
+                            shopSidebar.classList.remove('active');
+                            if (filterOverlay) filterOverlay.classList.remove('active');
+                            document.body.style.overflow = '';
+                        }
+                        if (navMenu && navMenu.classList.contains('active')) {
+                            navMenu.classList.remove('active');
+                            if (mobileMenuToggle) {
+                                mobileMenuToggle.querySelector('i').classList.remove('fa-times');
+                                mobileMenuToggle.querySelector('i').classList.add('fa-bars');
+                            }
+                        }
+                    }
+                });
+                
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 768) {
+                        if (navMenu) navMenu.classList.remove('active');
+                        if (shopSidebar) shopSidebar.classList.remove('active');
+                        if (filterOverlay) filterOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                        if (mobileMenuToggle) {
+                            mobileMenuToggle.querySelector('i').classList.remove('fa-times');
+                            mobileMenuToggle.querySelector('i').classList.add('fa-bars');
+                        }
+                    }
+                });
+            }
+        };
+
+        // ==================================================================
         // APP INITIALISATION
         // ==================================================================
         const App = {
-            init() {
-                DataManager.init();
+            async init() {
+                await FirebaseManager.loadProducts();
+                await FirebaseManager.loadWishlist();
+                await FirebaseManager.loadCart();
                 FilterManager.init();
                 QuickViewManager.init();
+                MobileMenuManager.init();
                 ProductRenderer.render();
                 this.setupEventListeners();
                 AOS.init({ duration: 800, once: true });
+                Utils.showNotification('Welcome to SB Store!', 'info');
             },
 
             setupEventListeners() {
@@ -3337,7 +3409,7 @@ document.addEventListener('DOMContentLoaded', function() {
             openQuickView: (id) => QuickViewManager.open(id),
             toggleWishlist: (id, e) => WishlistSystem.toggle(id, e),
             goToPage: (page) => Pagination.goToPage(page),
-            playVideo: (url, name, event) => VideoManager.playVideo(url, name, event)  // Add this line
+            playVideo: (url, name, event) => VideoManager.playVideo(url, name, event)
         };
 
         window.App = App;
@@ -3345,7 +3417,6 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
     
 </script>
-    <!-- TOTAL LINES: HTML + CSS + JS ≈ 10,600 lines -->
 
 <!-- Mobile Filter Toggle Button -->
 <button class="mobile-filter-toggle" id="mobileFilterToggle">
@@ -3355,7 +3426,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Filter Overlay -->
 <div class="filter-overlay" id="filterOverlay"></div>
-
 
 </body>
 </html>
