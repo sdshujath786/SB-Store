@@ -1693,44 +1693,49 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-        // Import Firebase SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
-            authDomain: "sb-store-719d5.firebaseapp.com",
-            projectId: "sb-store-719d5",
-            storageBucket: "sb-store-719d5.firebasestorage.app",
-            messagingSenderId: "501493533680",
-            appId: "1:501493533680:web:7b1409406b95006df62b35"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        
-        // Make db and functions available globally
-        window.db = db;
-        window.getDocs = getDocs;
-        window.doc = doc;
-        window.getDoc = getDoc;
-        window.addDoc = addDoc;
-        window.updateDoc = updateDoc;
-        window.collection = collection;
-        window.query = query;
-        window.where = where;
-        
-        // Auto-login flag (kept for compatibility, but Firebase auth can be added later)
-        localStorage.setItem('adminLoggedIn', 'true');
-        localStorage.setItem('sbstore_admin_logged_in', 'true');
-        localStorage.setItem('sbstore_current_user', JSON.stringify({
-            id: 1, name: 'Admin', email: 'admin@sbstore.com', role: 'admin'
-        }));
-    </script>
+<script type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+    
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
+        authDomain: "sb-store-719d5.firebaseapp.com",
+        projectId: "sb-store-719d5",
+        storageBucket: "sb-store-719d5.firebasestorage.app",
+        messagingSenderId: "501493533680",
+        appId: "1:501493533680:web:7b1409406b95006df62b35"
+    };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+    
+    // Make available globally
+    window.db = db;
+    window.storage = storage;
+    window.getDocs = getDocs;
+    window.doc = doc;
+    window.getDoc = getDoc;
+    window.addDoc = addDoc;
+    window.updateDoc = updateDoc;
+    window.collection = collection;
+    window.query = query;
+    window.where = where;
+    window.ref = ref;
+    window.uploadBytes = uploadBytes;
+    window.getDownloadURL = getDownloadURL;
+    
+    // Auto-login flag
+    localStorage.setItem('adminLoggedIn', 'true');
+    localStorage.setItem('sbstore_admin_logged_in', 'true');
+    localStorage.setItem('sbstore_current_user', JSON.stringify({
+        id: 1, name: 'Admin', email: 'admin@sbstore.com', role: 'admin'
+    }));
+</script>
     
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -1869,27 +1874,43 @@
             handleImageFiles(files);
         });
 
-        function handleImageFiles(files) {
-            files.forEach(file => {
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('File ' + file.name + ' is too large (max 5MB)', 'error');
-                    return;
-                }
-                
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    uploadedImages.push({
-                        data: e.target.result,
-                        name: file.name,
-                        size: file.size,
-                        featured: uploadedImages.length === 0
-                    });
-                    updateImagePreview();
-                };
-                reader.readAsDataURL(file);
-            });
+async function handleImageFiles(files) {
+    for (const file of files) {
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('File ' + file.name + ' is too large (max 5MB)', 'error');
+            continue;
         }
-
+        
+        try {
+            // Show uploading indicator
+            showToast('Uploading ' + file.name + '...', 'info');
+            
+            // Create a unique filename
+            const timestamp = Date.now();
+            const filename = `products/${timestamp}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+            
+            // Upload to Firebase Storage
+            const storageRef = ref(window.storage, filename);
+            const snapshot = await uploadBytes(storageRef, file);
+            const downloadUrl = await getDownloadURL(snapshot.ref);
+            
+            // Store the URL (not base64!)
+            uploadedImages.push({
+                data: downloadUrl,  // This is a URL, not base64!
+                name: file.name,
+                size: file.size,
+                featured: uploadedImages.length === 0
+            });
+            
+            updateImagePreview();
+            showToast(file.name + ' uploaded successfully!', 'success');
+            
+        } catch (error) {
+            console.error('Upload error:', error);
+            showToast('Failed to upload ' + file.name + ': ' + error.message, 'error');
+        }
+    }
+}
         function updateImagePreview() {
             imagePreview.innerHTML = uploadedImages.map((img, index) => `
                 <div class="preview-item">
