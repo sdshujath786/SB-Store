@@ -1506,14 +1506,19 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
                         </div>
                         
                         <!-- Videos -->
-<!-- Add this inside your product form -->
-<div class="form-group">
-    <label for="productVideo">Video Link (YouTube/Vimeo/etc.)</label>
-    <input type="url" id="productVideo" name="videoLink" class="form-control" 
-           placeholder="https://www.youtube.com/watch?v=..." 
-           pattern="https?://.+">
-    <small class="form-text text-muted">Paste the full URL to a product review, tutorial, or demo video</small>
-</div>
+                        <div class="form-group">
+                            <label>Product Videos</label>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <input type="url" id="videoUrl" placeholder="YouTube or Vimeo URL">
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" id="videoUpload" accept="video/mp4,video/webm">
+                                </div>
+                            </div>
+                            <div class="image-preview-grid" id="videoPreview"></div>
+                        </div>
+                        
                         <!-- 3D Model (Optional) -->
                         <div class="form-group">
                             <label>3D Model (Optional)</label>
@@ -1786,36 +1791,6 @@ localStorage.setItem('sbstore_current_user', JSON.stringify({
             document.getElementById('seoDescPreview').textContent = desc;
         }
 
-// Sample data to initialize your shop
-const sampleProducts = [
-    {
-        id: 1,
-        title: "Wireless Headphones",
-        price: 99.99,
-        description: "High-quality wireless headphones with noise cancellation",
-        image: "images/headphones.jpg",
-        videoLink: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        amazonLink: "https://www.amazon.com/dp/example1",
-        rating: 4.5
-    },
-    {
-        id: 2,
-        title: "Smart Watch",
-        price: 199.99,
-        description: "Fitness tracker with heart rate monitor",
-        image: "images/smartwatch.jpg",
-        videoLink: "https://www.youtube.com/watch?v=example2",
-        amazonLink: "https://www.amazon.com/dp/example2",
-        rating: 4.8
-    }
-];
-
-// Initialize localStorage with sample data if empty
-if (!localStorage.getItem('products')) {
-    localStorage.setItem('products', JSON.stringify(sampleProducts));
-}
-
-
         // Auto-generate slug from name
         document.getElementById('productName').addEventListener('blur', function() {
             const slugInput = document.getElementById('productSlug');
@@ -1917,36 +1892,6 @@ if (!localStorage.getItem('products')) {
             });
             updateImagePreview();
         };
-
-
-// admin.js - Save product function
-function saveProduct() {
-    const product = {
-        id: Date.now(),
-        title: document.getElementById('productTitle').value,
-        price: parseFloat(document.getElementById('productPrice').value),
-        description: document.getElementById('productDescription').value,
-        image: document.getElementById('productImage').value,
-        videoLink: document.getElementById('productVideo').value, // Get video link
-        amazonLink: document.getElementById('productAmazon').value,
-        rating: parseFloat(document.getElementById('productRating').value) || 4.5
-    };
-    
-    // Get existing products
-    let products = JSON.parse(localStorage.getItem('products')) || [];
-    
-    // Add new product
-    products.push(product);
-    
-    // Save to localStorage
-    localStorage.setItem('products', JSON.stringify(products));
-    
-    // Show success message
-    alert('Product saved successfully!');
-    
-    // Reset form
-    document.getElementById('productForm').reset();
-}
 
         // Variation Management
         let variationGroups = [];

@@ -600,135 +600,6 @@
         .product-card:hover .product-image img { transform: scale(1.08); }
 
         /* Wishlist & Quick View buttons – positioned on image */
-        /* Video Badge on Product Image */
-.video-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255, 0, 0, 0.9);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    animation: pulse 2s infinite;
-}
-
-.video-badge i {
-    font-size: 12px;
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-/* Video Button on Product Card */
-.video-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #ff0000, #cc0000);
-    color: white;
-    padding: 8px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    margin-top: 10px;
-    width: 100%;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
-}
-
-.video-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-    color: white;
-}
-
-.video-btn i {
-    font-size: 14px;
-}
-
-/* Video Icon in Quick View */
-.video-link-section {
-    margin: 15px 0;
-    padding: 12px;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-radius: 10px;
-    border-left: 4px solid #ff0000;
-}
-
-.video-link-section h3 {
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.video-link-section h3 i {
-    color: #ff0000;
-    font-size: 18px;
-}
-
-.video-link-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #ff0000;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-}
-
-.video-link-btn:hover {
-    background: #cc0000;
-    transform: translateX(5px);
-    color: white;
-}
-
-/* Product Card Hover Effect */
-.product-card {
-    position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .video-btn {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-    
-    .video-badge {
-        padding: 4px 8px;
-        font-size: 10px;
-    }
-}
         .product-actions {
             position: absolute;
             top: var(--space-4);
@@ -934,84 +805,7 @@
         /* ------------------------------------------------------------------
            SECTION 9: QUICK VIEW MODAL – KEPT ORIGINAL
            ------------------------------------------------------------------ */
-        /* Video Link Section */
-.video-link-section {
-    margin: 15px 0;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 8px;
-}
-
-.video-link-section h3 {
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.video-link-section h3 i {
-    color: #ff0000;
-    margin-right: 8px;
-}
-
-.video-link-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: #ff0000;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-.video-link-btn:hover {
-    background: #cc0000;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.video-link-btn i {
-    font-size: 18px;
-}
-
-/* Video Preview Thumbnail */
-.video-preview {
-    margin: 15px 0;
-}
-
-.video-thumbnail {
-    position: relative;
-    cursor: pointer;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.video-thumbnail img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.play-button-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-}
-
-.play-button-overlay i {
-    font-size: 48px;
-    color: white;
-    text-shadow: 0 0 10px rgba(0,0,0,0.5);
-}
-
-.video-thumbnail:hover .play-button-overlay {
-    opacity: 1;
-}
-           .quick-view-modal {
+        .quick-view-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -2484,37 +2278,29 @@ html {
         </div>
     </section>
 
-<!-- Quick View Modal -->
-<div class="quick-view-modal" id="quickViewModal">
-    <div class="modal-overlay"></div>
-    <div class="modal-content">
-        <button class="modal-close">&times;</button>
-        <div class="modal-body">
-            <div class="modal-image">
-                <img src="" alt="" id="quickViewImage">
-            </div>
-            <div class="modal-details">
-                <h2 id="quickViewTitle"></h2>
-                <div class="rating" id="quickViewRating"></div>
-                <div class="price" id="quickViewPrice"></div>
-                <p class="description" id="quickViewDescription"></p>
-                
-                <!-- Video Link Section -->
-                <div class="video-link-section" id="quickViewVideoSection" style="display: none;">
-                    <h3><i class="fas fa-video"></i> Product Video</h3>
-                    <a href="#" id="quickViewVideoLink" class="video-link-btn" target="_blank">
-                        <i class="fas fa-play-circle"></i> Watch Video
-                    </a>
+    <!-- Quick View Modal -->
+    <div class="quick-view-modal" id="quickViewModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img src="" alt="" id="quickViewImage">
                 </div>
-                
-                <div class="modal-actions">
-                    <button class="wishlist-btn" id="quickViewWishlistBtn"><i class="far fa-heart"></i> Add to Wishlist</button>
-                    <a href="#" class="buy-btn" id="quickViewAmazonBtn" target="_blank">View on Amazon</a>
+                <div class="modal-details">
+                    <h2 id="quickViewTitle"></h2>
+                    <div class="rating" id="quickViewRating"></div>
+                    <div class="price" id="quickViewPrice"></div>
+                    <p class="description" id="quickViewDescription"></p>
+                    <div class="modal-actions">
+                        <button class="wishlist-btn" id="quickViewWishlistBtn"><i class="far fa-heart"></i> Add to Wishlist</button>
+                        <a href="#" class="buy-btn" id="quickViewAmazonBtn" target="_blank">View on Amazon</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
     <!-- Footer -->
     <footer class="site-footer">
         <div class="container">
@@ -2957,33 +2743,21 @@ html {
                     const hasDiscount = product.comparePrice && product.comparePrice > product.currentPrice;
                     
                     return `
-<!-- Inside your product card template -->
-<div class="product-card" data-product-id="${product.id}">
-    <div class="product-image">
-        <img src="${product.image}" alt="${product.title}">
-        <!-- Add video badge if video exists -->
-        ${product.videoLink ? '<div class="video-badge"><i class="fas fa-play-circle"></i> Watch</div>' : ''}
-    </div>
-    <div class="product-info">
-        <h3 class="product-title">${product.title}</h3>
-        <div class="rating">${generateRatingStars(product.rating)}</div>
-        <div class="price">$${product.price}</div>
-        <div class="product-actions">
-            <button class="quick-view-btn" onclick="openQuickView(${product.id})">
-                <i class="fas fa-eye"></i> Quick View
-            </button>
-            <button class="wishlist-btn" onclick="addToWishlist(${product.id})">
-                <i class="far fa-heart"></i>
-            </button>
-        </div>
-        <!-- Add direct video link button -->
-        ${product.videoLink ? `
-            <a href="${product.videoLink}" class="video-btn" target="_blank">
-                <i class="fas fa-play"></i> Watch Video
-            </a>
-        ` : ''}
-    </div>
-</div>s
+                        <div class="product-card" data-product-id="${product.id}" data-aos="fade-up">
+                            ${product.isNew ? '<div class="product-badge new">New</div>' : ''}
+                            ${hasDiscount && product.discountPercent ? `<div class="product-badge sale">-${product.discountPercent}%</div>` : ''}
+                            
+                            <div class="product-image" onclick="App.openQuickView(${product.id})">
+                                <img src="${Utils.getValidImage(product)}" alt="${product.name}" loading="lazy">
+                                <div class="product-actions">
+                                    <button class="wishlist-btn ${inWishlist ? 'active' : ''}" onclick="App.toggleWishlist(${product.id}, event)" title="${inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}">
+                                        <i class="${inWishlist ? 'fas' : 'far'} fa-heart"></i>
+                                    </button>
+                                    <button class="quick-view-btn" onclick="App.openQuickView(${product.id})" title="Quick View">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
                             
                             <div class="product-info">
                                 <div class="product-category">${product.category}</div>
@@ -3119,51 +2893,7 @@ html {
             // ==================================================================
             // QUICK VIEW MANAGER – STATIC PRICES ONLY
             // ==================================================================
-           // Function to open quick view modal with video link
-function openQuickView(productId) {
-    // Fetch product details including video link
-    fetch(`/api/products/${productId}`)
-        .then(response => response.json())
-        .then(product => {
-            // Set basic product info
-            document.getElementById('quickViewImage').src = product.image;
-            document.getElementById('quickViewTitle').textContent = product.title;
-            document.getElementById('quickViewPrice').textContent = `$${product.price}`;
-            document.getElementById('quickViewDescription').textContent = product.description;
-            
-            // Handle video link
-            if (product.videoLink && product.videoLink.trim() !== '') {
-                const videoSection = document.getElementById('quickViewVideoSection');
-                const videoLink = document.getElementById('quickViewVideoLink');
-                
-                videoSection.style.display = 'block';
-                videoLink.href = product.videoLink;
-                
-                // Optional: Add YouTube embed preview
-                if (product.videoLink.includes('youtube.com') || product.videoLink.includes('youtu.be')) {
-                    videoLink.innerHTML = '<i class="fab fa-youtube"></i> Watch on YouTube';
-                } else if (product.videoLink.includes('vimeo.com')) {
-                    videoLink.innerHTML = '<i class="fab fa-vimeo-v"></i> Watch on Vimeo';
-                } else {
-                    videoLink.innerHTML = '<i class="fas fa-play-circle"></i> Watch Video';
-                }
-            } else {
-                document.getElementById('quickViewVideoSection').style.display = 'none';
-            }
-            
-            // Set Amazon link
-            if (product.amazonLink) {
-                document.getElementById('quickViewAmazonBtn').href = product.amazonLink;
-                document.getElementById('quickViewAmazonBtn').style.display = 'inline-block';
-            } else {
-                document.getElementById('quickViewAmazonBtn').style.display = 'none';
-            }
-            
-            // Show modal
-            document.getElementById('quickViewModal').classList.add('active');
-        })
-        .catch(error => console.error('Error loading product:', error));
-}
+           
            
            
            // Mobile Menu Toggle
@@ -3232,145 +2962,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
            
            
-           // shop.js - Complete product loading function
-document.addEventListener('DOMContentLoaded', function() {
-    loadProducts();
-});
-
-function loadProducts() {
-    // Get products from localStorage or API
-    const products = JSON.parse(localStorage.getItem('products')) || [];
-    
-    const productsContainer = document.getElementById('productsContainer');
-    if (!productsContainer) return;
-    
-    if (products.length === 0) {
-        productsContainer.innerHTML = '<div class="no-products">No products found</div>';
-        return;
-    }
-    
-    productsContainer.innerHTML = products.map(product => `
-        <div class="product-card" data-product-id="${product.id}">
-            <div class="product-image">
-                <img src="${product.image || 'images/placeholder.jpg'}" alt="${product.title}">
-                ${product.videoLink ? `
-                    <div class="video-badge">
-                        <i class="fas fa-play-circle"></i> Watch
-                    </div>
-                ` : ''}
-            </div>
-            <div class="product-info">
-                <h3 class="product-title">${product.title}</h3>
-                <div class="rating">${generateRatingStars(product.rating || 4.5)}</div>
-                <div class="price">$${product.price}</div>
-                <div class="product-actions">
-                    <button class="quick-view-btn" onclick="openQuickView(${product.id})">
-                        <i class="fas fa-eye"></i> Quick View
-                    </button>
-                    <button class="wishlist-btn" onclick="addToWishlist(${product.id})">
-                        <i class="far fa-heart"></i>
-                    </button>
-                </div>
-                ${product.videoLink ? `
-                    <a href="${product.videoLink}" class="video-btn" target="_blank">
-                        <i class="fas fa-play-circle"></i> Watch Product Video
-                    </a>
-                ` : ''}
-            </div>
-        </div>
-    `).join('');
-}
-
-// Generate rating stars
-function generateRatingStars(rating) {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-    
-    let stars = '';
-    for (let i = 0; i < fullStars; i++) {
-        stars += '<i class="fas fa-star"></i>';
-    }
-    if (halfStar) {
-        stars += '<i class="fas fa-star-half-alt"></i>';
-    }
-    for (let i = 0; i < emptyStars; i++) {
-        stars += '<i class="far fa-star"></i>';
-    }
-    return stars;
-}
-
-// Open Quick View Modal (updated version)
-function openQuickView(productId) {
-    const products = JSON.parse(localStorage.getItem('products')) || [];
-    const product = products.find(p => p.id == productId);
-    
-    if (!product) return;
-    
-    // Update modal content
-    document.getElementById('quickViewImage').src = product.image || 'images/placeholder.jpg';
-    document.getElementById('quickViewTitle').textContent = product.title;
-    document.getElementById('quickViewRating').innerHTML = generateRatingStars(product.rating || 4.5);
-    document.getElementById('quickViewPrice').textContent = `$${product.price}`;
-    document.getElementById('quickViewDescription').textContent = product.description || 'No description available';
-    
-    // Handle video link
-    const videoSection = document.getElementById('quickViewVideoSection');
-    const videoLink = document.getElementById('quickViewVideoLink');
-    
-    if (product.videoLink && product.videoLink.trim() !== '') {
-        videoSection.style.display = 'block';
-        videoLink.href = product.videoLink;
-        
-        // Detect video platform
-        if (product.videoLink.includes('youtube.com') || product.videoLink.includes('youtu.be')) {
-            videoLink.innerHTML = '<i class="fab fa-youtube"></i> Watch on YouTube';
-        } else if (product.videoLink.includes('vimeo.com')) {
-            videoLink.innerHTML = '<i class="fab fa-vimeo-v"></i> Watch on Vimeo';
-        } else {
-            videoLink.innerHTML = '<i class="fas fa-play-circle"></i> Watch Video';
-        }
-    } else {
-        videoSection.style.display = 'none';
-    }
-    
-    // Handle Amazon link
-    const amazonBtn = document.getElementById('quickViewAmazonBtn');
-    if (product.amazonLink && product.amazonLink.trim() !== '') {
-        amazonBtn.href = product.amazonLink;
-        amazonBtn.style.display = 'inline-flex';
-    } else {
-        amazonBtn.style.display = 'none';
-    }
-    
-    // Show modal
-    document.getElementById('quickViewModal').classList.add('active');
-}
-
-// Add to wishlist function
-function addToWishlist(productId) {
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-    
-    if (!wishlist.includes(productId)) {
-        wishlist.push(productId);
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
-        alert('Product added to wishlist!');
-    } else {
-        alert('Product already in wishlist!');
-    }
-}
-
-// Close modal function
-function closeQuickView() {
-    document.getElementById('quickViewModal').classList.remove('active');
-}
-
-// Event listener for modal close
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains('modal-close') || e.target.classList.contains('modal-overlay')) {
-        closeQuickView();
-    }
-});
+           
            
            
            
