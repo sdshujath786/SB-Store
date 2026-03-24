@@ -1740,6 +1740,7 @@
 
         .modal-image {
             flex: 1;
+            position: relative;
         }
 
         .modal-image img {
@@ -1820,6 +1821,50 @@
 
         .modal-actions .amazon-btn:hover {
             transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(63, 43, 150, 0.3);
+        }
+
+        .video-play-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-base);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .video-play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .watch-video-btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .watch-video-btn:hover {
+            transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(63, 43, 150, 0.3);
         }
 
@@ -2090,6 +2135,40 @@
                 font-size: 16px;
             }
         }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            text-align: center;
+            padding: 60px;
+            grid-column: 1 / -1;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--gray-200);
+            border-top-color: var(--primary-600);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            grid-column: 1 / -1;
+            color: var(--gray-500);
+        }
+        
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -2147,29 +2226,28 @@
 
         <!-- Header Actions -->
         <div class="header-actions">
-            <!-- Account Icon with Dropdown -->
-<!-- Account Icon with Dropdown - SIMPLE WORKING VERSION -->
-<div class="account-container" style="position: relative; display: inline-block;">
-    <button class="account-btn" id="accountIcon" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px;">
-        <i class="far fa-user-circle"></i>
-        <span>Account</span>
-    </button>
-    
-    <!-- Dropdown Menu -->
-    <div id="accountDropdown" style="position: absolute; top: 120%; right: 0; width: 250px; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: none; z-index: 999999;">
-        <div id="accountHeader" style="padding: 15px 20px; border-bottom: 1px solid #eee;">
-            <h4 style="margin: 0; color: #333; font-size: 16px;">Welcome to SB Store!</h4>
-        </div>
-        <div id="accountBody" style="padding: 10px 0;">
-            <a href="login.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; transition: background 0.3s;">
-                <i class="fas fa-sign-in-alt" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Login
-            </a>
-            <a href="register.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; transition: background 0.3s;">
-                <i class="fas fa-user-plus" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Register
-            </a>
-        </div>
-    </div>
-</div>
+            <!-- Account Icon with Dropdown - SIMPLE WORKING VERSION -->
+            <div class="account-container" style="position: relative; display: inline-block;">
+                <button class="account-btn" id="accountIcon" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                    <i class="far fa-user-circle"></i>
+                    <span>Account</span>
+                </button>
+                
+                <!-- Dropdown Menu -->
+                <div id="accountDropdown" style="position: absolute; top: 120%; right: 0; width: 250px; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: none; z-index: 999999;">
+                    <div id="accountHeader" style="padding: 15px 20px; border-bottom: 1px solid #eee;">
+                        <h4 style="margin: 0; color: #333; font-size: 16px;">Welcome to SB Store!</h4>
+                    </div>
+                    <div id="accountBody" style="padding: 10px 0;">
+                        <a href="login.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; transition: background 0.3s;">
+                            <i class="fas fa-sign-in-alt" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Login
+                        </a>
+                        <a href="register.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none; transition: background 0.3s;">
+                            <i class="fas fa-user-plus" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Register
+                        </a>
+                    </div>
+                </div>
+            </div>
 
             <!-- Wishlist Icon -->
             <a href="wishlist.html" class="header-icon">
@@ -2342,7 +2420,10 @@ Best <span class="gradient-text">Products</span>      Special Offers
                 <h2 class="section-title">Trending <span>Now</span></h2>
             </div>
             <div class="products-grid-modern" id="featuredProductsGrid">
-                <!-- Products will load dynamically from admin -->
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Loading products from Firebase...</p>
+                </div>
             </div>
         </div>
     </section>
@@ -2355,7 +2436,7 @@ Best <span class="gradient-text">Products</span>      Special Offers
                 <h2 class="section-title">Browse <span>Popular Categories</span></h2>
             </div>
             <div class="categories-grid-modern" id="categoriesGrid">
-                <!-- Categories will load dynamically from admin -->
+                <!-- Categories will load dynamically -->
             </div>
         </div>
     </section>
@@ -2427,232 +2508,206 @@ Best <span class="gradient-text">Products</span>      Special Offers
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-<script>
-    // ========== PROFESSIONAL HOMEPAGE SCRIPT - CONNECTED TO ALL ADMIN PAGES ==========
+<script type="module">
+    // ========== FIREBASE INTEGRATION ==========
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     
-    // Initialize AOS
-    AOS.init({
-        duration: 1000,
-        once: true,
-        offset: 100
-    });
-
-    // ========== DATA BRIDGE - CONNECTED TO ADMIN ==========
+    // Firebase configuration (same as admin)
+    const firebaseConfig = {
+        apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
+        authDomain: "sb-store-719d5.firebaseapp.com",
+        projectId: "sb-store-719d5",
+        storageBucket: "sb-store-719d5.firebasestorage.app",
+        messagingSenderId: "501493533680",
+        appId: "1:501493533680:web:7b1409406b95006df62b35"
+    };
     
-    // Global data variables
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    
+    // Global variables
     let allProducts = [];
     let allCategories = [];
-    let allUsers = [];
-    let allClicks = [];
-    let storeSettings = {};
     
-    // Load all data from localStorage (shared with admin)
-    function loadAllData() {
-        // Load products from admin
+    // ========== LOAD PRODUCTS FROM FIRESTORE ==========
+    async function loadProductsFromFirestore() {
         try {
-            const storedProducts = localStorage.getItem('sbstore_products');
-            allProducts = storedProducts ? JSON.parse(storedProducts) : [];
-            console.log(`📦 Loaded ${allProducts.length} products from admin`);
-        } catch (e) {
-            console.error('Error loading products:', e);
+            console.log('📦 Loading products from Firestore...');
+            const productsRef = collection(db, 'products');
+            const q = query(productsRef, orderBy('createdAt', 'desc'), limit(12));
+            const querySnapshot = await getDocs(q);
+            
             allProducts = [];
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                allProducts.push({
+                    id: doc.id,
+                    title: data.title || data.name || 'Untitled',
+                    name: data.title || data.name || 'Untitled',
+                    price: data.price || 0,
+                    description: data.description || '',
+                    category: data.category || 'Uncategorized',
+                    images: data.images || [],
+                    videoLink: data.videoLink || '',
+                    amazonUrl: data.amazonUrl || '#',
+                    createdAt: data.createdAt
+                });
+            });
+            
+            console.log(`✅ Loaded ${allProducts.length} products from Firestore`);
+            
+            // Also load categories from products
+            const categoriesSet = new Set();
+            allProducts.forEach(product => {
+                if (product.category && product.category !== 'Uncategorized') {
+                    categoriesSet.add(product.category);
+                }
+            });
+            allCategories = Array.from(categoriesSet).map(name => ({ name }));
+            
+            // Render everything
+            renderFeaturedProducts();
+            renderCategories();
+            renderCategoryDropdown();
+            renderMegaMenu();
+            renderFooterCategories();
+            
+            return allProducts;
+        } catch (error) {
+            console.error('❌ Error loading products from Firestore:', error);
+            showNotification('Error loading products. Please refresh the page.', 'error');
+            
+            // Show empty state
+            const grid = document.getElementById('featuredProductsGrid');
+            if (grid) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-database"></i><p>Unable to load products. Please check your internet connection.</p></div>';
+            }
+            return [];
         }
-        
-        // Load categories from admin
-        try {
-            const storedCategories = localStorage.getItem('sbstore_categories');
-            allCategories = storedCategories ? JSON.parse(storedCategories) : [];
-            console.log(`🏷️ Loaded ${allCategories.length} categories from admin`);
-        } catch (e) {
-            console.error('Error loading categories:', e);
-            allCategories = [];
-        }
-        
-        // Load users from admin
-        try {
-            const storedUsers = localStorage.getItem('sbstore_users');
-            allUsers = storedUsers ? JSON.parse(storedUsers) : [];
-            console.log(`👥 Loaded ${allUsers.length} users from admin`);
-        } catch (e) {
-            console.error('Error loading users:', e);
-            allUsers = [];
-        }
-        
-        // Load clicks from admin
-        try {
-            const storedClicks = localStorage.getItem('affiliate_clicks');
-            allClicks = storedClicks ? JSON.parse(storedClicks) : [];
-            console.log(`🔍 Loaded ${allClicks.length} clicks from admin`);
-        } catch (e) {
-            console.error('Error loading clicks:', e);
-            allClicks = [];
-        }
-        
-        // Load settings from admin
-        try {
-            const storedSettings = localStorage.getItem('store_settings');
-            storeSettings = storedSettings ? JSON.parse(storedSettings) : {};
-            console.log(`⚙️ Loaded settings from admin`);
-        } catch (e) {
-            console.error('Error loading settings:', e);
-            storeSettings = {};
-        }
-        
-        // Apply settings to page
-        applySettings();
-        
-        // Render all sections
-        renderCategories();
-        renderFeaturedProducts();
-        renderCategoryDropdown();
-        renderMegaMenu();
-        renderFooterCategories();
-        updateWishlistCount();
-        updateCartCount();
-    }
-    
-    // Apply settings from admin
-    function applySettings() {
-        // Apply currency settings
-        if (storeSettings.currency) {
-            window.currency = storeSettings.currency;
-            window.currencySymbol = getCurrencySymbol(storeSettings.currency);
-        }
-        
-        // Apply color settings (optional)
-        if (storeSettings.primaryColor) {
-            document.documentElement.style.setProperty('--primary-600', storeSettings.primaryColor);
-        }
-        if (storeSettings.accentColor) {
-            document.documentElement.style.setProperty('--accent-500', storeSettings.accentColor);
-        }
-    }
-    
-    // Get currency symbol
-    function getCurrencySymbol(currency) {
-        const symbols = {
-            'USD': '$', 'INR': '₹', 'EUR': '€', 'GBP': '£',
-            'JPY': '¥', 'CAD': 'C$', 'AUD': 'A$', 'CNY': '¥'
-        };
-        return symbols[currency] || '$';
     }
     
     // ========== RENDER FUNCTIONS ==========
     
-    // Render categories on homepage
-    function renderCategories() {
-        const grid = document.getElementById('categoriesGrid');
-        if (!grid) return;
-
-        // If no categories from admin, use defaults
-        let categories = allCategories.length > 0 ? allCategories : [
-            { name: 'Electronics', icon: 'fa-laptop', count: 156, image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=500' },
-            { name: 'Fashion', icon: 'fa-tshirt', count: 342, image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=500' },
-            { name: 'Home', icon: 'fa-home', count: 89, image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=500' },
-            { name: 'Sports', icon: 'fa-futbol', count: 94, image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500' }
-        ];
-
-        grid.innerHTML = categories.slice(0, 4).map(cat => `
-            <div class="category-card-modern" data-aos="fade-up" onclick="location.href='shop.html?category=${encodeURIComponent(cat.name)}'">
-                <img src="${cat.image || 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=500'}" alt="${cat.name}" class="category-image" loading="lazy">
-                <div class="category-overlay">
-                    <h3>${cat.name}</h3>
-                    <p>${cat.count || 0} Products</p>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    // Render featured products from admin
+    // Render featured products from Firestore
     function renderFeaturedProducts() {
         const grid = document.getElementById('featuredProductsGrid');
         if (!grid) return;
 
-        // If no products from admin, show empty state
         if (allProducts.length === 0) {
-            grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">No products yet. Add products in admin!</p>';
+            grid.innerHTML = '<div class="empty-state"><i class="fas fa-box-open"></i><p>No products yet. Add products from admin panel!</p><a href="admin/add-product.html" style="display: inline-block; margin-top: 20px; padding: 12px 24px; background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); color: white; border-radius: 30px; text-decoration: none;">Add Your First Product</a></div>';
             return;
         }
 
         // Show first 8 products as featured
         const featured = allProducts.slice(0, 8);
+        const currencySymbol = '₹';
 
-grid.innerHTML = featured.map(product => {
-    const price = product.salePrice || product.price;
-    const currencySymbol = getCurrencySymbol(product.currency || storeSettings.currency || 'USD');
-    const hasVideo = product.videoUrl && product.videoUrl.trim() !== '';
-    
-    return `
-        <div class="product-card-modern" data-aos="fade-up" data-id="${product.id}" onclick="quickView(${product.id})">
-            ${product.discount ? `<span class="product-badge-modern">-${product.discount}%</span>` : ''}
-            <div class="product-image-modern">
-                <img src="${product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${product.name}" loading="lazy">
-                ${hasVideo ? `<div class="video-indicator" style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; z-index: 5;">
-                    <i class="fas fa-play" style="color: white; font-size: 14px;"></i>
-                </div>` : ''}
-            </div>
+        grid.innerHTML = featured.map(product => {
+            const price = product.price;
+            const hasVideo = product.videoLink && product.videoLink.trim() !== '';
+            const firstImage = product.images && product.images[0] && product.images[0] !== "" ? product.images[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400';
+            
+            return `
+                <div class="product-card-modern" data-aos="fade-up" data-id="${product.id}" onclick="window.quickView('${product.id}')">
+                    <div class="product-image-modern">
+                        <img src="${firstImage}" alt="${product.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'">
+                        ${hasVideo ? `<div class="video-indicator" onclick="event.stopPropagation(); window.playVideo('${product.videoLink}', '${product.title}')">
+                            <i class="fas fa-play"></i>
+                        </div>` : ''}
+                    </div>
                     <div class="product-actions-modern">
-                        <button class="action-btn-modern wishlist-btn" onclick="event.stopPropagation(); toggleWishlist(${product.id})">
-                            <i class="${isInWishlist(product.id) ? 'fas' : 'far'} fa-heart" style="${isInWishlist(product.id) ? 'color: #ff6b6b;' : ''}"></i>
+                        <button class="action-btn-modern wishlist-btn" onclick="event.stopPropagation(); window.toggleWishlist('${product.id}')">
+                            <i class="${window.isInWishlist ? (window.isInWishlist(product.id) ? 'fas' : 'far') : 'far'} fa-heart" style="${window.isInWishlist && window.isInWishlist(product.id) ? 'color: #ff6b6b;' : ''}"></i>
                         </button>
-                        <button class="action-btn-modern" onclick="event.stopPropagation(); quickView(${product.id})">
+                        <button class="action-btn-modern" onclick="event.stopPropagation(); window.quickView('${product.id}')">
                             <i class="far fa-eye"></i>
                         </button>
                     </div>
                     <div class="product-info-modern">
                         <div class="product-category-modern">${product.category || 'Uncategorized'}</div>
-                        <h3 class="product-title-modern">${product.name}</h3>
+                        <h3 class="product-title-modern">${product.title.length > 50 ? product.title.substring(0, 47) + '...' : product.title}</h3>
                         <div class="product-price-modern">
                             <span class="current-price-modern">${currencySymbol}${price.toFixed(2)}</span>
-                            ${product.salePrice ? `<span class="old-price-modern">${currencySymbol}${product.price.toFixed(2)}</span>` : ''}
                         </div>
                         <button class="view-btn-modern" onclick="event.stopPropagation(); window.open('${product.amazonUrl || '#'}', '_blank')">
-                         View Product
+                            View Product <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
             `;
         }).join('');
     }
+    
+    // Render categories on homepage
+    function renderCategories() {
+        const grid = document.getElementById('categoriesGrid');
+        if (!grid) return;
+
+        const defaultCategories = [
+            { name: 'Electronics', image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=500', count: allProducts.filter(p => p.category === 'Electronics').length },
+            { name: 'Fashion', image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=500', count: allProducts.filter(p => p.category === 'Fashion').length },
+            { name: 'Home', image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=500', count: allProducts.filter(p => p.category === 'Home').length },
+            { name: 'Sports', image: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=500', count: allProducts.filter(p => p.category === 'Sports').length }
+        ];
+
+        let categories = allCategories.length > 0 ? allCategories.slice(0, 4).map(cat => ({
+            name: cat.name,
+            image: defaultCategories.find(d => d.name === cat.name)?.image || 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=500',
+            count: allProducts.filter(p => p.category === cat.name).length
+        })) : defaultCategories;
+
+        grid.innerHTML = categories.map(cat => `
+            <div class="category-card-modern" data-aos="fade-up" onclick="location.href='shop.html?category=${encodeURIComponent(cat.name)}'">
+                <img src="${cat.image}" alt="${cat.name}" class="category-image" loading="lazy">
+                <div class="category-overlay">
+                    <h3>${cat.name}</h3>
+                    <p>${cat.count} Products</p>
+                </div>
+            </div>
+        `).join('');
+    }
 
     // Render category dropdown in search
-function renderCategoryDropdown() {
-    const dropdown = document.getElementById('categoryDropdown');
-    if (!dropdown) return;
+    function renderCategoryDropdown() {
+        const dropdown = document.getElementById('categoryDropdown');
+        if (!dropdown) return;
 
-    let categories = allCategories.length > 0 ? allCategories : [
-        { name: 'Electronics' }, { name: 'Fashion' }, { name: 'Home & Living' }, 
-        { name: 'Sports' }, { name: 'Books' }
-    ];
+        let categories = allCategories.length > 0 ? allCategories.slice(0, 8) : [
+            { name: 'Electronics' }, { name: 'Fashion' }, { name: 'Home & Living' }, 
+            { name: 'Sports' }, { name: 'Books' }
+        ];
 
-    dropdown.innerHTML = categories.slice(0, 8).map(cat => {
-        // ONLY check for Electric Vehicles - everything else remains exactly the same
-        if (cat.name === 'Electric Vehicles' || cat.name === 'EV' || cat.name === 'Electric Vehicle') {
-        return `<a href="electric-vehicle.html">${cat.name}</a>`;
-        }
-        // ALL other categories work exactly as before - NO CHANGES
-        return `<a href="shop.html?category=${encodeURIComponent(cat.name)}">${cat.name}</a>`;
-    }).join('');
-}
+        dropdown.innerHTML = categories.map(cat => {
+            if (cat.name === 'Electric Vehicles' || cat.name === 'EV' || cat.name === 'Electric Vehicle') {
+                return `<a href="electric-vehicle.html">${cat.name}</a>`;
+            }
+            return `<a href="shop.html?category=${encodeURIComponent(cat.name)}">${cat.name}</a>`;
+        }).join('');
+    }
 
     // Render mega menu categories
     function renderMegaMenu() {
         const megaContent = document.getElementById('megaContent');
         if (!megaContent) return;
 
-        // Group categories (simplified for demo)
-        const groups = [
-            { name: 'Electronics', icon: 'fa-mobile-alt', items: ['Mobiles', 'Laptops', 'Audio', 'Cameras'] },
-            { name: 'Fashion', icon: 'fa-tshirt', items: ['Men\'s Wear', 'Women\'s Wear', 'Kids', 'Footwear'] },
-            { name: 'Home & Living', icon: 'fa-couch', items: ['Furniture', 'Appliances', 'Bedding', 'Decor'] }
-        ];
+        const categories = allCategories.slice(0, 9);
+        const groups = [];
+        for (let i = 0; i < categories.length; i += 3) {
+            groups.push(categories.slice(i, i + 3));
+        }
+
+        if (groups.length === 0) {
+            megaContent.innerHTML = '<div class="mega-col"><p>No categories yet</p></div>';
+            return;
+        }
 
         megaContent.innerHTML = groups.map(group => `
             <div class="mega-col">
-                <h4><i class="fas ${group.icon}" style="margin-right: 8px;"></i> ${group.name}</h4>
                 <ul>
-                    ${group.items.map(item => `
-                        <li><a href="shop.html?category=${encodeURIComponent(item)}"><i class="fas fa-angle-right"></i> ${item}</a></li>
+                    ${group.map(cat => `
+                        <li><a href="shop.html?category=${encodeURIComponent(cat.name)}"><i class="fas fa-angle-right"></i> ${cat.name}</a></li>
                     `).join('')}
                 </ul>
             </div>
@@ -2674,48 +2729,42 @@ function renderCategoryDropdown() {
     }
 
     // ========== WISHLIST FUNCTIONS ==========
-    
-    // Get wishlist from storage
-    function getWishlist() {
+    window.getWishlist = function() {
         const wishlist = localStorage.getItem('sbstore_wishlist');
         return wishlist ? JSON.parse(wishlist) : [];
-    }
+    };
 
-    // Check if product is in wishlist
-    function isInWishlist(productId) {
-        const wishlist = getWishlist();
+    window.isInWishlist = function(productId) {
+        const wishlist = window.getWishlist();
         return wishlist.includes(productId);
-    }
+    };
 
-    // Toggle wishlist
-    function toggleWishlist(productId) {
-        let wishlist = getWishlist();
+    window.toggleWishlist = function(productId) {
+        let wishlist = window.getWishlist();
         
         if (wishlist.includes(productId)) {
             wishlist = wishlist.filter(id => id !== productId);
-            showNotification('Removed from wishlist', 'info');
+            window.showNotification('Removed from wishlist', 'info');
         } else {
             wishlist.push(productId);
-            showNotification('Added to wishlist!', 'success');
+            window.showNotification('Added to wishlist!', 'success');
         }
         
         localStorage.setItem('sbstore_wishlist', JSON.stringify(wishlist));
-        updateWishlistCount();
-        renderFeaturedProducts(); // Re-render to update heart icons
-    }
+        window.updateWishlistCount();
+        renderFeaturedProducts();
+    };
 
-    // Update wishlist count
-    function updateWishlistCount() {
-        const wishlist = getWishlist();
+    window.updateWishlistCount = function() {
+        const wishlist = window.getWishlist();
         const countEl = document.getElementById('wishlistCount');
         if (countEl) {
             countEl.textContent = wishlist.length;
             countEl.style.display = wishlist.length > 0 ? 'flex' : 'none';
         }
-    }
+    };
 
-    // Update cart count
-    function updateCartCount() {
+    window.updateCartCount = function() {
         const cart = JSON.parse(localStorage.getItem('sbstore_cart')) || { items: [] };
         const count = cart.items.reduce((sum, item) => sum + item.quantity, 0);
         const countEl = document.getElementById('cartCount');
@@ -2723,117 +2772,109 @@ function renderCategoryDropdown() {
             countEl.textContent = count;
             countEl.style.display = count > 0 ? 'flex' : 'none';
         }
-    }
+    };
 
-// Enhanced Quick View with Video Support
-window.quickView = function(productId) {
-    const product = allProducts.find(p => p.id === productId);
-    if (!product) return;
-    
-    const currencySymbol = getCurrencySymbol(product.currency || storeSettings.currency || 'USD');
-    const price = product.salePrice || product.price;
-    const hasVideo = product.videoUrl && product.videoUrl.trim() !== '';
-    
-    const modal = document.createElement('div');
-    modal.className = 'quick-view-modal';
-    modal.innerHTML = `
-        <div class="modal-overlay" onclick="this.closest('.quick-view-modal').remove()"></div>
-        <div class="modal-content">
-            <button class="modal-close" onclick="this.closest('.quick-view-modal').remove()">&times;</button>
-            <div class="modal-body">
-                <div class="modal-image">
-                    <img src="${product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${product.name}">
-                    ${hasVideo ? `
-                        <button class="video-play-btn" onclick="event.stopPropagation(); playVideo('${product.videoUrl}', '${product.name}', event); this.closest('.quick-view-modal').remove();" style="position: absolute; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-base); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                            <i class="fas fa-play" style="font-size: 20px; margin-left: 3px;"></i>
-                        </button>
-                    ` : ''}
-                </div>
-                <div class="modal-details">
-                    <h2>${product.name}</h2>
-                    <div class="rating">${renderStars(product.rating || 4.5)} (${product.reviews || 0} reviews)</div>
-                    <div class="price">${currencySymbol}${price.toFixed(2)}</div>
-                    <p class="description">${product.description || 'No description available.'}</p>
-                    ${hasVideo ? `
-                        <button class="watch-video-btn" onclick="playVideo('${product.videoUrl}', '${product.name}', event); this.closest('.quick-view-modal').remove();" style="width: 100%; padding: 12px; margin-bottom: 15px; background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); color: white; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                            <i class="fas fa-play"></i> Watch Video
-                        </button>
-                    ` : ''}
-                    <div class="modal-actions">
-                        <button class="wishlist-btn" onclick="toggleWishlist(${product.id}); this.closest('.quick-view-modal').remove()">
-                            <i class="${isInWishlist(product.id) ? 'fas' : 'far'} fa-heart"></i>
-                            ${isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
-                        </button>
-                        <a href="${product.amazonUrl || '#'}" target="_blank" class="amazon-btn" onclick="trackClick(${product.id})">
-                            <i class="fab fa-amazon"></i> View on Amazon
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-};
-
-// Add CSS for video play button
-const videoButtonStyle = document.createElement('style');
-videoButtonStyle.textContent = `
-    .video-play-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
-    
-    .watch-video-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(63, 43, 150, 0.3);
-    }
-    
-    .modal-image {
-        position: relative;
-    }
-`;
-document.head.appendChild(videoButtonStyle);
-
-
-    // Render star ratings
-    function renderStars(rating) {
-        const fullStars = Math.floor(rating);
-        const hasHalf = rating % 1 >= 0.5;
-        let stars = '';
-        
-        for (let i = 0; i < fullStars; i++) {
-            stars += '<i class="fas fa-star"></i>';
-        }
-        if (hasHalf) {
-            stars += '<i class="fas fa-star-half-alt"></i>';
-        }
-        const emptyStars = 5 - Math.ceil(rating);
-        for (let i = 0; i < emptyStars; i++) {
-            stars += '<i class="far fa-star"></i>';
-        }
-        
-        return stars;
-    }
-
-    // Track click for analytics
-    window.trackClick = function(productId) {
+    // ========== QUICK VIEW FUNCTION ==========
+    window.quickView = function(productId) {
         const product = allProducts.find(p => p.id === productId);
         if (!product) return;
         
-        let clicks = JSON.parse(localStorage.getItem('affiliate_clicks')) || [];
-        clicks.push({
-            productId: productId,
-            productName: product.name,
-            timestamp: new Date().toISOString(),
-            url: product.amazonUrl,
-            page: 'homepage'
-        });
-        localStorage.setItem('affiliate_clicks', JSON.stringify(clicks));
+        const currencySymbol = '₹';
+        const price = product.price;
+        const hasVideo = product.videoLink && product.videoLink.trim() !== '';
+        const firstImage = product.images && product.images[0] && product.images[0] !== "" ? product.images[0] : 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400';
+        
+        const modal = document.createElement('div');
+        modal.className = 'quick-view-modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.zIndex = '100000';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        
+        modal.innerHTML = `
+            <div class="modal-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);" onclick="this.closest('.quick-view-modal').remove()"></div>
+            <div class="modal-content" style="position: relative; background: white; width: 90%; max-width: 900px; max-height: 80vh; border-radius: 30px; overflow: hidden; z-index: 2;">
+                <button class="modal-close" style="position: absolute; top: 15px; right: 15px; width: 40px; height: 40px; background: var(--gray-100); border: none; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 10;" onclick="this.closest('.quick-view-modal').remove()">&times;</button>
+                <div class="modal-body" style="display: flex; padding: 30px; gap: 30px; max-height: 80vh; overflow-y: auto;">
+                    <div class="modal-image" style="flex: 1; position: relative;">
+                        <img src="${firstImage}" alt="${product.title}" style="width: 100%; height: auto; border-radius: 20px;">
+                        ${hasVideo ? `
+                            <button class="video-play-btn" onclick="window.playVideo('${product.videoLink}', '${product.title}'); this.closest('.quick-view-modal').remove();" style="position: absolute; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                                <i class="fas fa-play" style="font-size: 20px; margin-left: 3px;"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="modal-details" style="flex: 1;">
+                        <h2 style="font-size: 24px; margin-bottom: 15px;">${product.title}</h2>
+                        <div class="price" style="font-size: 28px; font-weight: 700; color: var(--primary-600); margin-bottom: 15px;">${currencySymbol}${price.toFixed(2)}</div>
+                        <p class="description" style="color: var(--gray-600); margin-bottom: 20px; line-height: 1.6;">${product.description || 'No description available.'}</p>
+                        ${hasVideo ? `
+                            <button class="watch-video-btn" onclick="window.playVideo('${product.videoLink}', '${product.title}'); this.closest('.quick-view-modal').remove();" style="width: 100%; padding: 12px; margin-bottom: 15px; background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); color: white; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fas fa-play"></i> Watch Video
+                            </button>
+                        ` : ''}
+                        <div class="modal-actions" style="display: flex; gap: 15px;">
+                            <button class="wishlist-btn" onclick="window.toggleWishlist('${product.id}'); this.closest('.quick-view-modal').remove();" style="flex: 1; padding: 15px; background: white; border: 2px solid var(--gray-300); border-radius: 30px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="${window.isInWishlist(product.id) ? 'fas' : 'far'} fa-heart"></i>
+                                ${window.isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
+                            </button>
+                            <a href="${product.amazonUrl || '#'}" target="_blank" class="amazon-btn" onclick="window.trackClick('${product.id}')" style="flex: 1; padding: 15px; background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); color: white; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;">
+                                <i class="fab fa-amazon"></i> View on Amazon
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    };
+
+    // ========== VIDEO PLAY FUNCTION ==========
+    window.playVideo = function(videoUrl, title) {
+        // Extract YouTube video ID if it's a YouTube URL
+        let embedUrl = videoUrl;
+        if (videoUrl.includes('youtube.com/watch?v=')) {
+            const videoId = videoUrl.split('v=')[1].split('&')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        } else if (videoUrl.includes('youtu.be/')) {
+            const videoId = videoUrl.split('youtu.be/')[1].split('?')[0];
+            embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+        } else if (videoUrl.includes('vimeo.com/')) {
+            const videoId = videoUrl.split('vimeo.com/')[1].split('?')[0];
+            embedUrl = `https://player.vimeo.com/video/${videoId}?autoplay=1`;
+        }
+        
+        const modal = document.createElement('div');
+        modal.className = 'video-modal';
+        modal.style.position = 'fixed';
+        modal.style.top = '0';
+        modal.style.left = '0';
+        modal.style.width = '100%';
+        modal.style.height = '100%';
+        modal.style.zIndex = '1000000';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        
+        modal.innerHTML = `
+            <div class="video-modal-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);" onclick="this.closest('.video-modal').remove()"></div>
+            <div class="video-modal-content" style="position: relative; width: 90%; max-width: 900px; background: #000; border-radius: 20px; overflow: hidden; z-index: 2;">
+                <button class="video-modal-close" style="position: absolute; top: -40px; right: 0; width: 40px; height: 40px; background: white; border: none; border-radius: 50%; font-size: 24px; cursor: pointer;" onclick="this.closest('.video-modal').remove()">&times;</button>
+                <iframe src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="width: 100%; aspect-ratio: 16 / 9; display: block;"></iframe>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
     };
 
     // ========== NOTIFICATION SYSTEM ==========
-    function showNotification(message, type = 'success') {
+    window.showNotification = function(message, type = 'success') {
         const container = document.getElementById('toastContainer');
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
@@ -2853,7 +2894,7 @@ document.head.appendChild(videoButtonStyle);
             notification.classList.remove('show');
             setTimeout(() => notification.remove(), 300);
         }, 3000);
-    }
+    };
 
     // ========== SEARCH FUNCTIONALITY ==========
     document.getElementById('searchBtn')?.addEventListener('click', function() {
@@ -2873,7 +2914,6 @@ document.head.appendChild(videoButtonStyle);
     document.getElementById('newsletterBtn')?.addEventListener('click', function() {
         const email = document.getElementById('newsletterEmail').value.trim();
         if (email && email.includes('@') && email.includes('.')) {
-            // Save to users in localStorage
             let users = JSON.parse(localStorage.getItem('sbstore_users')) || [];
             users.push({
                 id: Date.now(),
@@ -2884,10 +2924,10 @@ document.head.appendChild(videoButtonStyle);
             });
             localStorage.setItem('sbstore_users', JSON.stringify(users));
             
-            showNotification('Thanks for subscribing!', 'success');
+            window.showNotification('Thanks for subscribing!', 'success');
             document.getElementById('newsletterEmail').value = '';
         } else {
-            showNotification('Please enter a valid email', 'error');
+            window.showNotification('Please enter a valid email', 'error');
         }
     });
 
@@ -2904,129 +2944,69 @@ document.head.appendChild(videoButtonStyle);
             });
             localStorage.setItem('sbstore_users', JSON.stringify(users));
             
-            showNotification('Thanks for subscribing!', 'success');
+            window.showNotification('Thanks for subscribing!', 'success');
             document.getElementById('footerNewsletterEmail').value = '';
         } else {
-            showNotification('Please enter a valid email', 'error');
+            window.showNotification('Please enter a valid email', 'error');
         }
     });
 
-    // ========== ACCOUNT BUTTON - FULLY FIXED AND WORKING ==========
+    // ========== ACCOUNT BUTTON ==========
     function initAccountSystem() {
-        console.log('🚀 Initializing account system...');
-        
         const accountIcon = document.getElementById('accountIcon');
         const accountDropdown = document.getElementById('accountDropdown');
-        const accountHeader = document.getElementById('accountHeader');
-        const accountBody = document.getElementById('accountBody');
         
-        if (!accountIcon) {
-            console.error('❌ Account button not found!');
-            return;
-        }
-        
-        if (!accountDropdown) {
-            console.error('❌ Account dropdown not found!');
-            return;
-        }
-        
-        console.log('✅ Account elements found');
-        
-        // Remove any existing event listeners by cloning and replacing
-        const newBtn = accountIcon.cloneNode(true);
-        if (accountIcon.parentNode) {
-            accountIcon.parentNode.replaceChild(newBtn, accountIcon);
-        }
-        
-        // Get fresh reference
-        const freshBtn = document.getElementById('accountIcon');
-        
-        // CLICK HANDLER - THIS IS THE MAIN FIX
-        freshBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        if (accountIcon && accountDropdown) {
+            accountIcon.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (accountDropdown.style.display === 'block') {
+                    accountDropdown.style.display = 'none';
+                } else {
+                    accountDropdown.style.display = 'block';
+                }
+            });
             
-            console.log('👆 Account button clicked');
+            document.addEventListener('click', function(e) {
+                if (!accountIcon.contains(e.target) && !accountDropdown.contains(e.target)) {
+                    accountDropdown.style.display = 'none';
+                }
+            });
             
-            // Toggle dropdown with class
-            if (accountDropdown.classList.contains('show')) {
-                accountDropdown.classList.remove('show');
-                console.log('🔽 Dropdown closed');
-            } else {
-                accountDropdown.classList.add('show');
-                console.log('🔼 Dropdown opened');
-                
-                // Close any other open dropdowns
-                document.querySelectorAll('.account-dropdown.show').forEach(drop => {
-                    if (drop !== accountDropdown) {
-                        drop.classList.remove('show');
-                    }
-                });
-            }
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!freshBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
-                accountDropdown.classList.remove('show');
-            }
-        });
-        
-        // Close dropdown on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                accountDropdown.classList.remove('show');
-            }
-        });
-        
-        // Check if user is logged in
-        const user = localStorage.getItem('sbstore_current_user') || sessionStorage.getItem('sbstore_current_user');
-        
-        if (user && accountHeader && accountBody) {
-            try {
-                const userData = JSON.parse(user);
-                console.log('👤 User logged in:', userData.name || userData.email);
-                
-                // Update dropdown for logged in user
-                accountHeader.innerHTML = `
-                    <div class="user-info">
-                        <div class="user-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="user-details">
-                            <h4>${userData.name || 'User'}</h4>
-                            <p>${userData.email || ''}</p>
-                        </div>
-                    </div>
-                `;
-                
-                accountBody.innerHTML = `
-                    <a href="account/dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                    <a href="account/profile.html"><i class="fas fa-user-edit"></i> Profile</a>
-                    <a href="account/orders.html"><i class="fas fa-box"></i> Orders</a>
-                    <a href="account/wishlist.html"><i class="fas fa-heart"></i> Wishlist</a>
-                    <hr>
-                    <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                `;
-                
-                // Add logout handler
-                const logoutBtn = document.getElementById('logoutBtn');
-                if (logoutBtn) {
-                    logoutBtn.addEventListener('click', function(e) {
+            const user = localStorage.getItem('sbstore_current_user') || sessionStorage.getItem('sbstore_current_user');
+            const accountHeader = document.getElementById('accountHeader');
+            const accountBody = document.getElementById('accountBody');
+            
+            if (user && accountHeader && accountBody) {
+                try {
+                    const userData = JSON.parse(user);
+                    accountHeader.innerHTML = `<h4 style="margin: 0; color: #333;">👋 Hello, ${userData.name || 'User'}!</h4>`;
+                    accountBody.innerHTML = `
+                        <a href="account/dashboard.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                            <i class="fas fa-tachometer-alt" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Dashboard
+                        </a>
+                        <a href="account/profile.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                            <i class="fas fa-user-edit" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Profile
+                        </a>
+                        <a href="account/wishlist.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
+                            <i class="fas fa-heart" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Wishlist
+                        </a>
+                        <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
+                        <a href="#" id="logoutBtn" style="display: block; padding: 12px 20px; color: #ef4444; text-decoration: none;">
+                            <i class="fas fa-sign-out-alt" style="width: 20px; margin-right: 10px;"></i> Logout
+                        </a>
+                    `;
+                    
+                    document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
                         e.preventDefault();
                         localStorage.removeItem('sbstore_current_user');
                         sessionStorage.removeItem('sbstore_current_user');
                         window.location.reload();
-                        
-                        // Show notification
-                        if (typeof showNotification === 'function') {
-                            showNotification('Logged out successfully', 'success');
-                        }
                     });
+                } catch (e) {
+                    console.error('Error parsing user data', e);
                 }
-                
-            } catch (e) {
-                console.error('Error parsing user data:', e);
             }
         }
     }
@@ -3055,7 +3035,6 @@ document.head.appendChild(videoButtonStyle);
                 }
             });
             
-            // Make all nav links clickable
             navMenu.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', function() {
                     mobileBtn.classList.remove('active');
@@ -3065,7 +3044,6 @@ document.head.appendChild(videoButtonStyle);
                 });
             });
             
-            // Handle categories dropdown on mobile
             if (categoriesLink && megaDropdown) {
                 categoriesLink.addEventListener('click', function(e) {
                     if (window.innerWidth <= 768) {
@@ -3087,127 +3065,35 @@ document.head.appendChild(videoButtonStyle);
     }
 
     // ========== ADMIN ACCESS ==========
-window.goToAdmin = function() {
-    window.location.href = "/admin/index.html";
-};
-console.log('🔐 Admin access ready! Type "goToAdmin()" in console to enter admin panel');
-
-    // Debug function to test dropdown
-    window.testAccount = function() {
-        const dropdown = document.getElementById('accountDropdown');
-        if (dropdown) {
-            dropdown.classList.toggle('show');
-            console.log('Dropdown toggled:', dropdown.classList.contains('show') ? 'OPEN' : 'CLOSED');
-        }
+    window.goToAdmin = function() {
+        window.location.href = "/admin/index.html";
     };
-    console.log('ℹ️ Type "testAccount()" in console to test dropdown');
+    console.log('🔐 Admin access ready! Type "goToAdmin()" in console to enter admin panel');
 
-    // ========== AUTO-SYNC WITH ADMIN ==========
+    // ========== AUTO-REFRESH ==========
     window.addEventListener('storage', function(e) {
-        if (e.key === 'sbstore_products' || e.key === 'sbstore_categories' || e.key === 'sbstore_last_update') {
-            console.log('🔄 Data updated from admin, reloading...');
-            loadAllData();
-            if (typeof showNotification === 'function') {
-                showNotification('Products updated from admin!', 'info');
-            }
+        if (e.key === 'sbstore_last_update') {
+            console.log('🔄 Products updated from admin, reloading...');
+            loadProductsFromFirestore();
+            window.showNotification('Products updated!', 'info');
         }
     });
 
     // ========== INITIALIZE EVERYTHING ==========
     document.addEventListener('DOMContentLoaded', function() {
         console.log('🚀 Page loaded, initializing...');
-        loadAllData();
-        initAccountSystem(); // This is the fixed account button function
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+        
+        initAccountSystem();
         initMobileMenu();
-        
-        // Set up periodic refresh (every 30 seconds)
-        setInterval(function() {
-            const lastUpdate = localStorage.getItem('sbstore_last_update');
-            if (lastUpdate && lastUpdate > (window._lastChecked || 0)) {
-                window._lastChecked = lastUpdate;
-                loadAllData();
-            }
-        }, 30000);
+        loadProductsFromFirestore();
+        window.updateWishlistCount();
+        window.updateCartCount();
     });
-</script>
-
-<script>
-// ========== SIMPLE ACCOUNT BUTTON FIX ==========
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Setting up account button...');
-    
-    const accountBtn = document.getElementById('accountIcon');
-    const accountDropdown = document.getElementById('accountDropdown');
-    
-    if (accountBtn && accountDropdown) {
-        console.log('Account button found, adding click handler');
-        
-        // Click handler for account button
-        accountBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Toggle dropdown
-            if (accountDropdown.style.display === 'block') {
-                accountDropdown.style.display = 'none';
-                console.log('Dropdown closed');
-            } else {
-                accountDropdown.style.display = 'block';
-                console.log('Dropdown opened');
-            }
-        });
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!accountBtn.contains(e.target) && !accountDropdown.contains(e.target)) {
-                accountDropdown.style.display = 'none';
-            }
-        });
-        
-        // Check if user is logged in
-        const user = localStorage.getItem('sbstore_current_user') || sessionStorage.getItem('sbstore_current_user');
-        const accountHeader = document.getElementById('accountHeader');
-        const accountBody = document.getElementById('accountBody');
-        
-        if (user && accountHeader && accountBody) {
-            try {
-                const userData = JSON.parse(user);
-                console.log('User logged in:', userData.name);
-                
-                // Update for logged in user
-                accountHeader.innerHTML = `<h4 style="margin: 0; color: #333;">👋 Hello, ${userData.name || 'User'}!</h4>`;
-                accountBody.innerHTML = `
-                    <a href="account/dashboard.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
-                        <i class="fas fa-tachometer-alt" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Dashboard
-                    </a>
-                    <a href="account/profile.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
-                        <i class="fas fa-user-edit" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Profile
-                    </a>
-                    <a href="account/wishlist.html" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">
-                        <i class="fas fa-heart" style="width: 20px; margin-right: 10px; color: #667eea;"></i> Wishlist
-                    </a>
-                    <hr style="margin: 8px 0; border: none; border-top: 1px solid #eee;">
-                    <a href="#" id="logoutBtn" style="display: block; padding: 12px 20px; color: #ef4444; text-decoration: none;">
-                        <i class="fas fa-sign-out-alt" style="width: 20px; margin-right: 10px;"></i> Logout
-                    </a>
-                `;
-                
-                // Add logout handler
-                document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    localStorage.removeItem('sbstore_current_user');
-                    sessionStorage.removeItem('sbstore_current_user');
-                    window.location.reload();
-                });
-                
-            } catch (e) {
-                console.error('Error parsing user data', e);
-            }
-        }
-    } else {
-        console.error('Account button or dropdown not found!');
-    }
-});
 </script>
 
 </body>
