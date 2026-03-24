@@ -20,13 +20,8 @@
     <!-- Tagify for tags input -->
     <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.17.9/dist/tagify.css" rel="stylesheet">
     
-    <!-- Dropzone for advanced file upload -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css">
-    
     <style>
-        /* ========== PROFESSIONAL ADD PRODUCT STYLES ========== */
-        
-        /* CSS Reset & Base Styles */
+        /* ========== COMPLETE PROFESSIONAL STYLES ========== */
         * {
             margin: 0;
             padding: 0;
@@ -34,7 +29,6 @@
         }
 
         :root {
-            /* Primary Purple Palette */
             --primary-900: #1a1a3a;
             --primary-800: #2a2a5a;
             --primary-700: #3F2B96;
@@ -45,62 +39,12 @@
             --primary-200: #c9b5ed;
             --primary-100: #e8ddff;
             
-            /* Accent Gold Palette */
-            --accent-900: #8B5F00;
-            --accent-800: #B87C00;
-            --accent-700: #E69A00;
-            --accent-600: #F4B400;
             --accent-500: #F4C430;
-            --accent-400: #f6cf5a;
-            --accent-300: #f9db84;
-            --accent-200: #fbe7ad;
-            --accent-100: #fef3d6;
-            
-            /* Success Palette */
-            --success-900: #064e3b;
-            --success-800: #065f46;
-            --success-700: #047857;
-            --success-600: #059669;
             --success-500: #10b981;
-            --success-400: #34d399;
-            --success-300: #6ee7b7;
-            --success-200: #a7f3d0;
-            --success-100: #d1fae5;
-            
-            /* Warning Palette */
-            --warning-900: #78350f;
-            --warning-800: #92400e;
-            --warning-700: #b45309;
-            --warning-600: #d97706;
-            --warning-500: #f59e0b;
-            --warning-400: #fbbf24;
-            --warning-300: #fcd34d;
-            --warning-200: #fde68a;
-            --warning-100: #fef3c7;
-            
-            /* Danger Palette */
-            --danger-900: #7f1d1d;
-            --danger-800: #991b1b;
-            --danger-700: #b91c1c;
-            --danger-600: #dc2626;
+            --success-600: #059669;
             --danger-500: #ef4444;
-            --danger-400: #f87171;
-            --danger-300: #fca5a5;
-            --danger-200: #fecaca;
-            --danger-100: #fee2e2;
-            
-            /* Info Palette */
-            --info-900: #1e3a8a;
-            --info-800: #1e40af;
-            --info-700: #1d4ed8;
-            --info-600: #2563eb;
-            --info-500: #3b82f6;
-            --info-400: #60a5fa;
-            --info-300: #93c5fd;
-            --info-200: #bfdbfe;
-            --info-100: #dbeafe;
-            
-            /* Neutral Palette */
+            --danger-600: #dc2626;
+            --warning-500: #f59e0b;
             --gray-900: #111827;
             --gray-800: #1f2937;
             --gray-700: #374151;
@@ -112,19 +56,11 @@
             --gray-100: #f3f4f6;
             --gray-50: #f9fafb;
             
-            /* Shadows */
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
             --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-            --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
             
-            /* Transitions */
-            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
-            
-            /* Border Radius */
             --radius-sm: 0.375rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
@@ -138,10 +74,8 @@
             background: var(--gray-50);
             color: var(--gray-900);
             line-height: 1.5;
-            overflow-x: hidden;
         }
 
-        /* ===== CUSTOM SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -155,21 +89,13 @@
         ::-webkit-scrollbar-thumb {
             background: var(--primary-400);
             border-radius: var(--radius-full);
-            transition: var(--transition-fast);
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-500);
-        }
-
-        /* ===== ADMIN CONTAINER ===== */
         .admin-container {
             display: flex;
             min-height: 100vh;
-            position: relative;
         }
 
-        /* ===== SIDEBAR ===== */
         .admin-sidebar {
             width: 280px;
             background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
@@ -178,7 +104,6 @@
             height: 100vh;
             overflow-y: auto;
             z-index: 100;
-            transition: var(--transition-base);
             box-shadow: var(--shadow-xl);
         }
 
@@ -191,30 +116,10 @@
         .sidebar-header h2 {
             font-size: 32px;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 4px;
         }
 
         .sidebar-header h2 span {
             color: var(--accent-500);
-            position: relative;
-        }
-
-        .sidebar-header h2 span::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--accent-500);
-            border-radius: var(--radius-full);
-        }
-
-        .sidebar-header p {
-            font-size: 12px;
-            opacity: 0.7;
-            letter-spacing: 0.5px;
         }
 
         .sidebar-menu {
@@ -235,47 +140,18 @@
             padding: 12px 24px;
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            transition: var(--transition-base);
             gap: 12px;
-            position: relative;
             font-weight: 500;
-            font-size: 14px;
+            transition: all 0.3s;
         }
 
-        .sidebar-menu a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .sidebar-menu a.active {
+        .sidebar-menu a:hover, .sidebar-menu a.active {
             background: rgba(255, 255, 255, 0.15);
             color: white;
         }
 
-        .sidebar-menu a.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: var(--accent-500);
-            border-radius: 0 var(--radius-md) var(--radius-md) 0;
-        }
-
         .sidebar-menu a i {
             width: 20px;
-            font-size: 18px;
-            text-align: center;
-        }
-
-        .sidebar-menu .badge {
-            margin-left: auto;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
         }
 
         .sidebar-footer {
@@ -294,25 +170,14 @@
             text-decoration: none;
             padding: 12px;
             border-radius: var(--radius-lg);
-            transition: var(--transition-base);
-            font-weight: 500;
-            font-size: 14px;
         }
 
-        .sidebar-footer a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        /* ===== MAIN CONTENT ===== */
         .admin-main {
             flex: 1;
             margin-left: 280px;
             padding: 24px;
-            transition: var(--transition-base);
         }
 
-        /* ===== TOP HEADER ===== */
         .admin-top-header {
             background: white;
             border-radius: var(--radius-xl);
@@ -333,18 +198,11 @@
             padding: 8px 16px;
             width: 320px;
             border: 1px solid var(--gray-200);
-            transition: var(--transition-base);
-        }
-
-        .header-search:focus-within {
-            border-color: var(--primary-400);
-            box-shadow: 0 0 0 3px var(--primary-100);
         }
 
         .header-search i {
             color: var(--gray-400);
             margin-right: 12px;
-            font-size: 16px;
         }
 
         .header-search input {
@@ -352,49 +210,12 @@
             background: transparent;
             outline: none;
             width: 100%;
-            font-size: 14px;
-            color: var(--gray-700);
-        }
-
-        .header-search input::placeholder {
-            color: var(--gray-400);
         }
 
         .header-actions {
             display: flex;
             align-items: center;
             gap: 24px;
-        }
-
-        .notification-badge {
-            position: relative;
-            cursor: pointer;
-            transition: var(--transition-fast);
-        }
-
-        .notification-badge:hover i {
-            color: var(--primary-600);
-        }
-
-        .notification-badge i {
-            font-size: 20px;
-            color: var(--gray-600);
-            transition: var(--transition-fast);
-        }
-
-        .notification-badge .badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: var(--danger-500);
-            color: white;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 3px 6px;
-            border-radius: 20px;
-            min-width: 18px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
         }
 
         .admin-profile {
@@ -404,13 +225,6 @@
             cursor: pointer;
             padding: 6px 12px;
             border-radius: 40px;
-            transition: var(--transition-base);
-            border: 1px solid transparent;
-        }
-
-        .admin-profile:hover {
-            background: var(--gray-50);
-            border-color: var(--gray-200);
         }
 
         .admin-profile img {
@@ -418,22 +232,8 @@
             height: 40px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid white;
-            box-shadow: var(--shadow-sm);
         }
 
-        .profile-info h4 {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-900);
-        }
-
-        .profile-info p {
-            font-size: 12px;
-            color: var(--gray-500);
-        }
-
-        /* ===== PAGE HEADER ===== */
         .page-header {
             display: flex;
             align-items: center;
@@ -444,18 +244,11 @@
         .page-header h1 {
             font-size: 28px;
             font-weight: 700;
-            color: var(--gray-900);
-            letter-spacing: -0.5px;
         }
 
         .page-header h1 i {
             color: var(--primary-500);
             margin-right: 12px;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
         }
 
         .btn {
@@ -464,18 +257,16 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition-base);
+            transition: all 0.3s;
             border: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            letter-spacing: 0.3px;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
-            box-shadow: 0 4px 10px rgba(63, 43, 150, 0.2);
         }
 
         .btn-primary:hover {
@@ -491,32 +282,8 @@
 
         .btn-outline:hover {
             background: var(--gray-50);
-            border-color: var(--gray-400);
         }
 
-        .btn-success {
-            background: var(--success-500);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: var(--success-600);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-danger {
-            background: var(--danger-500);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: var(--danger-600);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-        }
-
-        /* ===== FORM CONTAINER ===== */
         .form-container {
             background: white;
             border-radius: var(--radius-2xl);
@@ -536,7 +303,6 @@
         .form-section h2 {
             font-size: 18px;
             font-weight: 700;
-            color: var(--gray-800);
             margin-bottom: 20px;
             display: flex;
             align-items: center;
@@ -571,74 +337,24 @@
 
         .form-group label .required {
             color: var(--danger-500);
-            margin-left: 2px;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
             padding: 12px 16px;
             border: 1px solid var(--gray-300);
             border-radius: var(--radius-md);
             font-size: 14px;
-            transition: var(--transition-fast);
+            transition: all 0.2s;
             font-family: 'Inter', sans-serif;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--primary-500);
             box-shadow: 0 0 0 3px var(--primary-100);
         }
 
-        .form-group input.error,
-        .form-group select.error,
-        .form-group textarea.error {
-            border-color: var(--danger-500);
-        }
-
-        .form-group .error-message {
-            color: var(--danger-500);
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .input-group {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-        }
-
-        .input-group .input-group-text {
-            background: var(--gray-100);
-            padding: 12px 16px;
-            font-size: 14px;
-            color: var(--gray-600);
-            border-right: 1px solid var(--gray-300);
-        }
-
-        .input-group input {
-            flex: 1;
-            border: none;
-            border-radius: 0;
-        }
-
-        .input-group input:focus {
-            box-shadow: none;
-        }
-
-        /* ===== CURRENCY SELECTOR ===== */
         .currency-group {
             display: flex;
             gap: 10px;
@@ -646,14 +362,12 @@
 
         .currency-group select {
             width: 120px;
-            background: var(--gray-50);
         }
 
         .currency-group input {
             flex: 1;
         }
 
-        /* ===== TOGGLE SWITCH ===== */
         .toggle-switch {
             position: relative;
             display: inline-block;
@@ -675,7 +389,7 @@
             right: 0;
             bottom: 0;
             background-color: var(--gray-300);
-            transition: var(--transition-base);
+            transition: 0.3s;
             border-radius: 34px;
         }
 
@@ -687,7 +401,7 @@
             left: 2px;
             bottom: 2px;
             background-color: white;
-            transition: var(--transition-base);
+            transition: 0.3s;
             border-radius: 50%;
         }
 
@@ -702,35 +416,23 @@
         .toggle-label {
             margin-left: 60px;
             font-size: 14px;
-            color: var(--gray-700);
             display: inline-block;
             vertical-align: middle;
         }
 
-        /* ===== RICH TEXT EDITOR ===== */
         .quill-editor {
             height: 200px;
             margin-bottom: 20px;
+            background: white;
         }
 
-        /* ===== TAGS INPUT ===== */
-        .tags-input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--radius-md);
-            font-size: 14px;
-        }
-
-        /* ===== MEDIA UPLOAD ===== */
         .media-section {
             border: 2px dashed var(--gray-300);
             border-radius: var(--radius-xl);
             padding: 40px;
             text-align: center;
-            margin-bottom: 20px;
             cursor: pointer;
-            transition: var(--transition-base);
+            transition: all 0.3s;
             background: var(--gray-50);
         }
 
@@ -742,7 +444,6 @@
         .media-section.dragover {
             border-color: var(--primary-500);
             background: var(--primary-100);
-            transform: scale(1.02);
         }
 
         .media-section i {
@@ -754,13 +455,7 @@
         .media-section h3 {
             font-size: 18px;
             font-weight: 600;
-            color: var(--gray-800);
             margin-bottom: 8px;
-        }
-
-        .media-section p {
-            color: var(--gray-500);
-            margin-bottom: 16px;
         }
 
         .media-section .upload-btn {
@@ -770,13 +465,7 @@
             color: white;
             border-radius: var(--radius-full);
             font-weight: 500;
-            font-size: 14px;
-            transition: var(--transition-base);
-        }
-
-        .media-section .upload-btn:hover {
-            background: var(--primary-700);
-            transform: translateY(-2px);
+            margin-top: 16px;
         }
 
         .image-preview-grid {
@@ -792,28 +481,13 @@
             border-radius: var(--radius-lg);
             overflow: hidden;
             border: 1px solid var(--gray-200);
-            transition: var(--transition-base);
-        }
-
-        .preview-item:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-lg);
-            z-index: 10;
+            cursor: pointer;
         }
 
         .preview-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .preview-item.video-preview {
-            background: linear-gradient(135deg, var(--gray-800), var(--gray-900));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
         }
 
         .preview-item .remove-btn {
@@ -830,17 +504,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition-fast);
             opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .preview-item:hover .remove-btn {
             opacity: 1;
-        }
-
-        .preview-item .remove-btn:hover {
-            background: var(--danger-600);
-            transform: scale(1.1);
         }
 
         .preview-item .featured-badge {
@@ -855,54 +524,26 @@
             font-weight: 600;
         }
 
-        /* ===== VARIATIONS SECTION ===== */
-        .variations-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 16px;
+        .upload-loading {
+            position: relative;
+            opacity: 0.6;
+            pointer-events: none;
         }
 
-        .variations-table th {
-            text-align: left;
-            padding: 12px;
-            background: var(--gray-100);
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--gray-700);
+        .upload-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            border: 3px solid var(--primary-200);
+            border-top-color: var(--primary-600);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
         }
 
-        .variations-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .variations-table input,
-        .variations-table select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--radius-md);
-        }
-
-        .add-variation-btn {
-            margin-top: 16px;
-            padding: 10px 20px;
-            background: var(--gray-100);
-            border: 1px dashed var(--gray-400);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: var(--transition-fast);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .add-variation-btn:hover {
-            background: var(--gray-200);
-            border-color: var(--primary-500);
-        }
-
-        /* ===== SEO PREVIEW ===== */
         .seo-preview {
             background: white;
             border: 1px solid var(--gray-200);
@@ -915,23 +556,18 @@
             color: #1a0dab;
             font-size: 18px;
             font-weight: 500;
-            margin-bottom: 4px;
-            cursor: pointer;
         }
 
         .seo-preview .seo-url {
             color: #006621;
             font-size: 14px;
-            margin-bottom: 4px;
         }
 
         .seo-preview .seo-description {
             color: var(--gray-600);
             font-size: 13px;
-            line-height: 1.4;
         }
 
-        /* ===== SAVE BUTTON ===== */
         .save-btn {
             background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
             color: white;
@@ -943,8 +579,7 @@
             cursor: pointer;
             width: 100%;
             margin-top: 30px;
-            transition: var(--transition-base);
-            box-shadow: 0 4px 15px rgba(63, 43, 150, 0.3);
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -956,17 +591,11 @@
             box-shadow: 0 8px 25px rgba(63, 43, 150, 0.4);
         }
 
-        .save-btn i {
-            font-size: 18px;
-        }
-
         .save-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
-        /* ===== PROGRESS BAR ===== */
         .progress-bar {
             width: 100%;
             height: 4px;
@@ -982,7 +611,6 @@
             transition: width 0.3s ease;
         }
 
-        /* ===== TOAST NOTIFICATION ===== */
         .toast-container {
             position: fixed;
             top: 24px;
@@ -1000,62 +628,26 @@
             align-items: center;
             gap: 12px;
             min-width: 320px;
-            max-width: 400px;
-            animation: slideInRight 0.3s ease forwards;
+            animation: slideInRight 0.3s ease;
             border-left: 4px solid var(--primary-600);
         }
 
-        .toast.success {
-            border-left-color: var(--success-500);
+        .toast.success { border-left-color: var(--success-500); }
+        .toast.error { border-left-color: var(--danger-500); }
+        .toast.warning { border-left-color: var(--warning-500); }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
         }
 
-        .toast.error {
-            border-left-color: var(--danger-500);
-        }
-
-        .toast.warning {
-            border-left-color: var(--warning-500);
-        }
-
-        .toast i {
-            font-size: 20px;
-        }
-
-        .toast.success i {
-            color: var(--success-500);
-        }
-
-        .toast.error i {
-            color: var(--danger-500);
-        }
-
-        .toast.warning i {
-            color: var(--warning-500);
-        }
-
-        .toast-content {
-            flex: 1;
-        }
-
-        .toast-content h4 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .toast-content p {
-            font-size: 12px;
-            color: var(--gray-500);
-        }
-
-        .toast-close {
-            color: var(--gray-400);
-            cursor: pointer;
-            transition: var(--transition-fast);
-        }
-
-        .toast-close:hover {
-            color: var(--gray-600);
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         @keyframes slideInRight {
@@ -1069,657 +661,248 @@
             }
         }
 
-        /* ===== LOADING SPINNER ===== */
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--gray-200);
-            border-top-color: var(--primary-600);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1280px) {
-            .image-preview-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
         @media (max-width: 1024px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-group.full-width {
-                grid-column: span 1;
-            }
-            
-            .image-preview-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.full-width { grid-column: span 1; }
+            .image-preview-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
         @media (max-width: 768px) {
             .admin-sidebar {
                 width: 0;
                 left: -280px;
+                position: fixed;
             }
-            
-            .admin-sidebar.active {
-                width: 280px;
-                left: 0;
-            }
-            
-            .admin-main {
-                margin-left: 0;
-            }
-            
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            
-            .image-preview-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .page-header {
-                flex-direction: column;
-                gap: 16px;
-                align-items: flex-start;
-            }
+            .admin-main { margin-left: 0; }
+            .image-preview-grid { grid-template-columns: repeat(2, 1fr); }
         }
-
-        @media (max-width: 480px) {
-            .image-preview-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ===== TOOLTIPS ===== */
-        [data-tooltip] {
-            position: relative;
-            cursor: help;
-        }
-
-        [data-tooltip]:before {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 6px 12px;
-            background: var(--gray-900);
-            color: white;
-            font-size: 12px;
-            border-radius: var(--radius-md);
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition-fast);
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        [data-tooltip]:hover:before {
-            opacity: 1;
-            visibility: visible;
-            bottom: calc(100% + 8px);
-        }
-
-        /* ===== ANIMATIONS ===== */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.7;
-            }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        /* Upload Loading Animation */
-.upload-loading {
-    position: relative;
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.upload-loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 30px;
-    height: 30px;
-    margin: -15px 0 0 -15px;
-    border: 3px solid var(--primary-200);
-    border-top-color: var(--primary-600);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-}
     </style>
 </head>
 <body>
 
-    <div class="admin-container">
-        <!-- Sidebar -->
-        <aside class="admin-sidebar" id="adminSidebar">
-            <div class="sidebar-header">
-                <h2>SB<span>Admin</span></h2>
-                <p>Product Management</p>
-            </div>
-            
-            <nav class="sidebar-menu">
-                <ul>
-                    <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                    <li><a href="products.html"><i class="fas fa-box"></i> Products</a></li>
-                    <li><a href="add-product.html" class="active"><i class="fas fa-plus-circle"></i> Add Product</a></li>
-                    <li><a href="categories.html"><i class="fas fa-tags"></i> Categories</a></li>
-                    <li><a href="orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-                    <li><a href="analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
-                    <li><a href="users.html"><i class="fas fa-users"></i> Users</a></li>
-                    <li><a href="media.html"><i class="fas fa-images"></i> Media</a></li>
-                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
-                </ul>
-            </nav>
-            
-            <div class="sidebar-footer">
-                <a href="#" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </div>
-        </aside>
+<div class="admin-container">
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="sidebar-header">
+            <h2>SB<span>Admin</span></h2>
+            <p>Product Management</p>
+        </div>
+        <nav class="sidebar-menu">
+            <ul>
+                <li><a href="index.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="add-product.html" class="active"><i class="fas fa-plus-circle"></i> Add Product</a></li>
+                <li><a href="categories.html"><i class="fas fa-tags"></i> Categories</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </aside>
 
-        <!-- Main Content -->
-        <main class="admin-main">
-            <!-- Top Header -->
-            <div class="admin-top-header">
-                <div class="header-search">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search products..." id="globalSearch">
-                </div>
-                
-                <div class="header-actions">
-                    <div class="notification-badge" data-tooltip="Notifications">
-                        <i class="far fa-bell"></i>
-                        <span class="badge" id="notificationCount">3</span>
-                    </div>
-                    
-                    <div class="admin-profile" id="adminProfile">
-                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=3F2B96&color=fff&bold=true" alt="Admin">
-                        <div class="profile-info">
-                            <h4>Admin User</h4>
-                            <p>admin@sbstore.com</p>
-                        </div>
-                        <i class="fas fa-chevron-down" style="font-size: 12px; color: var(--gray-400);"></i>
+    <main class="admin-main">
+        <div class="admin-top-header">
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search products..." id="globalSearch">
+            </div>
+            <div class="header-actions">
+                <div class="admin-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=3F2B96&color=fff" alt="Admin">
+                    <div class="profile-info">
+                        <h4>Admin User</h4>
+                        <p>admin@sbstore.com</p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Page Header -->
-            <div class="page-header">
-                <h1>
-                    <i class="fas fa-plus-circle"></i>
-                    <span id="formTitle">Add New Product</span>
-                </h1>
-                <div class="header-actions">
-                    <button class="btn btn-outline" onclick="window.location.href='products.html'">
-                        <i class="fas fa-arrow-left"></i> Back to Products
-                    </button>
-                    <button class="btn btn-outline" onclick="previewProduct()">
-                        <i class="fas fa-eye"></i> Preview
-                    </button>
-                    <button class="btn btn-outline" onclick="duplicateProduct()">
-                        <i class="fas fa-copy"></i> Duplicate
-                    </button>
-                </div>
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="progress-bar">
-                <div class="progress-bar-fill" id="progressBar" style="width: 0%;"></div>
-            </div>
-
-            <!-- Main Form -->
-            <div class="form-container">
-                <form id="productForm" novalidate>
-                    <input type="hidden" id="productId">
-                    
-                    <!-- Basic Information Section -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
-                        
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label>Product Name <span class="required">*</span></label>
-                                <input type="text" id="productName" required placeholder="e.g., Sony WH-1000XM5" maxlength="100">
-                                <div class="char-counter"><span id="nameCount">0</span>/100</div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Category <span class="required">*</span></label>
-                                <select id="productCategory" required>
-                                    <option value="">Select Category</option>
-                                    <option value="Electronics">Electronics</option>
-                                    <option value="Toys">Electric Vehicles</option>
-                                    <option value="Fashion">Fashion</option>
-                                    <option value="Home">Home & Living</option>
-                                    <option value="Sports">Sports</option>
-                                    <option value="Books">Books</option>
-                                    <option value="Beauty">Beauty</option>
-                                    <option value="Toys">Toys & Games</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Subcategory</label>
-                                <select id="productSubcategory">
-                                    <option value="">Select Subcategory</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Brand</label>
-                                <input type="text" id="productBrand" placeholder="e.g., Sony" list="brands">
-                                <datalist id="brands">
-                                    <option value="Sony">
-                                    <option value="Samsung">
-                                    <option value="Apple">
-                                    <option value="Nike">
-                                    <option value="Adidas">
-                                </datalist>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>SKU</label>
-                                <input type="text" id="productSku" placeholder="e.g., SONY-WH-1000XM5">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Barcode (UPC/EAN)</label>
-                                <input type="text" id="productBarcode" placeholder="123456789012">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pricing Section -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-tag"></i> Pricing</h2>
-                        
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Price <span class="required">*</span></label>
-                                <div class="currency-group">
-                                    <select id="currency">
-                                        <option value="INR">INR (₹)</option>
-                                    </select>
-                                    <input type="number" id="productPrice" step="0.01" required placeholder="99.99">
-                                </div>
-                                <small style="color: var(--gray-500);">Regular selling price</small>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Compare at Price</label>
-                                <input type="number" id="productSalePrice" step="0.01" placeholder="79.99">
-                                <small style="color: var(--gray-500);">Original/MRP price for reference</small>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Cost per item</label>
-                                <input type="number" id="productCost" step="0.01" placeholder="45.00">
-                                <small style="color: var(--gray-500);">Your purchase cost</small>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Discount %</label>
-                                <input type="number" id="productDiscount" min="0" max="100" step="0.1" placeholder="20">
-                                <small style="color: var(--gray-500);">Enter discount percentage manually</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Inventory Section -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-boxes"></i> Inventory</h2>
-                        
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Stock Quantity</label>
-                                <input type="number" id="stockQuantity" value="100" min="0">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Low Stock Threshold</label>
-                                <input type="number" id="lowStockThreshold" value="5" min="1">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Stock Status</label>
-                                <select id="stockStatus">
-                                    <option value="true">In Stock</option>
-                                    <option value="false">Out of Stock</option>
-                                    <option value="preorder">Pre-order</option>
-                                    <option value="backorder">Backorder</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Allow Backorders?</label>
-                                <div style="display: flex; align-items: center; gap: 20px; margin-top: 8px;">
-                                    <label style="display: flex; align-items: center; gap: 5px;">
-                                        <input type="radio" name="backorders" value="no" checked> No
-                                    </label>
-                                    <label style="display: flex; align-items: center; gap: 5px;">
-                                        <input type="radio" name="backorders" value="notify"> Notify customer
-                                    </label>
-                                    <label style="display: flex; align-items: center; gap: 5px;">
-                                        <input type="radio" name="backorders" value="yes"> Yes
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product Variations Section -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-pallet"></i> Product Variations</h2>
-                        
-                        <div style="margin-bottom: 20px;">
-                            <button type="button" class="btn btn-outline" onclick="addVariationGroup()">
-                                <i class="fas fa-plus"></i> Add Variation (Size, Color, etc.)
-                            </button>
-                        </div>
-                        
-                        <div id="variations-container">
-                            <!-- Variations will be added here -->
-                        </div>
-                        
-                        <table class="variations-table" id="variationsTable" style="display: none;">
-                            <thead>
-                                <tr>
-                                    <th>Variation</th>
-                                    <th>SKU</th>
-                                    <th>Price</th>
-                                    <th>Stock</th>
-                                    <th>Image</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="variationsBody">
-                                <!-- Variation rows will be added here -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Description Section -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-align-left"></i> Description</h2>
-                        
-                        <div class="form-group">
-                            <label>Short Description</label>
-                            <textarea id="shortDescription" rows="3" placeholder="Brief product description for listings..." maxlength="160"></textarea>
-                            <div class="char-counter"><span id="shortDescCount">0</span>/160</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Full Description</label>
-                            <div id="fullDescriptionEditor" class="quill-editor"></div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Features / Bullet Points</label>
-                            <textarea id="features" rows="5" placeholder="Enter each feature on a new line"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Media Section -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-images"></i> Media</h2>
-                        
-                        <!-- Images -->
-                        <div class="form-group">
-                            <label>Product Images</label>
-                            <div class="media-section" id="imageUploadArea">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <h3>Drag & Drop Images Here</h3>
-                                <p>Supported: JPG, PNG, WebP, GIF (Max 5MB each)</p>
-                                <span class="upload-btn">Choose Files</span>
-                                <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
-                            </div>
-                            <div class="image-preview-grid" id="imagePreview"></div>
-                        </div>
-                        
-                        <!-- Videos -->
-                        <div class="form-group">
-                            <label>Product Videos</label>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <input type="url" id="videoUrl" placeholder="YouTube or Vimeo URL">
-                                </div>
-                                <div class="form-group">
-                                    <input type="file" id="videoUpload" accept="video/mp4,video/webm">
-                                </div>
-                            </div>
-                            <div class="image-preview-grid" id="videoPreview"></div>
-                        </div>
-                        
-                        <!-- 3D Model (Optional) -->
-                        <div class="form-group">
-                            <label>3D Model (Optional)</label>
-                            <input type="file" id="modelUpload" accept=".glb,.gltf,.obj">
-                        </div>
-                    </div>
-
-                    <!-- SEO Section -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-search"></i> Search Engine Optimization</h2>
-                        
-                        <div class="form-group">
-                            <label>Meta Title</label>
-                            <input type="text" id="metaTitle" placeholder="Product Name | SB Store" maxlength="70">
-                            <div class="char-counter"><span id="metaTitleCount">0</span>/70</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Meta Description</label>
-                            <textarea id="metaDescription" rows="3" placeholder="Brief description for search engines..." maxlength="160"></textarea>
-                            <div class="char-counter"><span id="metaDescCount">0</span>/160</div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Meta Keywords</label>
-                            <input type="text" id="metaKeywords" placeholder="product, category, tags" class="tags-input">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>URL Slug</label>
-                            <input type="text" id="productSlug" placeholder="product-name">
-                        </div>
-                        
-                        <!-- SEO Preview -->
-                        <div class="seo-preview" id="seoPreview">
-                            <div class="seo-title" id="seoTitlePreview">Product Name | SB Store</div>
-                            <div class="seo-url" id="seoUrlPreview">https://sbstore.com/product/product-name</div>
-                            <div class="seo-description" id="seoDescPreview">Brief description for search engines...</div>
-                        </div>
-                    </div>
-
-                    <!-- Shipping Section -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-truck"></i> Shipping</h2>
-                        
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Weight (kg)</label>
-                                <input type="number" id="weight" step="0.01" placeholder="0.5">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Dimensions (cm)</label>
-                                <div class="form-row">
-                                    <input type="number" id="length" placeholder="L">
-                                    <input type="number" id="width" placeholder="W">
-                                    <input type="number" id="height" placeholder="H">
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Shipping Class</label>
-                                <select id="shippingClass">
-                                    <option value="standard">Standard Shipping</option>
-                                    <option value="express">Express Shipping</option>
-                                    <option value="free">Free Shipping</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Free Shipping</label>
-                                <div style="margin-top: 8px;">
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="freeShipping">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                    <span class="toggle-label">Enable free shipping</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Affiliate Section -->
-                    <div class="form-section">
-                        <h2><i class="fab fa-amazon"></i> Amazon Affiliate</h2>
-                        
-                        <div class="form-group">
-                            <label>Amazon Product URL</label>
-                            <input type="url" id="amazonUrl" placeholder="https://www.amazon.com/dp/...?tag=your-tag-20">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Amazon Price</label>
-                            <input type="number" id="amazonPrice" step="0.01" placeholder="Automatically fetched" readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>
-                                <input type="checkbox" id="primeEligible" checked> Prime Eligible
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Additional Settings -->
-                    <div class="form-section">
-                        <h2><i class="fas fa-cog"></i> Additional Settings</h2>
-                        
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select id="productStatus">
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                    <option value="draft">Draft</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Visibility</label>
-                                <select id="productVisibility">
-                                    <option value="public">Public</option>
-                                    <option value="hidden">Hidden</option>
-                                    <option value="search">Search only</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Featured Product</label>
-                                <div style="margin-top: 8px;">
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="featuredProduct">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                    <span class="toggle-label">Show on homepage</span>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Tax Class</label>
-                                <select id="taxClass">
-                                    <option value="standard">Standard Tax</option>
-                                    <option value="reduced">Reduced Tax</option>
-                                    <option value="zero">Zero Tax</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Tags</label>
-                            <input type="text" id="productTags" placeholder="Enter tags separated by commas" class="tags-input">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Related Products</label>
-                            <select id="relatedProducts" multiple style="width: 100%; height: 100px;">
-                                <!-- Will be populated with products -->
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Save Button -->
-                    <button type="submit" class="save-btn" id="submitBtn">
-                        <i class="fas fa-save"></i> <span id="submitText">Save Product</span>
-                        <span class="spinner" style="display: none;"></span>
-                    </button>
-                </form>
-            </div>
-        </main>
-    </div>
-
-    <!-- Preview Modal -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content modal-lg">
-            <div class="modal-header">
-                <h2><i class="fas fa-eye"></i> Product Preview</h2>
-                <button class="modal-close" onclick="closePreview()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <iframe id="previewFrame" style="width: 100%; height: 500px; border: none;"></iframe>
             </div>
         </div>
-    </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+        <div class="page-header">
+            <h1><i class="fas fa-plus-circle"></i> <span id="formTitle">Add New Product</span></h1>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="window.location.href='products.html'">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
 
+        <div class="progress-bar"><div class="progress-bar-fill" id="progressBar"></div></div>
+
+        <div class="form-container">
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                
+                <div class="form-section">
+                    <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Product Name <span class="required">*</span></label>
+                            <input type="text" id="productName" required placeholder="e.g., Sony WH-1000XM5">
+                            <div><span id="nameCount">0</span>/100</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Category <span class="required">*</span></label>
+                            <select id="productCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Home">Home & Living</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Beauty">Beauty</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Brand</label>
+                            <input type="text" id="productBrand" placeholder="e.g., Sony">
+                        </div>
+                        <div class="form-group">
+                            <label>SKU</label>
+                            <input type="text" id="productSku" placeholder="e.g., SONY-WH-1000XM5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-tag"></i> Pricing</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Price <span class="required">*</span></label>
+                            <div class="currency-group">
+                                <select id="currency"><option value="INR">₹ INR</option></select>
+                                <input type="number" id="productPrice" step="0.01" required placeholder="99.99">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Compare at Price</label>
+                            <input type="number" id="productSalePrice" step="0.01" placeholder="Original price">
+                        </div>
+                        <div class="form-group">
+                            <label>Discount %</label>
+                            <input type="number" id="productDiscount" min="0" max="100" step="0.1" placeholder="20">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-boxes"></i> Inventory</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Stock Quantity</label>
+                            <input type="number" id="stockQuantity" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Stock Status</label>
+                            <select id="stockStatus">
+                                <option value="true">In Stock</option>
+                                <option value="false">Out of Stock</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Free Shipping</label>
+                            <div><label class="toggle-switch"><input type="checkbox" id="freeShipping"><span class="toggle-slider"></span></label></div>
+                        </div>
+                        <div class="form-group">
+                            <label>Featured Product</label>
+                            <div><label class="toggle-switch"><input type="checkbox" id="featuredProduct"><span class="toggle-slider"></span></label></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-align-left"></i> Description</h2>
+                    <div class="form-group">
+                        <label>Short Description</label>
+                        <textarea id="shortDescription" rows="3" maxlength="160"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Description</label>
+                        <div id="fullDescriptionEditor" class="quill-editor"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-images"></i> Media</h2>
+                    <div class="form-group">
+                        <label>Product Images</label>
+                        <div class="media-section" id="imageUploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h3>Drag & Drop Images Here</h3>
+                            <p>Supported: JPG, PNG, WebP (Max 5MB each)</p>
+                            <span class="upload-btn">Choose Files</span>
+                            <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
+                        </div>
+                        <div class="image-preview-grid" id="imagePreview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Video URL (YouTube/Vimeo)</label>
+                        <input type="url" id="videoUrl" placeholder="https://www.youtube.com/watch?v=...">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fab fa-amazon"></i> Affiliate</h2>
+                    <div class="form-group">
+                        <label>Amazon Affiliate URL</label>
+                        <input type="url" id="amazonUrl" placeholder="https://www.amazon.com/dp/...?tag=your-tag">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-search"></i> SEO</h2>
+                    <div class="form-group">
+                        <label>URL Slug</label>
+                        <input type="text" id="productSlug" placeholder="product-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Title</label>
+                        <input type="text" id="metaTitle" maxlength="70">
+                    </div>
+                    <div class="form-group">
+                        <label>Meta Description</label>
+                        <textarea id="metaDescription" rows="2" maxlength="160"></textarea>
+                    </div>
+                    <div class="seo-preview" id="seoPreview">
+                        <div class="seo-title" id="seoTitlePreview">Product Name | SB Store</div>
+                        <div class="seo-url" id="seoUrlPreview">https://sbstore.com/product/</div>
+                        <div class="seo-description" id="seoDescPreview"></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2><i class="fas fa-cog"></i> Status</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Product Status</label>
+                            <select id="productStatus">
+                                <option value="active">Active</option>
+                                <option value="draft">Draft</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tags</label>
+                            <input type="text" id="productTags" placeholder="Enter tags separated by commas">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="save-btn" id="submitBtn">
+                    <i class="fas fa-save"></i> <span id="submitText">Save Product</span>
+                </button>
+            </form>
+        </div>
+    </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Firebase Module -->
 <script type="module">
-    // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+    import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
     
-    // Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
         authDomain: "sb-store-719d5.firebaseapp.com",
@@ -1729,239 +912,200 @@
         appId: "1:501493533680:web:7b1409406b95006df62b35"
     };
     
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const storage = getStorage(app);
     
-    // Make available globally
     window.db = db;
     window.storage = storage;
-    window.getDocs = getDocs;
+    window.collection = collection;
     window.doc = doc;
     window.getDoc = getDoc;
     window.addDoc = addDoc;
     window.updateDoc = updateDoc;
-    window.collection = collection;
-    window.query = query;
-    window.where = where;
+    window.deleteDoc = deleteDoc;
     window.ref = ref;
     window.uploadBytes = uploadBytes;
     window.getDownloadURL = getDownloadURL;
+    window.deleteObject = deleteObject;
     
-    // Auto-login flag
+    console.log('✅ Firebase initialized with Storage');
+    
+    // Auto-login for demo
     localStorage.setItem('adminLoggedIn', 'true');
-    localStorage.setItem('sbstore_admin_logged_in', 'true');
-    localStorage.setItem('sbstore_current_user', JSON.stringify({
-        id: 1, name: 'Admin', email: 'admin@sbstore.com', role: 'admin'
-    }));
 </script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<script>
+// ========== COMPLETE WORKING ADMIN PANEL ==========
+
+let quill;
+let uploadedImages = [];
+let isUploading = false;
+
+// Initialize Quill
+quill = new Quill('#fullDescriptionEditor', {
+    theme: 'snow',
+    modules: {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link']
+        ]
+    },
+    placeholder: 'Write detailed product description...'
+});
+
+// Toast notification
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+        <div class="toast-content"><p>${message}</p></div>
+        <div class="toast-close" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></div>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
+
+window.showToast = showToast;
+
+// Update progress
+function updateProgress() {
+    const fields = [
+        document.getElementById('productName').value,
+        document.getElementById('productCategory').value,
+        document.getElementById('productPrice').value
+    ];
+    const filled = fields.filter(f => f).length;
+    const progress = (filled / fields.length) * 100;
+    document.getElementById('progressBar').style.width = progress + '%';
+}
+
+// Update SEO preview
+function updateSeoPreview() {
+    const name = document.getElementById('productName').value || 'Product Name';
+    const slug = document.getElementById('productSlug').value || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const title = document.getElementById('metaTitle').value || name + ' | SB Store';
+    const desc = document.getElementById('metaDescription').value || document.getElementById('shortDescription').value || '';
     
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.17.9/dist/tagify.min.js"></script>
-    
-    <script>
-        // ========== PROFESSIONAL ADD PRODUCT SCRIPT ==========
-        
-        // Check admin login
-        if (localStorage.getItem('adminLoggedIn') !== 'true') {
-            window.location.href = 'login.html';
-        }
+    document.getElementById('seoTitlePreview').textContent = title;
+    document.getElementById('seoUrlPreview').textContent = 'https://sbstore.com/product/' + slug;
+    document.getElementById('seoDescPreview').textContent = desc;
+}
 
-        // Initialize Quill editor
-        const quill = new Quill('#fullDescriptionEditor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'align': [] }],
-                    ['link', 'image', 'video'],
-                    ['clean']
-                ]
-            },
-            placeholder: 'Write a detailed description of your product...'
-        });
+// Auto-generate slug
+document.getElementById('productName').addEventListener('input', function() {
+    document.getElementById('nameCount').textContent = this.value.length;
+    updateProgress();
+    const slugInput = document.getElementById('productSlug');
+    if (!slugInput.value) {
+        slugInput.value = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+    updateSeoPreview();
+});
 
-        // Initialize Tagify for tags
-        const tagify = new Tagify(document.getElementById('productTags'), {
-            delimiters: ",| ",
-            maxTags: 10,
-            placeholder: "Add tags..."
-        });
+document.getElementById('shortDescription').addEventListener('input', updateSeoPreview);
+document.getElementById('metaTitle').addEventListener('input', updateSeoPreview);
+document.getElementById('metaDescription').addEventListener('input', updateSeoPreview);
+document.getElementById('productSlug').addEventListener('input', updateSeoPreview);
+document.getElementById('productCategory').addEventListener('change', updateProgress);
+document.getElementById('productPrice').addEventListener('input', updateProgress);
 
-        // Initialize Select2 for related products
-        $('#relatedProducts').select2({
-            placeholder: 'Search for related products...',
-            allowClear: true,
-            width: '100%'
-        });
+// Image upload handling
+const imageInput = document.getElementById('imageInput');
+const imagePreview = document.getElementById('imagePreview');
+const uploadArea = document.getElementById('imageUploadArea');
 
-        // Image upload handling
-        let uploadedImages = [];
-        const imageInput = document.getElementById('imageInput');
-        const imagePreview = document.getElementById('imagePreview');
-        const uploadArea = document.getElementById('imageUploadArea');
+uploadArea.addEventListener('click', () => imageInput.click());
 
-        // Character counters
-        document.getElementById('productName').addEventListener('input', function() {
-            document.getElementById('nameCount').textContent = this.value.length;
-            updateProgress();
-            updateSeoPreview();
-        });
+uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
 
-        document.getElementById('shortDescription').addEventListener('input', function() {
-            document.getElementById('shortDescCount').textContent = this.value.length;
-        });
+uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+});
 
-        document.getElementById('metaTitle').addEventListener('input', function() {
-            document.getElementById('metaTitleCount').textContent = this.value.length;
-            updateSeoPreview();
-        });
+uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    handleImageFiles(files);
+});
 
-        document.getElementById('metaDescription').addEventListener('input', function() {
-            document.getElementById('metaDescCount').textContent = this.value.length;
-            updateSeoPreview();
-        });
-
-        document.getElementById('productSlug').addEventListener('input', updateSeoPreview);
-
-        // Update SEO preview
-        function updateSeoPreview() {
-            const name = document.getElementById('productName').value || 'Product Name';
-            const slug = document.getElementById('productSlug').value || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-            const title = document.getElementById('metaTitle').value || name + ' | SB Store';
-            const desc = document.getElementById('metaDescription').value || document.getElementById('shortDescription').value || 'Product description...';
-            
-            document.getElementById('seoTitlePreview').textContent = title;
-            document.getElementById('seoUrlPreview').textContent = 'https://sbstore.com/product/' + slug;
-            document.getElementById('seoDescPreview').textContent = desc;
-        }
-
-        // Auto-generate slug from name
-        document.getElementById('productName').addEventListener('blur', function() {
-            const slugInput = document.getElementById('productSlug');
-            if (!slugInput.value) {
-                const slug = this.value.toLowerCase()
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-|-$/g, '');
-                slugInput.value = slug;
-                updateSeoPreview();
-            }
-        });
-
-        // Update progress bar
-        function updateProgress() {
-            const fields = [
-                document.getElementById('productName').value,
-                document.getElementById('productCategory').value,
-                document.getElementById('productPrice').value,
-                document.getElementById('shortDescription').value
-            ];
-            
-            const filled = fields.filter(f => f).length;
-            const progress = (filled / fields.length) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
-
-        // Upload Area Event Listeners
-        uploadArea.addEventListener('click', () => imageInput.click());
-
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            
-            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-            handleImageFiles(files);
-        });
-
-        imageInput.addEventListener('change', (e) => {
-            const files = Array.from(e.target.files);
-            handleImageFiles(files);
-        });
+imageInput.addEventListener('change', (e) => {
+    handleImageFiles(Array.from(e.target.files));
+});
 
 async function handleImageFiles(files) {
+    if (isUploading) {
+        showToast('Please wait for current uploads to finish', 'warning');
+        return;
+    }
+    
     for (const file of files) {
         if (file.size > 5 * 1024 * 1024) {
-            showToast('File ' + file.name + ' is too large (max 5MB)', 'error');
+            showToast(`${file.name} is too large (max 5MB)`, 'error');
             continue;
         }
         
+        isUploading = true;
+        uploadArea.classList.add('upload-loading');
+        
         try {
-            // Show uploading indicator
-            showToast('Uploading ' + file.name + '...', 'info');
-            
-            // Create a unique filename
             const timestamp = Date.now();
             const random = Math.random().toString(36).substring(2, 8);
             const filename = `products/${timestamp}_${random}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
             
-            // Upload to Firebase Storage
             const storageRef = ref(window.storage, filename);
             const snapshot = await uploadBytes(storageRef, file);
             const downloadUrl = await getDownloadURL(snapshot.ref);
             
-            console.log('Image uploaded successfully:', downloadUrl);
-            
-            // Store the URL (not base64!)
             uploadedImages.push({
-                data: downloadUrl,  // This is a URL, not base64!
+                url: downloadUrl,
                 name: file.name,
-                size: file.size,
-                featured: uploadedImages.length === 0
+                featured: uploadedImages.length === 0,
+                storagePath: filename
             });
             
             updateImagePreview();
-            showToast(file.name + ' uploaded successfully!', 'success');
+            showToast(`${file.name} uploaded successfully!`, 'success');
             
         } catch (error) {
-            console.error('Upload error details:', error);
-            showToast('Failed to upload ' + file.name + ': ' + error.message, 'error');
+            console.error('Upload error:', error);
+            showToast(`Failed to upload ${file.name}: ${error.message}`, 'error');
+        } finally {
+            isUploading = false;
+            uploadArea.classList.remove('upload-loading');
         }
     }
 }
+
 function updateImagePreview() {
     imagePreview.innerHTML = uploadedImages.map((img, index) => `
-        <div class="preview-item">
-            <img src="${img.data}" alt="Preview ${index + 1}">
+        <div class="preview-item" onclick="setFeaturedImage(${index})">
+            <img src="${img.url}" alt="Preview">
             ${img.featured ? '<span class="featured-badge">Featured</span>' : ''}
-            <button class="remove-btn" onclick="removeImage(${index})">
+            <button class="remove-btn" onclick="event.stopPropagation(); removeImage(${index})">
                 <i class="fas fa-times"></i>
             </button>
         </div>
     `).join('');
-    
-    // Make featured images clickable
-    document.querySelectorAll('.preview-item').forEach((item, idx) => {
-        item.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('remove-btn')) {
-                setFeaturedImage(idx);
-            }
-        });
-    });
 }
 
-        window.removeImage = function(index) {
-            uploadedImages.splice(index, 1);
-            if (uploadedImages.length > 0 && !uploadedImages.some(img => img.featured)) {
-                uploadedImages[0].featured = true;
-            }
-            updateImagePreview();
-        };
+window.removeImage = function(index) {
+    uploadedImages.splice(index, 1);
+    if (uploadedImages.length > 0 && !uploadedImages.some(img => img.featured)) {
+        uploadedImages[0].featured = true;
+    }
+    updateImagePreview();
+};
 
 window.setFeaturedImage = function(index) {
     uploadedImages.forEach((img, i) => {
@@ -1971,380 +1115,170 @@ window.setFeaturedImage = function(index) {
     showToast('Featured image updated', 'success');
 };
 
-        // Variation Management
-        let variationGroups = [];
-
-        window.addVariationGroup = function() {
-            const groupName = prompt('Enter variation type (e.g., Size, Color):');
-            if (!groupName) return;
-            
-            const options = prompt('Enter options separated by commas (e.g., Small, Medium, Large):');
-            if (!options) return;
-            
-            const values = options.split(',').map(v => v.trim());
-            
-            variationGroups.push({
-                name: groupName,
-                values: values
-            });
-            
-            generateVariations();
-        };
-
-        function generateVariations() {
-            if (variationGroups.length === 0) {
-                document.getElementById('variationsTable').style.display = 'none';
-                return;
-            }
-            
-            // Generate all combinations
-            let combinations = [{}];
-            
-            variationGroups.forEach(group => {
-                const newCombinations = [];
-                combinations.forEach(combo => {
-                    group.values.forEach(value => {
-                        newCombinations.push({
-                            ...combo,
-                            [group.name]: value
-                        });
-                    });
-                });
-                combinations = newCombinations;
-            });
-            
-            const tbody = document.getElementById('variationsBody');
-            tbody.innerHTML = combinations.map((combo, index) => {
-                const variationName = Object.entries(combo)
-                    .map(([key, value]) => `${key}: ${value}`)
-                    .join(' / ');
-                    
-                return `
-                    <tr>
-                        <td>${variationName}</td>
-                        <td><input type="text" placeholder="SKU-${index + 1}" class="variation-sku"></td>
-                        <td><input type="number" step="0.01" placeholder="0.00" class="variation-price"></td>
-                        <td><input type="number" value="0" class="variation-stock"></td>
-                        <td><button class="btn btn-outline" onclick="chooseVariationImage(${index})">Choose</button></td>
-                        <td><button class="btn btn-danger" onclick="removeVariation(${index})"><i class="fas fa-trash"></i></button></td>
-                    </tr>
-                `;
-            }).join('');
-            
-            document.getElementById('variationsTable').style.display = 'table';
-        }
-
-        // Firebase CRUD Functions
-        async function loadProductFromFirebase(productId) {
-            try {
-                const productRef = doc(window.db, 'products', productId);
-                const productSnap = await getDoc(productRef);
-                
-                if (productSnap.exists()) {
-                    const product = productSnap.data();
-                    document.getElementById('productId').value = productId;
-                    document.getElementById('productName').value = product.name || '';
-                    document.getElementById('productCategory').value = product.category || '';
-                    document.getElementById('productBrand').value = product.brand || '';
-                    document.getElementById('productSku').value = product.sku || '';
-                    document.getElementById('productBarcode').value = product.barcode || '';
-                    
-                    // Pricing - all fields loaded independently
-                    document.getElementById('currency').value = product.currency || 'INR';
-                    document.getElementById('productPrice').value = product.price || '';
-                    document.getElementById('productSalePrice').value = product.salePrice || '';
-                    document.getElementById('productCost').value = product.cost || '';
-                    document.getElementById('productDiscount').value = product.discount || '';
-                    
-                    // Inventory
-                    document.getElementById('stockQuantity').value = product.stock || 100;
-                    document.getElementById('stockStatus').value = product.inStock ? 'true' : 'false';
-                    
-                    // Description
-                    document.getElementById('shortDescription').value = product.shortDesc || '';
-                    quill.root.innerHTML = product.description || '';
-                    document.getElementById('features').value = product.features ? product.features.join('\n') : '';
-                    
-                    // SEO
-                    document.getElementById('metaTitle').value = product.metaTitle || '';
-                    document.getElementById('metaDescription').value = product.metaDesc || '';
-                    document.getElementById('metaKeywords').value = product.metaKeywords || '';
-                    document.getElementById('productSlug').value = product.slug || '';
-                    
-                    // Media
-                    if (product.images && product.images.length > 0) {
-                        uploadedImages = product.images.map((url, index) => ({ 
-                            data: url, 
-                            name: 'image-' + (index + 1),
-                            featured: index === 0
-                        }));
-                        updateImagePreview();
-                    }
-                    
-                    document.getElementById('videoUrl').value = product.videoUrl || '';
-                    document.getElementById('amazonUrl').value = product.amazonUrl || '';
-                    document.getElementById('primeEligible').checked = product.prime || false;
-                    
-                    // Shipping
-                    document.getElementById('weight').value = product.weight || '';
-                    if (product.dimensions) {
-                        document.getElementById('length').value = product.dimensions.length || '';
-                        document.getElementById('width').value = product.dimensions.width || '';
-                        document.getElementById('height').value = product.dimensions.height || '';
-                    }
-                    
-                    // Status
-                    document.getElementById('productStatus').value = product.status || 'active';
-                    document.getElementById('featuredProduct').checked = product.featured || false;
-                    
-                    // Tags
-                    if (product.tags) {
-                        tagify.removeAllTags();
-                        tagify.addTags(product.tags);
-                    }
-                    
-                    updateSeoPreview();
-                    updateProgress();
-                }
-            } catch (error) {
-                console.error('Error loading product:', error);
-                showToast('Error loading product data', 'error');
-            }
-        }
+// Load product for editing
+async function loadProduct(productId) {
+    try {
+        const productRef = doc(window.db, 'products', productId);
+        const productSnap = await getDoc(productRef);
         
-        async function saveProductToFirebase(productData, productId) {
-            try {
-                if (productId) {
-                    // Update existing product
-                    const productRef = doc(window.db, 'products', productId);
-                    await updateDoc(productRef, productData);
-                    showToast('Product updated successfully!', 'success');
-                } else {
-                    // Add new product
-                    const docRef = await addDoc(collection(window.db, 'products'), productData);
-                    showToast('Product added successfully!', 'success');
-                }
-                return true;
-            } catch (error) {
-                console.error('Error saving product:', error);
-                showToast('Error saving product: ' + error.message, 'error');
-                return false;
+        if (productSnap.exists()) {
+            const product = productSnap.data();
+            document.getElementById('productId').value = productId;
+            document.getElementById('productName').value = product.name || '';
+            document.getElementById('productCategory').value = product.category || '';
+            document.getElementById('productBrand').value = product.brand || '';
+            document.getElementById('productSku').value = product.sku || '';
+            document.getElementById('productPrice').value = product.price || '';
+            document.getElementById('productSalePrice').value = product.salePrice || '';
+            document.getElementById('productDiscount').value = product.discount || '';
+            document.getElementById('stockQuantity').value = product.stock || 100;
+            document.getElementById('stockStatus').value = product.inStock ? 'true' : 'false';
+            document.getElementById('freeShipping').checked = product.freeShipping || false;
+            document.getElementById('featuredProduct').checked = product.featured || false;
+            document.getElementById('shortDescription').value = product.shortDesc || '';
+            document.getElementById('videoUrl').value = product.videoUrl || '';
+            document.getElementById('amazonUrl').value = product.amazonUrl || '';
+            document.getElementById('productSlug').value = product.slug || '';
+            document.getElementById('metaTitle').value = product.metaTitle || '';
+            document.getElementById('metaDescription').value = product.metaDesc || '';
+            document.getElementById('productTags').value = product.tags ? product.tags.join(', ') : '';
+            document.getElementById('productStatus').value = product.status || 'active';
+            
+            if (quill) quill.root.innerHTML = product.description || '';
+            
+            if (product.images && product.images.length) {
+                uploadedImages = product.images.map((url, i) => ({
+                    url: url,
+                    name: `image-${i+1}`,
+                    featured: i === 0,
+                    storagePath: null
+                }));
+                updateImagePreview();
             }
+            
+            updateSeoPreview();
+            updateProgress();
         }
+    } catch (error) {
+        console.error('Error loading product:', error);
+        showToast('Error loading product', 'error');
+    }
+}
 
-        // Check if editing
-        const urlParams = new URLSearchParams(window.location.search);
-        const productId = urlParams.get('id');
-
+// Save product
+async function saveProduct(productData, productId) {
+    try {
         if (productId) {
-            document.getElementById('formTitle').textContent = 'Edit Product';
-            document.getElementById('submitText').textContent = 'Update Product';
-            loadProductFromFirebase(productId);
+            const productRef = doc(window.db, 'products', productId);
+            await updateDoc(productRef, productData);
+            showToast('Product updated successfully!', 'success');
+        } else {
+            await addDoc(collection(window.db, 'products'), productData);
+            showToast('Product added successfully!', 'success');
         }
+        return true;
+    } catch (error) {
+        console.error('Save error:', error);
+        showToast(`Error saving product: ${error.message}`, 'error');
+        return false;
+    }
+}
 
-        // Handle form submission
-        document.getElementById('productForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-            submitBtn.disabled = true;
-            
-            // Get all form values
-            const name = document.getElementById('productName').value.trim();
-            if (!name) {
-                showToast('Product name is required', 'error');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
-            
-            const price = parseFloat(document.getElementById('productPrice').value);
-            if (isNaN(price) || price <= 0) {
-                showToast('Valid price is required', 'error');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-                return;
-            }
+// Form submission
+document.getElementById('productForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const submitBtn = document.getElementById('submitBtn');
+    const originalHtml = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span class="spinner"></span> Saving...';
+    submitBtn.disabled = true;
+    
+    const name = document.getElementById('productName').value.trim();
+    const price = parseFloat(document.getElementById('productPrice').value);
+    
+    if (!name) {
+        showToast('Product name is required', 'error');
+        submitBtn.innerHTML = originalHtml;
+        submitBtn.disabled = false;
+        return;
+    }
+    
+    if (isNaN(price) || price <= 0) {
+        showToast('Valid price is required', 'error');
+        submitBtn.innerHTML = originalHtml;
+        submitBtn.disabled = false;
+        return;
+    }
+    
+    const tags = document.getElementById('productTags').value.split(',').map(t => t.trim()).filter(t => t);
+    const images = uploadedImages.map(img => img.url);
+    
+    const productData = {
+        name: name,
+        category: document.getElementById('productCategory').value,
+        brand: document.getElementById('productBrand').value,
+        sku: document.getElementById('productSku').value,
+        price: price,
+        salePrice: document.getElementById('productSalePrice').value ? parseFloat(document.getElementById('productSalePrice').value) : null,
+        discount: document.getElementById('productDiscount').value ? parseFloat(document.getElementById('productDiscount').value) : 0,
+        stock: parseInt(document.getElementById('stockQuantity').value) || 0,
+        inStock: document.getElementById('stockStatus').value === 'true',
+        freeShipping: document.getElementById('freeShipping').checked,
+        featured: document.getElementById('featuredProduct').checked,
+        shortDesc: document.getElementById('shortDescription').value,
+        description: quill ? quill.root.innerHTML : '',
+        images: images,
+        videoUrl: document.getElementById('videoUrl').value,
+        amazonUrl: document.getElementById('amazonUrl').value,
+        slug: document.getElementById('productSlug').value,
+        metaTitle: document.getElementById('metaTitle').value,
+        metaDesc: document.getElementById('metaDescription').value,
+        tags: tags,
+        status: document.getElementById('productStatus').value,
+        updatedAt: new Date().toISOString()
+    };
+    
+    if (!document.getElementById('productId').value) {
+        productData.createdAt = new Date().toISOString();
+    }
+    
+    const success = await saveProduct(productData, document.getElementById('productId').value);
+    
+    submitBtn.innerHTML = originalHtml;
+    submitBtn.disabled = false;
+    
+    if (success) {
+        localStorage.setItem('sbstore_last_update', Date.now().toString());
+        setTimeout(() => {
+            window.location.href = 'products.html';
+        }, 1500);
+    }
+});
 
-            // Get features as array
-            const features = document.getElementById('features').value
-                .split('\n')
-                .map(f => f.trim())
-                .filter(f => f);
+// Check if editing
+const urlParams = new URLSearchParams(window.location.search);
+const editId = urlParams.get('id');
+if (editId) {
+    document.getElementById('formTitle').textContent = 'Edit Product';
+    document.getElementById('submitText').textContent = 'Update Product';
+    loadProduct(editId);
+}
 
-            // Get tags as array
-            const tags = tagify.value.map(t => t.value);
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    localStorage.removeItem('adminLoggedIn');
+    window.location.href = 'login.html';
+});
 
-            const productData = {
-                name: name,
-                category: document.getElementById('productCategory').value,
-                subcategory: document.getElementById('productSubcategory').value,
-                brand: document.getElementById('productBrand').value,
-                sku: document.getElementById('productSku').value,
-                barcode: document.getElementById('productBarcode').value,
-                
-                // Pricing - all values saved as entered, no calculations
-                currency: document.getElementById('currency').value,
-                price: price,
-                salePrice: document.getElementById('productSalePrice').value ? parseFloat(document.getElementById('productSalePrice').value) : null,
-                cost: document.getElementById('productCost').value ? parseFloat(document.getElementById('productCost').value) : null,
-                discount: document.getElementById('productDiscount').value ? parseFloat(document.getElementById('productDiscount').value) : 0,
-                
-                // Inventory
-                stock: parseInt(document.getElementById('stockQuantity').value) || 0,
-                lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value) || 5,
-                inStock: document.getElementById('stockStatus').value === 'true',
-                
-                // Description
-                shortDesc: document.getElementById('shortDescription').value,
-                description: quill.root.innerHTML,
-                features: features,
-                
-                // Media
-                images: uploadedImages.map(img => img.data),
-                videoUrl: document.getElementById('videoUrl').value,
-                
-                // Affiliate
-                amazonUrl: document.getElementById('amazonUrl').value,
-                prime: document.getElementById('primeEligible').checked,
-                
-                // SEO
-                metaTitle: document.getElementById('metaTitle').value,
-                metaDesc: document.getElementById('metaDescription').value,
-                metaKeywords: document.getElementById('metaKeywords').value,
-                slug: document.getElementById('productSlug').value,
-                
-                // Shipping
-                weight: parseFloat(document.getElementById('weight').value) || null,
-                dimensions: {
-                    length: parseFloat(document.getElementById('length').value) || null,
-                    width: parseFloat(document.getElementById('width').value) || null,
-                    height: parseFloat(document.getElementById('height').value) || null
-                },
-                freeShipping: document.getElementById('freeShipping').checked,
-                shippingClass: document.getElementById('shippingClass').value,
-                
-                // Status
-                status: document.getElementById('productStatus').value,
-                visibility: document.getElementById('productVisibility').value,
-                featured: document.getElementById('featuredProduct').checked,
-                taxClass: document.getElementById('taxClass').value,
-                tags: tags,
-                
-                // Timestamps
-                updatedAt: new Date().toISOString()
-            };
-            
-            // Add createdAt for new products
-            if (!productId) {
-                productData.createdAt = new Date().toISOString();
-            }
+// Initialize
+updateSeoPreview();
+updateProgress();
 
-            // Save to Firebase
-            const success = await saveProductToFirebase(productData, productId);
-            
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            
-            if (success) {
-                // Trigger update on main site
-                localStorage.setItem('sbstore_last_update', Date.now().toString());
-                
-                // Redirect after delay
-                setTimeout(() => {
-                    window.location.href = 'products.html';
-                }, 1500);
-            }
-        });
-
-        // Preview function
-        window.previewProduct = function() {
-            const name = document.getElementById('productName').value;
-            if (!name) {
-                showToast('Please enter a product name first', 'warning');
-                return;
-            }
-            
-            // Create preview HTML
-            const previewHtml = `
-                <div style="padding: 20px; font-family: 'Inter', sans-serif;">
-                    <h1>${name}</h1>
-                    <p>Price: ₹${document.getElementById('productPrice').value || '0.00'}</p>
-                    <p>${document.getElementById('shortDescription').value || 'No description'}</p>
-                </div>
-            `;
-            
-            const previewFrame = document.getElementById('previewFrame');
-            previewFrame.srcdoc = previewHtml;
-            document.getElementById('previewModal').classList.add('active');
-        };
-
-        window.closePreview = function() {
-            document.getElementById('previewModal').classList.remove('active');
-        };
-        
-        window.duplicateProduct = function() {
-            showToast('Duplicate feature coming soon', 'info');
-        };
-        
-        window.chooseVariationImage = function(index) {
-            showToast('Variation image upload coming soon', 'info');
-        };
-        
-        window.removeVariation = function(index) {
-            showToast('Variation removal coming soon', 'info');
-        };
-
-        // Toast notification function
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            const icons = {
-                success: 'fa-check-circle',
-                error: 'fa-exclamation-circle',
-                warning: 'fa-exclamation-triangle',
-                info: 'fa-info-circle'
-            };
-            
-            toast.innerHTML = `
-                <i class="fas ${icons[type] || 'fa-info-circle'}"></i>
-                <div class="toast-content">
-                    <h4>${type.charAt(0).toUpperCase() + type.slice(1)}</h4>
-                    <p>${message}</p>
-                </div>
-                <div class="toast-close" onclick="this.parentElement.remove()">
-                    <i class="fas fa-times"></i>
-                </div>
-            `;
-            
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.remove();
-            }, 5000);
-        }
-
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            showToast('Logging out...', 'warning');
-            setTimeout(() => {
-                localStorage.removeItem('adminLoggedIn');
-                localStorage.removeItem('sbstore_admin_logged_in');
-                window.location.href = 'login.html';
-            }, 1500);
-        });
-
-        // Initialize
-        updateSeoPreview();
-        updateProgress();
-        
-        // Make showToast available globally
-        window.showToast = showToast;
-    </script>
+// Check admin login
+if (localStorage.getItem('adminLoggedIn') !== 'true') {
+    window.location.href = 'login.html';
+}
+</script>
 </body>
 </html>
