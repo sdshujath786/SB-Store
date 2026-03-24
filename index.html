@@ -1231,7 +1231,138 @@
             object-fit: cover;
             transition: transform 0.8s;
         }
+        .video-indicator {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-base);
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
 
+.video-indicator:hover {
+    transform: scale(1.1);
+    background: var(--primary-600);
+}
+
+.video-indicator i {
+    color: white;
+    font-size: 16px;
+    margin-left: 2px;
+}
+
+/* Video Modal Styles */
+.video-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-modal.active {
+    display: flex;
+}
+
+.video-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.video-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 2;
+    animation: fadeInUp 0.3s ease;
+}
+
+.video-modal-content iframe,
+.video-modal-content video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    border: none;
+}
+
+.video-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-base);
+    color: var(--gray-900);
+}
+
+.video-modal-close:hover {
+    transform: rotate(90deg);
+    background: var(--danger-500);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .video-modal-content {
+        width: 95%;
+    }
+    
+    .video-modal-close {
+        top: -35px;
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+    
+    .video-indicator {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .video-indicator i {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .video-indicator {
+        width: 28px;
+        height: 28px;
+        bottom: 8px;
+        right: 8px;
+    }
+    
+    .video-indicator i {
+        font-size: 10px;
+    }
+}
         .product-card-modern:hover .product-image-modern img {
             transform: scale(1.2);
         }
@@ -2446,16 +2577,20 @@ Best <span class="gradient-text">Products</span>      Special Offers
         // Show first 8 products as featured
         const featured = allProducts.slice(0, 8);
 
-        grid.innerHTML = featured.map(product => {
-            const price = product.salePrice || product.price;
-            const currencySymbol = getCurrencySymbol(product.currency || storeSettings.currency || 'USD');
-            
-            return `
-                <div class="product-card-modern" data-aos="fade-up" data-id="${product.id}" onclick="quickView(${product.id})">
-                    ${product.discount ? `<span class="product-badge-modern">-${product.discount}%</span>` : ''}
-                    <div class="product-image-modern">
-                        <img src="${product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${product.name}" loading="lazy">
-                    </div>
+grid.innerHTML = featured.map(product => {
+    const price = product.salePrice || product.price;
+    const currencySymbol = getCurrencySymbol(product.currency || storeSettings.currency || 'USD');
+    const hasVideo = product.videoUrl && product.videoUrl.trim() !== '';
+    
+    return `
+        <div class="product-card-modern" data-aos="fade-up" data-id="${product.id}" onclick="quickView(${product.id})">
+            ${product.discount ? `<span class="product-badge-modern">-${product.discount}%</span>` : ''}
+            <div class="product-image-modern">
+                <img src="${product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${product.name}" loading="lazy">
+                ${hasVideo ? `<div class="video-indicator" style="position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; z-index: 5;">
+                    <i class="fas fa-play" style="color: white; font-size: 14px;"></i>
+                </div>` : ''}
+            </div>
                     <div class="product-actions-modern">
                         <button class="action-btn-modern wishlist-btn" onclick="event.stopPropagation(); toggleWishlist(${product.id})">
                             <i class="${isInWishlist(product.id) ? 'fas' : 'far'} fa-heart" style="${isInWishlist(product.id) ? 'color: #ff6b6b;' : ''}"></i>
@@ -2590,45 +2725,76 @@ function renderCategoryDropdown() {
         }
     }
 
-    // ========== QUICK VIEW FUNCTION ==========
-    window.quickView = function(productId) {
-        const product = allProducts.find(p => p.id === productId);
-        if (!product) return;
-        
-        const currencySymbol = getCurrencySymbol(product.currency || storeSettings.currency || 'USD');
-        const price = product.salePrice || product.price;
-        
-        const modal = document.createElement('div');
-        modal.className = 'quick-view-modal';
-        modal.innerHTML = `
-            <div class="modal-overlay" onclick="this.closest('.quick-view-modal').remove()"></div>
-            <div class="modal-content">
-                <button class="modal-close" onclick="this.closest('.quick-view-modal').remove()">&times;</button>
-                <div class="modal-body">
-                    <div class="modal-image">
-                        <img src="${product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${product.name}">
-                    </div>
-                    <div class="modal-details">
-                        <h2>${product.name}</h2>
-                        <div class="rating">${renderStars(product.rating || 4.5)} (${product.reviews || 0} reviews)</div>
-                        <div class="price">${currencySymbol}${price.toFixed(2)}</div>
-                        <p class="description">${product.description || 'No description available.'}</p>
-                        <div class="modal-actions">
-                            <button class="wishlist-btn" onclick="toggleWishlist(${product.id}); this.closest('.quick-view-modal').remove()">
-                                <i class="${isInWishlist(product.id) ? 'fas' : 'far'} fa-heart"></i>
-                                ${isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
-                            </button>
-                            <a href="${product.amazonUrl || '#'}" target="_blank" class="amazon-btn" onclick="trackClick(${product.id})">
-                                <i class="fab fa-amazon"></i> View on Amazon
-                            </a>
-                        </div>
+// Enhanced Quick View with Video Support
+window.quickView = function(productId) {
+    const product = allProducts.find(p => p.id === productId);
+    if (!product) return;
+    
+    const currencySymbol = getCurrencySymbol(product.currency || storeSettings.currency || 'USD');
+    const price = product.salePrice || product.price;
+    const hasVideo = product.videoUrl && product.videoUrl.trim() !== '';
+    
+    const modal = document.createElement('div');
+    modal.className = 'quick-view-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay" onclick="this.closest('.quick-view-modal').remove()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="this.closest('.quick-view-modal').remove()">&times;</button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img src="${product.images?.[0] || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'}" alt="${product.name}">
+                    ${hasVideo ? `
+                        <button class="video-play-btn" onclick="event.stopPropagation(); playVideo('${product.videoUrl}', '${product.name}', event); this.closest('.quick-view-modal').remove();" style="position: absolute; bottom: 20px; right: 20px; background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition-base); box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                            <i class="fas fa-play" style="font-size: 20px; margin-left: 3px;"></i>
+                        </button>
+                    ` : ''}
+                </div>
+                <div class="modal-details">
+                    <h2>${product.name}</h2>
+                    <div class="rating">${renderStars(product.rating || 4.5)} (${product.reviews || 0} reviews)</div>
+                    <div class="price">${currencySymbol}${price.toFixed(2)}</div>
+                    <p class="description">${product.description || 'No description available.'}</p>
+                    ${hasVideo ? `
+                        <button class="watch-video-btn" onclick="playVideo('${product.videoUrl}', '${product.name}', event); this.closest('.quick-view-modal').remove();" style="width: 100%; padding: 12px; margin-bottom: 15px; background: linear-gradient(135deg, var(--primary-600), var(--primary-700)); color: white; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                            <i class="fas fa-play"></i> Watch Video
+                        </button>
+                    ` : ''}
+                    <div class="modal-actions">
+                        <button class="wishlist-btn" onclick="toggleWishlist(${product.id}); this.closest('.quick-view-modal').remove()">
+                            <i class="${isInWishlist(product.id) ? 'fas' : 'far'} fa-heart"></i>
+                            ${isInWishlist(product.id) ? 'In Wishlist' : 'Add to Wishlist'}
+                        </button>
+                        <a href="${product.amazonUrl || '#'}" target="_blank" class="amazon-btn" onclick="trackClick(${product.id})">
+                            <i class="fab fa-amazon"></i> View on Amazon
+                        </a>
                     </div>
                 </div>
             </div>
-        `;
-        
-        document.body.appendChild(modal);
-    };
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+};
+
+// Add CSS for video play button
+const videoButtonStyle = document.createElement('style');
+videoButtonStyle.textContent = `
+    .video-play-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    
+    .watch-video-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(63, 43, 150, 0.3);
+    }
+    
+    .modal-image {
+        position: relative;
+    }
+`;
+document.head.appendChild(videoButtonStyle);
+
 
     // Render star ratings
     function renderStars(rating) {
