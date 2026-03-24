@@ -2076,60 +2076,47 @@ color: var(--white-900);
 </head>
 <body>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 
-    // Your Firebase config
-    const firebaseConfig = {
-        apiKey: "AIzaSyAgus5dwm52lyMIe6fwHCuIF_08stWQdGU",
-        authDomain: "sb-store-b6e4b.firebaseapp.com",
-        projectId: "sb-store-b6e4b",
-        storageBucket: "sb-store-b6e4b.firebasestorage.app",
-        messagingSenderId: "983527066671",
-        appId: "1:983527066671:web:6488e1fd814e47f9134ada",
-        measurementId: "G-H4L9XNZ55P"
-    };
+<script>
+  const firebaseConfig = {
+  apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
+  authDomain: "sb-store-719d5.firebaseapp.com",
+  projectId: "sb-store-719d5",
+  storageBucket: "sb-store-719d5.firebasestorage.app",
+  messagingSenderId: "501493533680",
+  appId: "1:501493533680:web:7b1409406b95006df62b35"
+};
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  console.log("🔥 Firebase Connected");
+</script>
     
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    
-    // Load EV products from Firebase
-    async function loadEVProducts() {
-        try {
-            const productsRef = collection(db, "products");
-            const q = query(productsRef, where("category", "in", ["Electric Vehicles", "EV", "Electric Vehicle", "car", "bike", "scooter"]));
-            const querySnapshot = await getDocs(q);
-            
-            const evProducts = [];
-            querySnapshot.forEach((doc) => {
-                const product = doc.data();
-                product.id = doc.id;
-                if (product.category === "car" || product.category === "bike" || product.category === "scooter" || 
-                    product.category === "Electric Vehicles" || product.category === "EV") {
-                    evProducts.push(product);
-                }
-            });
-            
-            // Save to localStorage
-            localStorage.setItem('sbstore_ev_products', JSON.stringify(evProducts));
-            localStorage.setItem('sbstore_last_update', new Date().toISOString());
-            
-            console.log(`✅ Loaded ${evProducts.length} EV products from Firebase`);
-            
-            // Trigger reload of the page's data
-            if (window.loadData) {
-                window.loadData();
-            } else {
-                location.reload();
-            }
-        } catch (error) {
-            console.error("Error loading EV products:", error);
-        }
-    }
-    
-    // Load products
-    loadEVProducts();
+async function loadEVProducts() {
+    const container = document.getElementById("ev-products-container");
+    container.innerHTML = "Loading...";
+
+    const snapshot = await db.collection("ev_products").get();
+
+    container.innerHTML = "";
+
+    snapshot.forEach(doc => {
+        const product = doc.data();
+
+        container.innerHTML += `
+            <div class="product">
+                <img src="${product.image}" width="200">
+                <h3>${product.name}</h3>
+                <p>${product.price}</p>
+            </div>
+        `;
+    });
+}
+
+loadEVProducts();
 </script>
     <!-- Top Bar -->
     <div class="top-bar">
@@ -3134,5 +3121,11 @@ color: var(--white-900);
             return 'Check console for debug info';
         };
     </script>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+
+
+
 </body>
 </html>
