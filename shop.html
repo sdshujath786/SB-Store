@@ -2340,11 +2340,6 @@ html {
     }
 }
 
-
-
-
-
-
         /* ========== TOTAL LINES: APPROXIMATELY 10,400 ========== */
     </style>
 </head>
@@ -2553,7 +2548,7 @@ html {
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, deleteDoc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
@@ -2576,6 +2571,7 @@ html {
         window.deleteDoc = deleteDoc;
         window.query = query;
         window.where = where;
+        window.onSnapshot = onSnapshot;
         
         console.log('Firebase initialized successfully');
     </script>
@@ -2687,108 +2683,82 @@ html {
             }
         };
 
-// ==================================================================
-// FIREBASE DATA MANAGER - DEMO PRODUCTS REMOVED
-// ==================================================================
-const FirebaseManager = {
-    async loadProducts() {
-        try {
-            const productsCollection = collection(window.db, 'products');
-            const productsSnapshot = await getDocs(productsCollection);
+        // ==================================================================
+        // FIREBASE DATA MANAGER - REAL-TIME PRODUCTS
+        // ==================================================================
+        const FirebaseManager = {
+            unsubscribeProducts: null,
             
-            if (productsSnapshot.empty) {
-                console.log('No products found in Firebase.');
-                Utils.showNotification('No products available. Please add products to the database.', 'info');
-                State.products = [];
-                State.filteredProducts = [];
-                ProductRenderer.render();
-                return false;
-            }
+            async loadProducts() {
+                try {
+                    const productsCollection = collection(window.db, 'products');
+                    
+                    // Set up real-time listener
+                    this.unsubscribeProducts = onSnapshot(productsCollection, (snapshot) => {
+                        const products = [];
+                        snapshot.forEach((doc) => {
+                            const data = doc.data();
+                            products.push({
+                                id: doc.id,
+                                name: data.title || data.name || 'Unnamed Product',
+                                comparePrice: data.comparePrice || data.price || 0,
+                                currentPrice: data.price || data.salePrice || data.comparePrice || 0,
+                                discountPercent: data.discountPercent || '',
+                                image: data.image || data.images?.[0] || CONFIG.defaultImage,
+                                category: data.category || 'Uncategorized',
+                                brand: data.brand || 'Generic',
+                                rating: data.rating || 4.5,
+                                reviews: data.reviews || Math.floor(Math.random() * 100) + 10,
+                                stock: data.stock !== undefined ? data.stock : 100,
+                                freeShipping: data.freeShipping || false,
+                                featured: data.featured || false,
+                                isNew: data.isNew || false,
+                                description: data.description || 'No description available.',
+                                amazonUrl: data.amazonUrl || data.affiliateLink || '#',
+                                videoUrl: data.videoLink || data.videoUrl || ''
+                            });
+                        });
+                        
+                        State.products = products;
+                        // Sort by newest (by id or timestamp)
+                        State.products.sort((a,b) => {
+                            if (a.id > b.id) return -1;
+                            if (a.id < b.id) return 1;
+                            return 0;
+                        });
+                        State.filteredProducts = [...State.products];
+                        
+                        console.log(`Loaded ${State.products.length} products from Firebase (real-time)`);
+                        FilterManager.updateFilterCounts();
+                        FilterManager.applyFilters();
+                        ProductRenderer.render();
+                        
+                        if (State.products.length === 0) {
+                            Utils.showNotification('No products found. Please add products from admin panel.', 'info');
+                        }
+                    }, (error) => {
+                        console.error('Error loading products from Firebase:', error);
+                        Utils.showNotification('Failed to load products. Please check your Firebase connection.', 'error');
+                        State.products = [];
+                        State.filteredProducts = [];
+                        ProductRenderer.render();
+                    });
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Error setting up Firebase listener:', error);
+                    Utils.showNotification('Failed to connect to Firebase. Please check your configuration.', 'error');
+                    State.products = [];
+                    State.filteredProducts = [];
+                    ProductRenderer.render();
+                    return false;
+                }
+            },
             
-            const products = [];
-            productsSnapshot.forEach((doc) => {
-                const data = doc.data();
-                products.push({
-                    id: doc.id,
-                    name: data.name || 'Unnamed Product',
-                    comparePrice: data.comparePrice || data.price || 0,
-                    currentPrice: data.currentPrice || data.salePrice || data.price || 0,
-                    discountPercent: data.discountPercent || '',
-                    image: Utils.getValidImage(data),
-                    category: data.category || 'Uncategorized',
-                    brand: data.brand || 'Generic',
-                    rating: data.rating || 4.5,
-                    reviews: data.reviews || Math.floor(Math.random() * 100) + 10,
-                    stock: data.stock !== undefined ? data.stock : 100,
-                    freeShipping: data.freeShipping || false,
-                    featured: data.featured || false,
-                    isNew: data.isNew || false,
-                    description: Utils.getProductDescription(data),
-                    amazonUrl: data.amazonUrl || '#',
-                    videoUrl: data.videoUrl || ''
-                });
-            });
-            
-            State.products = products;
-            State.products.sort((a,b) => b.id.localeCompare(a.id));
-            State.filteredProducts = [...State.products];
-            
-            console.log(`Loaded ${State.products.length} products from Firebase`);
-            return true;
-        } catch (error) {
-            console.error('Error loading products from Firebase:', error);
-            Utils.showNotification('Failed to load products. Please check your Firebase connection.', 'error');
-            State.products = [];
-            State.filteredProducts = [];
-            ProductRenderer.render();
-            return false;
-        }
-    },
-
-    // ... rest of the code remains exactly the same
-
-            loadDemoProducts() {
-                State.products = [
-                    {
-                        id: 1,
-                        name: 'Premium Wireless Headphones',
-                        comparePrice: 9999,
-                        currentPrice: 6999,
-                        discountPercent: '30',
-                        image: 'https://via.placeholder.com/600x600?text=Headphones',
-                        category: 'Electronics',
-                        brand: 'Sony',
-                        rating: 4.8,
-                        reviews: 245,
-                        stock: 50,
-                        freeShipping: true,
-                        featured: true,
-                        isNew: true,
-                        description: 'High-quality wireless headphones with noise cancellation.',
-                        amazonUrl: '#',
-                        videoUrl: ''
-                    },
-                    {
-                        id: 2,
-                        name: 'Smart Watch Pro',
-                        comparePrice: 14999,
-                        currentPrice: 10999,
-                        discountPercent: '27',
-                        image: 'https://via.placeholder.com/600x600?text=Smart+Watch',
-                        category: 'Electronics',
-                        brand: 'Apple',
-                        rating: 4.9,
-                        reviews: 189,
-                        stock: 30,
-                        freeShipping: true,
-                        featured: true,
-                        isNew: true,
-                        description: 'Advanced smartwatch with health tracking features.',
-                        amazonUrl: '#',
-                        videoUrl: ''
-                    }
-                ];
-                State.filteredProducts = [...State.products];
+            cleanup() {
+                if (this.unsubscribeProducts) {
+                    this.unsubscribeProducts();
+                }
             },
 
             async loadWishlist() {
@@ -2869,7 +2839,6 @@ const FirebaseManager = {
         const FilterManager = {
             init() {
                 this.initPriceSlider();
-                this.updateFilterCounts();
                 this.setupEventListeners();
             },
 
@@ -2917,11 +2886,14 @@ const FirebaseManager = {
                     `).join('');
                 }
 
-                document.getElementById('ratingFilters').innerHTML = `
-                    <label><input type="checkbox" value="4"> <span class="rating-stars">★★★★☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 4).length}</span></label>
-                    <label><input type="checkbox" value="3"> <span class="rating-stars">★★★☆☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 3 && p.rating < 4).length}</span></label>
-                    <label><input type="checkbox" value="2"> <span class="rating-stars">★★☆☆☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 2 && p.rating < 3).length}</span></label>
-                `;
+                const ratingEl = document.getElementById('ratingFilters');
+                if (ratingEl) {
+                    ratingEl.innerHTML = `
+                        <label><input type="checkbox" value="4"> <span class="rating-stars">★★★★☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 4).length}</span></label>
+                        <label><input type="checkbox" value="3"> <span class="rating-stars">★★★☆☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 3 && p.rating < 4).length}</span></label>
+                        <label><input type="checkbox" value="2"> <span class="rating-stars">★★☆☆☆</span> & above <span class="count">${State.products.filter(p => p.rating >= 2 && p.rating < 3).length}</span></label>
+                    `;
+                }
 
                 document.getElementById('inStockCount').textContent = State.products.filter(p => p.stock > 0).length;
                 document.getElementById('outOfStockCount').textContent = State.products.filter(p => p.stock <= 0).length;
@@ -2984,7 +2956,11 @@ const FirebaseManager = {
                         break;
                     case 'newest':
                     default:
-                        State.filteredProducts.sort((a,b) => b.id - a.id);
+                        State.filteredProducts.sort((a,b) => {
+                            if (a.id > b.id) return -1;
+                            if (a.id < b.id) return 1;
+                            return 0;
+                        });
                         break;
                 }
             },
@@ -2995,7 +2971,11 @@ const FirebaseManager = {
                 if (slider && slider.noUiSlider) slider.noUiSlider.set([0, 100000]);
                 State.filters = { categories: [], brands: [], ratings: [], availability: [], features: [], minPrice: 0, maxPrice: 100000 };
                 State.filteredProducts = [...State.products];
-                State.filteredProducts.sort((a,b) => b.id - a.id);
+                State.filteredProducts.sort((a,b) => {
+                    if (a.id > b.id) return -1;
+                    if (a.id < b.id) return 1;
+                    return 0;
+                });
                 State.currentPage = 1;
                 ProductRenderer.render();
                 Utils.showNotification('All filters cleared', 'info');
@@ -3045,19 +3025,20 @@ const FirebaseManager = {
                 const inWishlist = State.wishlist.includes(product.id);
                 const hasDiscount = product.comparePrice && product.comparePrice > product.currentPrice;
                 const hasVideo = product.videoUrl && product.videoUrl.trim() !== '';
+                const discountPercent = hasDiscount && product.discountPercent ? product.discountPercent : (hasDiscount ? Math.round(((product.comparePrice - product.currentPrice) / product.comparePrice) * 100) : 0);
                 
                 return `
                     <div class="product-card" data-product-id="${product.id}" data-aos="fade-up">
                         ${product.isNew ? '<div class="product-badge new">New</div>' : ''}
-                        ${hasDiscount && product.discountPercent ? `<div class="product-badge sale">-${product.discountPercent}%</div>` : ''}
+                        ${hasDiscount ? `<div class="product-badge sale">-${discountPercent}%</div>` : ''}
                         
-                        <div class="product-image" onclick="App.openQuickView(${product.id})">
-                            <img src="${Utils.getValidImage(product)}" alt="${product.name}" loading="lazy">
+                        <div class="product-image" onclick="App.openQuickView('${product.id}')">
+                            <img src="${Utils.getValidImage(product)}" alt="${product.name}" loading="lazy" onerror="this.src='${CONFIG.defaultImage}'">
                             <div class="product-actions">
-                                <button class="wishlist-btn ${inWishlist ? 'active' : ''}" onclick="App.toggleWishlist(${product.id}, event)" title="${inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}">
+                                <button class="wishlist-btn ${inWishlist ? 'active' : ''}" onclick="App.toggleWishlist('${product.id}', event)" title="${inWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}">
                                     <i class="${inWishlist ? 'fas' : 'far'} fa-heart"></i>
                                 </button>
-                                <button class="quick-view-btn" onclick="App.openQuickView(${product.id})" title="Quick View">
+                                <button class="quick-view-btn" onclick="App.openQuickView('${product.id}')" title="Quick View">
                                     <i class="fas fa-eye"></i>
                                 </button>
                             </div>
@@ -3080,7 +3061,7 @@ const FirebaseManager = {
                             <div class="product-price">
                                 ${hasDiscount ? `<span class="compare-price">${Utils.formatPrice(product.comparePrice)}</span>` : ''}
                                 <span class="current-price">${Utils.formatPrice(product.currentPrice)}</span>
-                                ${hasDiscount && product.discountPercent ? `<span class="discount-badge">-${product.discountPercent}%</span>` : ''}
+                                ${hasDiscount ? `<span class="discount-badge">-${discountPercent}%</span>` : ''}
                             </div>
                             
                             <p class="product-description">${Utils.truncateText(Utils.getProductDescription(product), CONFIG.maxDescriptionLength)}</p>
@@ -3101,8 +3082,13 @@ const FirebaseManager = {
             updateResultsCount(count) {
                 const el = document.getElementById('resultsCount');
                 if (el) {
-                    const showing = Math.min(State.productsPerPage, count);
-                    el.innerHTML = `<i class="fas fa-box"></i> Showing <strong>${showing}</strong> of <strong>${count}</strong> results`;
+                    const start = (State.currentPage - 1) * State.productsPerPage + 1;
+                    const end = Math.min(State.currentPage * State.productsPerPage, count);
+                    if (count > 0) {
+                        el.innerHTML = `<i class="fas fa-box"></i> Showing <strong>${start}-${end}</strong> of <strong>${count}</strong> results`;
+                    } else {
+                        el.innerHTML = `<i class="fas fa-box"></i> Showing <strong>0</strong> results`;
+                    }
                 }
             }
         };
@@ -3161,7 +3147,7 @@ const FirebaseManager = {
         const WishlistSystem = {
             async toggle(productId, event) {
                 if (event) { event.preventDefault(); event.stopPropagation(); }
-                const id = Number(productId);
+                const id = productId;
                 const product = State.products.find(p => p.id === id);
                 if (!product) return;
 
@@ -3178,13 +3164,12 @@ const FirebaseManager = {
             },
 
             isInWishlist(id) {
-                return State.wishlist.includes(Number(id));
+                return State.wishlist.includes(id);
             },
 
             updateAllButtons(productId) {
-                const id = Number(productId);
-                const inWish = this.isInWishlist(id);
-                document.querySelectorAll(`.product-card[data-product-id="${id}"] .wishlist-btn`).forEach(btn => {
+                const inWish = this.isInWishlist(productId);
+                document.querySelectorAll(`.product-card[data-product-id="${productId}"] .wishlist-btn`).forEach(btn => {
                     const icon = btn.querySelector('i');
                     if (icon) {
                         icon.className = inWish ? 'fas fa-heart' : 'far fa-heart';
@@ -3193,7 +3178,7 @@ const FirebaseManager = {
                     }
                 });
                 const qvBtn = document.getElementById('quickViewWishlistBtn');
-                if (qvBtn && State.currentProduct?.id === id) {
+                if (qvBtn && State.currentProduct?.id === productId) {
                     qvBtn.innerHTML = inWish ? '<i class="fas fa-heart"></i> In Wishlist' : '<i class="far fa-heart"></i> Add to Wishlist';
                 }
             }
@@ -3222,6 +3207,7 @@ const FirebaseManager = {
                 State.currentProduct = product;
                 const hasDiscount = product.comparePrice && product.comparePrice > product.currentPrice;
                 const hasVideo = product.videoUrl && product.videoUrl.trim() !== '';
+                const discountPercent = hasDiscount && product.discountPercent ? product.discountPercent : (hasDiscount ? Math.round(((product.comparePrice - product.currentPrice) / product.comparePrice) * 100) : 0);
 
                 document.getElementById('quickViewImage').src = Utils.getValidImage(product);
                 document.getElementById('quickViewImage').alt = product.name;
@@ -3230,7 +3216,7 @@ const FirebaseManager = {
                 
                 let priceHtml = `${Utils.formatPrice(product.currentPrice)}`;
                 if (hasDiscount) {
-                    priceHtml = `<span style="text-decoration:line-through; margin-right:0.5rem; color:var(--gray-500);">${Utils.formatPrice(product.comparePrice)}</span> ${priceHtml}`;
+                    priceHtml = `<span style="text-decoration:line-through; margin-right:0.5rem; color:var(--gray-500);">${Utils.formatPrice(product.comparePrice)}</span> ${priceHtml} ${hasDiscount ? `<span class="discount-badge">-${discountPercent}%</span>` : ''}`;
                 }
                 document.getElementById('quickViewPrice').innerHTML = priceHtml;
                 
@@ -3402,10 +3388,11 @@ const FirebaseManager = {
                 FilterManager.init();
                 QuickViewManager.init();
                 MobileMenuManager.init();
-                ProductRenderer.render();
                 this.setupEventListeners();
                 AOS.init({ duration: 800, once: true });
-                Utils.showNotification('Welcome to SB Store!', 'info');
+                setTimeout(() => {
+                    Utils.showNotification('Welcome to SB Store! Products load in real-time from Firebase.', 'info');
+                }, 1000);
             },
 
             setupEventListeners() {
@@ -3420,6 +3407,9 @@ const FirebaseManager = {
                 });
                 document.getElementById('accountToggle')?.addEventListener('click', () => {
                     Utils.showNotification('Account feature coming soon', 'info');
+                });
+                document.getElementById('searchToggle')?.addEventListener('click', () => {
+                    Utils.showNotification('Search feature coming soon', 'info');
                 });
             },
 
