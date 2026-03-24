@@ -1201,6 +1201,26 @@
         .pulse {
             animation: pulse 2s infinite;
         }
+        /* Upload Loading Animation */
+.upload-loading {
+    position: relative;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.upload-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    border: 3px solid var(--primary-200);
+    border-top-color: var(--primary-600);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
     </style>
 </head>
 <body>
@@ -1887,12 +1907,15 @@ async function handleImageFiles(files) {
             
             // Create a unique filename
             const timestamp = Date.now();
-            const filename = `products/${timestamp}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+            const random = Math.random().toString(36).substring(2, 8);
+            const filename = `products/${timestamp}_${random}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
             
             // Upload to Firebase Storage
             const storageRef = ref(window.storage, filename);
             const snapshot = await uploadBytes(storageRef, file);
             const downloadUrl = await getDownloadURL(snapshot.ref);
+            
+            console.log('Image uploaded successfully:', downloadUrl);
             
             // Store the URL (not base64!)
             uploadedImages.push({
@@ -1906,22 +1929,31 @@ async function handleImageFiles(files) {
             showToast(file.name + ' uploaded successfully!', 'success');
             
         } catch (error) {
-            console.error('Upload error:', error);
+            console.error('Upload error details:', error);
             showToast('Failed to upload ' + file.name + ': ' + error.message, 'error');
         }
     }
 }
-        function updateImagePreview() {
-            imagePreview.innerHTML = uploadedImages.map((img, index) => `
-                <div class="preview-item">
-                    <img src="${img.data}" alt="Preview ${index + 1}">
-                    ${img.featured ? '<span class="featured-badge">Featured</span>' : ''}
-                    <button class="remove-btn" onclick="removeImage(${index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
+function updateImagePreview() {
+    imagePreview.innerHTML = uploadedImages.map((img, index) => `
+        <div class="preview-item">
+            <img src="${img.data}" alt="Preview ${index + 1}">
+            ${img.featured ? '<span class="featured-badge">Featured</span>' : ''}
+            <button class="remove-btn" onclick="removeImage(${index})">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `).join('');
+    
+    // Make featured images clickable
+    document.querySelectorAll('.preview-item').forEach((item, idx) => {
+        item.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('remove-btn')) {
+                setFeaturedImage(idx);
+            }
+        });
+    });
+}
 
         window.removeImage = function(index) {
             uploadedImages.splice(index, 1);
@@ -1931,12 +1963,13 @@ async function handleImageFiles(files) {
             updateImagePreview();
         };
 
-        window.setFeaturedImage = function(index) {
-            uploadedImages.forEach((img, i) => {
-                img.featured = i === index;
-            });
-            updateImagePreview();
-        };
+window.setFeaturedImage = function(index) {
+    uploadedImages.forEach((img, i) => {
+        img.featured = (i === index);
+    });
+    updateImagePreview();
+    showToast('Featured image updated', 'success');
+};
 
         // Variation Management
         let variationGroups = [];
