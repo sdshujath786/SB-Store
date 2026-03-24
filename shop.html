@@ -2748,10 +2748,10 @@ html {
                         <span class="current-price">${Utils.formatPrice(product.price)}</span>
                     </div>
                     <p class="product-description">${Utils.truncateText(product.description, CONFIG.maxDescriptionLength)}</p>
-                    <div class="product-actions-bottom">
-                        <button class="view-details-btn" onclick="window.open('${product.amazonUrl}', '_blank')">View Details</button>
-                        <a href="${product.amazonUrl}" class="amazon-btn" target="_blank">Buy Now</a>
-                    </div>
+<div class="product-actions-bottom">
+    <button class="view-details-btn" onclick="window.open('${product.amazonUrl}', '_blank')">View Details</button>
+    <a href="${product.amazonUrl}" class="amazon-btn" target="_blank">Buy Now</a>
+</div>
                 </div>
             </div>
         `).join('');
