@@ -2544,11 +2544,11 @@ html {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-<!-- Firebase SDK and App - ALL IN ONE MODULE -->
+<!-- Firebase SDK and App - ALL IN ONE MODULE with Real-time onSnapshot -->
 <script type="module">
-    // Import Firebase modules
+    // Import Firebase modules (Modular SDK v9+)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     
     // Your Firebase config
     const firebaseConfig = {
@@ -2564,7 +2564,7 @@ html {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     
-    console.log('✅ Firebase connected - ready to load products');
+    console.log('✅ Firebase connected - real-time updates enabled');
     
     // ========== CONFIGURATION ==========
     const CONFIG = {
@@ -2578,16 +2578,18 @@ html {
     let filteredProducts = [];
     let currentPage = 1;
     let wishlist = [];
+    let unsubscribeProducts = null; // for real-time listener
     
     // ========== UTILITIES ==========
     const Utils = {
         formatPrice(price) {
+            if (!price && price !== 0) return '₹0';
             return new Intl.NumberFormat('en-IN', {
                 style: 'currency',
                 currency: 'INR',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
-            }).format(price || 0);
+            }).format(price);
         },
         
         truncateText(text, maxLength) {
@@ -2595,24 +2597,28 @@ html {
             return text.length <= maxLength ? text : text.substr(0, maxLength).trim() + '...';
         },
         
-        getValidImage(product) {
+        getFirstImage(product) {
+            if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+                return product.images[0];
+            }
             if (product.image && product.image.trim()) return product.image;
             return CONFIG.defaultImage;
         },
         
         generateStars(rating) {
-            const full = Math.floor(rating);
-            const half = rating % 1 >= 0.5;
+            const numRating = parseFloat(rating) || 4.5;
+            const full = Math.floor(numRating);
+            const half = numRating % 1 >= 0.5;
             let stars = '';
             for (let i = 0; i < full; i++) stars += '<i class="fas fa-star"></i>';
             if (half) stars += '<i class="fas fa-star-half-alt"></i>';
-            for (let i = 0; i < 5 - Math.ceil(rating); i++) stars += '<i class="far fa-star"></i>';
+            for (let i = 0; i < 5 - Math.ceil(numRating); i++) stars += '<i class="far fa-star"></i>';
             return stars;
         },
         
         showNotification(message, type = 'success') {
             if (typeof toastr !== 'undefined') {
-                toastr.options = { closeButton: true, progressBar: true, timeOut: 3000 };
+                toastr.options = { closeButton: true, progressBar: true, timeOut: 3000, positionClass: 'toast-top-right' };
                 if (type === 'success') toastr.success(message);
                 else if (type === 'error') toastr.error(message);
                 else toastr.info(message);
@@ -2622,72 +2628,71 @@ html {
         }
     };
     
-    // ========== LOAD PRODUCTS FROM FIREBASE ==========
-    async function loadProductsFromFirebase() {
-        const grid = document.getElementById('shopProductsGrid');
-        if (grid) grid.innerHTML = '<div class="loading-spinner"></div>';
+    // ========== REAL-TIME PRODUCT LOADER ==========
+    function initRealTimeProducts() {
+        const productsRef = collection(db, 'products');
         
-        try {
-            const productsRef = collection(db, 'products');
-            const querySnapshot = await getDocs(productsRef);
-            
-            if (querySnapshot.empty) {
-                console.log('No products found in Firebase');
+        // Use onSnapshot for real-time updates
+        unsubscribeProducts = onSnapshot(productsRef, 
+            (snapshot) => {
+                console.log(`🔥 Real-time update: ${snapshot.docChanges().length} changes detected`);
+                
+                const products = [];
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Map Firebase data to product structure (supports both title and name, images array)
+                    products.push({
+                        id: doc.id,
+                        name: data.title || data.name || 'Unnamed Product',
+                        price: data.price || data.currentPrice || 0,
+                        comparePrice: data.comparePrice || data.originalPrice || 0,
+                        image: Utils.getFirstImage(data),  // handles images array or single image
+                        images: data.images || (data.image ? [data.image] : []),
+                        category: data.category || 'Uncategorized',
+                        brand: data.brand || 'Generic',
+                        rating: data.rating || 4.5,
+                        reviews: data.reviews || Math.floor(Math.random() * 100) + 10,
+                        stock: data.stock !== undefined ? data.stock : 100,
+                        freeShipping: data.freeShipping || false,
+                        featured: data.featured || false,
+                        isNew: data.isNew || false,
+                        description: data.description || 'No description available.',
+                        amazonUrl: data.amazonUrl || data.affiliateLink || '#',
+                        videoUrl: data.videoLink || data.videoUrl || ''
+                    });
+                });
+                
+                allProducts = products;
+                filteredProducts = [...allProducts];
+                
+                console.log(`✅ Loaded ${allProducts.length} products from Firebase (real-time)`);
+                
+                // Update category filters dynamically
+                updateCategoryFilters();
+                
+                // Re-apply current filters (preserve filter state)
+                applyFilters();
+                
+                Utils.showNotification(`🔄 ${allProducts.length} products updated from Firebase!`, 'success');
+            },
+            (error) => {
+                console.error('Error fetching real-time products:', error);
+                Utils.showNotification('Failed to load products. Check Firebase connection.', 'error');
+                const grid = document.getElementById('shopProductsGrid');
                 if (grid) {
                     grid.innerHTML = `
                         <div class="no-products">
-                            <i class="fas fa-box-open"></i>
-                            <h3>No Products Found</h3>
-                            <p>Add products from the admin panel to see them here.</p>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Error Loading Products</h3>
+                            <p>Please verify Firebase configuration.</p>
                         </div>
                     `;
                 }
-                return [];
             }
-            
-            const products = [];
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                products.push({
-                    id: doc.id,
-                    name: data.title || data.name || 'Unnamed Product',
-                    price: data.price || data.currentPrice || 0,
-                    comparePrice: data.comparePrice || data.originalPrice || 0,
-                    image: data.image || data.images?.[0] || CONFIG.defaultImage,
-                    category: data.category || 'Uncategorized',
-                    brand: data.brand || 'Generic',
-                    rating: data.rating || 4.5,
-                    reviews: data.reviews || Math.floor(Math.random() * 100) + 10,
-                    stock: data.stock !== undefined ? data.stock : 100,
-                    freeShipping: data.freeShipping || false,
-                    featured: data.featured || false,
-                    isNew: data.isNew || false,
-                    description: data.description || 'No description available.',
-                    amazonUrl: data.amazonUrl || data.affiliateLink || '#',
-                    videoUrl: data.videoLink || data.videoUrl || ''
-                });
-            });
-            
-            console.log(`✅ Loaded ${products.length} products from Firebase`);
-            return products;
-            
-        } catch (error) {
-            console.error('Error loading products:', error);
-            Utils.showNotification('Failed to load products. Check console for details.', 'error');
-            if (grid) {
-                grid.innerHTML = `
-                    <div class="no-products">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Error Loading Products</h3>
-                        <p>Please check your Firebase connection.</p>
-                    </div>
-                `;
-            }
-            return [];
-        }
+        );
     }
     
-    // ========== RENDER PRODUCT CARDS ==========
+    // ========== RENDER PRODUCT CARDS (preserves exact structure) ==========
     function renderProducts() {
         const grid = document.getElementById('shopProductsGrid');
         if (!grid) return;
@@ -2715,7 +2720,7 @@ html {
                 ${product.comparePrice > product.price ? `<div class="product-badge sale">-${Math.round(((product.comparePrice - product.price) / product.comparePrice) * 100)}%</div>` : ''}
                 
                 <div class="product-image" onclick="window.openQuickView('${product.id}')">
-                    <img src="${Utils.getValidImage(product)}" alt="${product.name}" loading="lazy" onerror="this.src='${CONFIG.defaultImage}'">
+                    <img src="${product.image}" alt="${product.name.replace(/"/g, '&quot;')}" loading="lazy" onerror="this.src='${CONFIG.defaultImage}'">
                     <div class="product-actions">
                         <button class="wishlist-btn" onclick="window.toggleWishlist('${product.id}', event)">
                             <i class="far fa-heart"></i>
@@ -2725,7 +2730,7 @@ html {
                         </button>
                     </div>
                     ${product.videoUrl ? `
-                        <div class="video-indicator" onclick="event.stopPropagation(); window.playVideo('${product.videoUrl}', '${product.name}')">
+                        <div class="video-indicator" onclick="event.stopPropagation(); window.playVideo('${product.videoUrl.replace(/'/g, "\\'")}', '${product.name.replace(/'/g, "\\'")}')">
                             <i class="fas fa-play"></i>
                         </div>
                     ` : ''}
@@ -2759,9 +2764,9 @@ html {
     function updateResultsCount(count) {
         const el = document.getElementById('resultsCount');
         if (el) {
-            const start = (currentPage - 1) * CONFIG.productsPerPage + 1;
-            const end = Math.min(currentPage * CONFIG.productsPerPage, count);
             if (count > 0) {
+                const start = (currentPage - 1) * CONFIG.productsPerPage + 1;
+                const end = Math.min(currentPage * CONFIG.productsPerPage, count);
                 el.innerHTML = `<i class="fas fa-box"></i> Showing <strong>${start}-${end}</strong> of <strong>${count}</strong> products`;
             } else {
                 el.innerHTML = `<i class="fas fa-box"></i> Showing <strong>0</strong> products`;
@@ -2799,7 +2804,7 @@ html {
         numEl.innerHTML = html;
     }
     
-    // ========== APPLY FILTERS ==========
+    // ========== APPLY FILTERS (preserve all original filtering) ==========
     function applyFilters() {
         const selectedCategories = Array.from(document.querySelectorAll('#categoryFilters input:checked')).map(cb => cb.value);
         const minPrice = parseFloat(document.getElementById('minPrice')?.value) || 0;
@@ -2808,15 +2813,15 @@ html {
         
         let filtered = [...allProducts];
         
-        // Filter by category
+        // Category filter
         if (selectedCategories.length > 0) {
             filtered = filtered.filter(p => selectedCategories.includes(p.category));
         }
         
-        // Filter by price
+        // Price filter
         filtered = filtered.filter(p => p.price >= minPrice && p.price <= maxPrice);
         
-        // Sort
+        // Sorting (preserve original functionality)
         switch(sortBy) {
             case 'price-low':
                 filtered.sort((a,b) => a.price - b.price);
@@ -2833,6 +2838,7 @@ html {
             case 'name-desc':
                 filtered.sort((a,b) => b.name.localeCompare(a.name));
                 break;
+            case 'newest':
             default:
                 filtered.sort((a,b) => b.id.localeCompare(a.id));
                 break;
@@ -2843,7 +2849,7 @@ html {
         renderProducts();
     }
     
-    // ========== UPDATE CATEGORY FILTERS ==========
+    // ========== UPDATE CATEGORY FILTERS FROM LIVE DATA ==========
     function updateCategoryFilters() {
         const categories = {};
         allProducts.forEach(p => {
@@ -2854,27 +2860,20 @@ html {
         if (catEl) {
             catEl.innerHTML = Object.keys(categories).sort().map(cat => `
                 <label>
-                    <input type="checkbox" value="${cat}"> ${cat}
+                    <input type="checkbox" value="${cat.replace(/"/g, '&quot;')}"> ${cat}
                     <span class="count">${categories[cat]}</span>
                 </label>
             `).join('');
             
-            // Reattach event listeners
+            // Re-attach event listeners for dynamic filters
             catEl.querySelectorAll('input').forEach(cb => {
                 cb.addEventListener('change', () => applyFilters());
             });
         }
     }
     
-    // ========== INITIALIZE PAGE ==========
+    // ========== INITIALIZE PAGE WITH REAL-TIME ==========
     async function initPage() {
-        // Load products from Firebase
-        allProducts = await loadProductsFromFirebase();
-        filteredProducts = [...allProducts];
-        
-        // Update category filters
-        updateCategoryFilters();
-        
         // Initialize price slider
         if (typeof noUiSlider !== 'undefined') {
             const slider = document.getElementById('priceSlider');
@@ -2900,7 +2899,7 @@ html {
             }
         }
         
-        // Setup event listeners
+        // Setup filter button listeners
         const applyBtn = document.getElementById('applyFilters');
         const clearBtn = document.getElementById('clearFilters');
         const sortBy = document.getElementById('sortBy');
@@ -2915,13 +2914,13 @@ html {
         });
         if (sortBy) sortBy.addEventListener('change', () => applyFilters());
         
-        // Render products
-        renderProducts();
+        // Start real-time listener
+        initRealTimeProducts();
         
         // Initialize AOS
         if (typeof AOS !== 'undefined') AOS.init({ duration: 800, once: true });
         
-        // Setup mobile menu
+        // Mobile menu and filter toggles
         const mobileToggle = document.getElementById('mobileMenuToggle');
         const navMenu = document.querySelector('.nav-menu');
         if (mobileToggle && navMenu) {
@@ -2943,11 +2942,9 @@ html {
                 document.body.style.overflow = '';
             });
         }
-        
-        Utils.showNotification(`✅ ${allProducts.length} products loaded from Firebase!`, 'success');
     }
     
-    // ========== EXPOSE GLOBAL FUNCTIONS ==========
+    // ========== EXPOSE GLOBAL FUNCTIONS (preserve original naming) ==========
     window.goToPage = (page) => {
         currentPage = page;
         renderProducts();
@@ -2961,7 +2958,7 @@ html {
         const modal = document.getElementById('quickViewModal');
         if (!modal) return;
         
-        document.getElementById('quickViewImage').src = Utils.getValidImage(product);
+        document.getElementById('quickViewImage').src = product.image;
         document.getElementById('quickViewTitle').textContent = product.name;
         document.getElementById('quickViewRating').innerHTML = `<div class="rating-stars">${Utils.generateStars(product.rating)}</div> <span>(${product.reviews} reviews)</span>`;
         document.getElementById('quickViewPrice').innerHTML = Utils.formatPrice(product.price);
@@ -2970,26 +2967,26 @@ html {
         
         modal.classList.add('active');
         
-        // Close modal
-        document.querySelector('.modal-close')?.addEventListener('click', () => modal.classList.remove('active'));
-        document.querySelector('.modal-overlay')?.addEventListener('click', () => modal.classList.remove('active'));
+        const closeModal = () => modal.classList.remove('active');
+        document.querySelector('.modal-close')?.addEventListener('click', closeModal);
+        document.querySelector('.modal-overlay')?.addEventListener('click', closeModal);
     };
     
     window.toggleWishlist = (productId, event) => {
         event.stopPropagation();
-        Utils.showNotification('Wishlist feature coming soon!', 'info');
+        Utils.showNotification('❤️ Wishlist feature coming soon!', 'info');
     };
     
     window.playVideo = (videoUrl, productName) => {
         if (!videoUrl) {
-            Utils.showNotification('No video available', 'error');
+            Utils.showNotification('No video available for this product', 'error');
             return;
         }
         
         let embedUrl = videoUrl;
         const youtubeMatch = videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
         if (youtubeMatch) {
-            embedUrl = `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1`;
+            embedUrl = `https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1&rel=0`;
         }
         
         const modal = document.createElement('div');
@@ -2999,15 +2996,16 @@ html {
             <div class="video-modal-content">
                 <button class="video-modal-close" onclick="this.closest('.video-modal').remove()">&times;</button>
                 ${youtubeMatch ? 
-                    `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>` : 
+                    `<iframe src="${embedUrl}" frameborder="0" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>` : 
                     `<video controls autoplay src="${videoUrl}"></video>`
                 }
             </div>
         `;
         document.body.appendChild(modal);
+        modal.style.display = 'flex';
     };
     
-    // Start the app
+    // Start everything
     initPage();
 </script>
 

@@ -1698,11 +1698,11 @@
     </div>
 
     <!-- Preview Modal -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content modal-lg">
-            <div class="modal-header">
+    <div class="modal" id="previewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div class="modal-content" style="background: white; margin: 50px auto; padding: 20px; width: 80%; max-width: 800px; border-radius: 10px;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
                 <h2><i class="fas fa-eye"></i> Product Preview</h2>
-                <button class="modal-close" onclick="closePreview()">&times;</button>
+                <button class="modal-close" onclick="closePreview()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
             </div>
             <div class="modal-body">
                 <iframe id="previewFrame" style="width: 100%; height: 500px; border: none;"></iframe>
@@ -1713,57 +1713,44 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
-<script type="module">
-    // Import Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
-    
-    // Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
-        authDomain: "sb-store-719d5.firebaseapp.com",
-        projectId: "sb-store-719d5",
-        storageBucket: "sb-store-719d5.firebasestorage.app",
-        messagingSenderId: "501493533680",
-        appId: "1:501493533680:web:7b1409406b95006df62b35"
-    };
-    
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-    
-    // Make available globally
-    window.db = db;
-    window.storage = storage;
-    window.getDocs = getDocs;
-    window.doc = doc;
-    window.getDoc = getDoc;
-    window.addDoc = addDoc;
-    window.updateDoc = updateDoc;
-    window.collection = collection;
-    window.query = query;
-    window.where = where;
-    window.ref = ref;
-    window.uploadBytes = uploadBytes;
-    window.getDownloadURL = getDownloadURL;
-    
-    // Auto-login flag
-    localStorage.setItem('adminLoggedIn', 'true');
-    localStorage.setItem('sbstore_admin_logged_in', 'true');
-    localStorage.setItem('sbstore_current_user', JSON.stringify({
-        id: 1, name: 'Admin', email: 'admin@sbstore.com', role: 'admin'
-    }));
-</script>
-    
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@4.17.9/dist/tagify.min.js"></script>
     
-    <script>
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDT7EwNMmgfyOJa-uMVcXW3TWmNNHApkus",
+            authDomain: "sb-store-719d5.firebaseapp.com",
+            projectId: "sb-store-719d5",
+            storageBucket: "sb-store-719d5.firebasestorage.app",
+            messagingSenderId: "501493533680",
+            appId: "1:501493533680:web:7b1409406b95006df62b35"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+        
+        // Make Firebase instances available globally
+        window.db = db;
+        window.storage = storage;
+        
+        // Auto-login flag
+        localStorage.setItem('adminLoggedIn', 'true');
+        localStorage.setItem('sbstore_admin_logged_in', 'true');
+        localStorage.setItem('sbstore_current_user', JSON.stringify({
+            id: 1, name: 'Admin', email: 'admin@sbstore.com', role: 'admin'
+        }));
+        
         // ========== PROFESSIONAL ADD PRODUCT SCRIPT ==========
         
         // Check admin login
@@ -1894,66 +1881,54 @@
             handleImageFiles(files);
         });
 
-async function handleImageFiles(files) {
-    for (const file of files) {
-        if (file.size > 5 * 1024 * 1024) {
-            showToast('File ' + file.name + ' is too large (max 5MB)', 'error');
-            continue;
+        async function handleImageFiles(files) {
+            for (const file of files) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('File ' + file.name + ' is too large (max 5MB)', 'error');
+                    continue;
+                }
+                
+                try {
+                    showToast('Uploading ' + file.name + '...', 'info');
+                    
+                    const timestamp = Date.now();
+                    const random = Math.random().toString(36).substring(2, 8);
+                    const filename = `products/${timestamp}_${random}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+                    
+                    const storageRef = ref(storage, filename);
+                    const snapshot = await uploadBytes(storageRef, file);
+                    const downloadUrl = await getDownloadURL(snapshot.ref);
+                    
+                    console.log('Image uploaded successfully:', downloadUrl);
+                    
+                    uploadedImages.push({
+                        data: downloadUrl,
+                        name: file.name,
+                        size: file.size,
+                        featured: uploadedImages.length === 0
+                    });
+                    
+                    updateImagePreview();
+                    showToast(file.name + ' uploaded successfully!', 'success');
+                    
+                } catch (error) {
+                    console.error('Upload error details:', error);
+                    showToast('Failed to upload ' + file.name + ': ' + error.message, 'error');
+                }
+            }
         }
         
-        try {
-            // Show uploading indicator
-            showToast('Uploading ' + file.name + '...', 'info');
-            
-            // Create a unique filename
-            const timestamp = Date.now();
-            const random = Math.random().toString(36).substring(2, 8);
-            const filename = `products/${timestamp}_${random}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-            
-            // Upload to Firebase Storage
-            const storageRef = ref(window.storage, filename);
-            const snapshot = await uploadBytes(storageRef, file);
-            const downloadUrl = await getDownloadURL(snapshot.ref);
-            
-            console.log('Image uploaded successfully:', downloadUrl);
-            
-            // Store the URL
-            uploadedImages.push({
-                data: downloadUrl,
-                name: file.name,
-                size: file.size,
-                featured: uploadedImages.length === 0
-            });
-            
-            updateImagePreview();
-            showToast(file.name + ' uploaded successfully!', 'success');
-            
-        } catch (error) {
-            console.error('Upload error details:', error);
-            showToast('Failed to upload ' + file.name + ': ' + error.message, 'error');
+        function updateImagePreview() {
+            imagePreview.innerHTML = uploadedImages.map((img, index) => `
+                <div class="preview-item">
+                    <img src="${img.data}" alt="Preview ${index + 1}">
+                    ${img.featured ? '<span class="featured-badge">Featured</span>' : ''}
+                    <button class="remove-btn" onclick="window.removeImage(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('');
         }
-    }
-}
-function updateImagePreview() {
-    imagePreview.innerHTML = uploadedImages.map((img, index) => `
-        <div class="preview-item">
-            <img src="${img.data}" alt="Preview ${index + 1}">
-            ${img.featured ? '<span class="featured-badge">Featured</span>' : ''}
-            <button class="remove-btn" onclick="removeImage(${index})">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    `).join('');
-    
-    // Make featured images clickable
-    document.querySelectorAll('.preview-item').forEach((item, idx) => {
-        item.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('remove-btn')) {
-                setFeaturedImage(idx);
-            }
-        });
-    });
-}
 
         window.removeImage = function(index) {
             uploadedImages.splice(index, 1);
@@ -1963,13 +1938,13 @@ function updateImagePreview() {
             updateImagePreview();
         };
 
-window.setFeaturedImage = function(index) {
-    uploadedImages.forEach((img, i) => {
-        img.featured = (i === index);
-    });
-    updateImagePreview();
-    showToast('Featured image updated', 'success');
-};
+        window.setFeaturedImage = function(index) {
+            uploadedImages.forEach((img, i) => {
+                img.featured = (i === index);
+            });
+            updateImagePreview();
+            showToast('Featured image updated', 'success');
+        };
 
         // Variation Management
         let variationGroups = [];
@@ -1997,7 +1972,6 @@ window.setFeaturedImage = function(index) {
                 return;
             }
             
-            // Generate all combinations
             let combinations = [{}];
             
             variationGroups.forEach(group => {
@@ -2037,7 +2011,7 @@ window.setFeaturedImage = function(index) {
         // Firebase CRUD Functions
         async function loadProductFromFirebase(productId) {
             try {
-                const productRef = doc(window.db, 'products', productId);
+                const productRef = doc(db, 'products', productId);
                 const productSnap = await getDoc(productRef);
                 
                 if (productSnap.exists()) {
@@ -2048,59 +2022,18 @@ window.setFeaturedImage = function(index) {
                     document.getElementById('productBrand').value = product.brand || '';
                     document.getElementById('productSku').value = product.sku || '';
                     document.getElementById('productBarcode').value = product.barcode || '';
-                    
-                    // Pricing
-                    document.getElementById('currency').value = product.currency || 'INR';
                     document.getElementById('productPrice').value = product.price || '';
-                    document.getElementById('productSalePrice').value = product.salePrice || '';
-                    document.getElementById('productCost').value = product.cost || '';
-                    document.getElementById('productDiscount').value = product.discount || '';
-                    
-                    // Inventory
-                    document.getElementById('stockQuantity').value = product.stock || 100;
-                    document.getElementById('stockStatus').value = product.inStock ? 'true' : 'false';
-                    
-                    // Description
                     document.getElementById('shortDescription').value = product.shortDesc || '';
                     quill.root.innerHTML = product.description || '';
-                    document.getElementById('features').value = product.features ? product.features.join('\n') : '';
+                    document.getElementById('videoUrl').value = product.videoLink || '';
                     
-                    // SEO
-                    document.getElementById('metaTitle').value = product.metaTitle || '';
-                    document.getElementById('metaDescription').value = product.metaDesc || '';
-                    document.getElementById('metaKeywords').value = product.metaKeywords || '';
-                    document.getElementById('productSlug').value = product.slug || '';
-                    
-                    // Media
                     if (product.images && product.images.length > 0) {
-                        uploadedImages = product.images.map((url, index) => ({ 
+                        uploadedImages = product.images.filter(img => img).map((url, index) => ({ 
                             data: url, 
                             name: 'image-' + (index + 1),
                             featured: index === 0
                         }));
                         updateImagePreview();
-                    }
-                    
-                    document.getElementById('videoUrl').value = product.videoLink || '';
-                    document.getElementById('amazonUrl').value = product.amazonUrl || '';
-                    document.getElementById('primeEligible').checked = product.prime || false;
-                    
-                    // Shipping
-                    document.getElementById('weight').value = product.weight || '';
-                    if (product.dimensions) {
-                        document.getElementById('length').value = product.dimensions.length || '';
-                        document.getElementById('width').value = product.dimensions.width || '';
-                        document.getElementById('height').value = product.dimensions.height || '';
-                    }
-                    
-                    // Status
-                    document.getElementById('productStatus').value = product.status || 'active';
-                    document.getElementById('featuredProduct').checked = product.featured || false;
-                    
-                    // Tags
-                    if (product.tags) {
-                        tagify.removeAllTags();
-                        tagify.addTags(product.tags);
                     }
                     
                     updateSeoPreview();
@@ -2115,13 +2048,11 @@ window.setFeaturedImage = function(index) {
         async function saveProductToFirebase(productData, productId) {
             try {
                 if (productId) {
-                    // Update existing product
-                    const productRef = doc(window.db, 'products', productId);
+                    const productRef = doc(db, 'products', productId);
                     await updateDoc(productRef, productData);
                     showToast('Product updated successfully!', 'success');
                 } else {
-                    // Add new product
-                    await addDoc(collection(window.db, 'products'), productData);
+                    await addDoc(collection(db, 'products'), productData);
                     showToast('Product added successfully!', 'success');
                 }
                 return true;
@@ -2151,7 +2082,6 @@ window.setFeaturedImage = function(index) {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
             submitBtn.disabled = true;
             
-            // Get all form values
             const title = document.getElementById('productName').value.trim();
             if (!title) {
                 showToast('Product name is required', 'error');
@@ -2168,18 +2098,9 @@ window.setFeaturedImage = function(index) {
                 return;
             }
 
-            // Get features as array
-            const features = document.getElementById('features').value
-                .split('\n')
-                .map(f => f.trim())
-                .filter(f => f);
-
-            // Get tags as array
-            const tags = tagify.value.map(t => t.value);
-
-            // Get images array (at least 5 image URLs or empty array)
+            // Get images array
             const images = uploadedImages.map(img => img.data);
-            // Ensure we have at least 5 slots (can be empty strings if not enough images)
+            // Ensure we have at least 5 slots
             while(images.length < 5) {
                 images.push("");
             }
@@ -2192,51 +2113,16 @@ window.setFeaturedImage = function(index) {
                 images: images,
                 videoLink: document.getElementById('videoUrl').value || "",
                 createdAt: serverTimestamp(),
-                // Additional fields for compatibility with existing UI
-                name: title,
-                shortDesc: document.getElementById('shortDescription').value,
-                brand: document.getElementById('productBrand').value,
-                sku: document.getElementById('productSku').value,
-                barcode: document.getElementById('productBarcode').value,
-                currency: document.getElementById('currency').value,
-                salePrice: document.getElementById('productSalePrice').value ? parseFloat(document.getElementById('productSalePrice').value) : null,
-                cost: document.getElementById('productCost').value ? parseFloat(document.getElementById('productCost').value) : null,
-                discount: document.getElementById('productDiscount').value ? parseFloat(document.getElementById('productDiscount').value) : 0,
-                stock: parseInt(document.getElementById('stockQuantity').value) || 0,
-                lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value) || 5,
-                inStock: document.getElementById('stockStatus').value === 'true',
-                features: features,
-                metaTitle: document.getElementById('metaTitle').value,
-                metaDesc: document.getElementById('metaDescription').value,
-                metaKeywords: document.getElementById('metaKeywords').value,
-                slug: document.getElementById('productSlug').value,
-                weight: parseFloat(document.getElementById('weight').value) || null,
-                dimensions: {
-                    length: parseFloat(document.getElementById('length').value) || null,
-                    width: parseFloat(document.getElementById('width').value) || null,
-                    height: parseFloat(document.getElementById('height').value) || null
-                },
-                freeShipping: document.getElementById('freeShipping').checked,
-                shippingClass: document.getElementById('shippingClass').value,
-                status: document.getElementById('productStatus').value,
-                visibility: document.getElementById('productVisibility').value,
-                featured: document.getElementById('featuredProduct').checked,
-                taxClass: document.getElementById('taxClass').value,
-                tags: tags,
                 updatedAt: serverTimestamp()
             };
             
-            // Save to Firebase
             const success = await saveProductToFirebase(productData, productId);
             
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
             
             if (success) {
-                // Trigger update on main site
                 localStorage.setItem('sbstore_last_update', Date.now().toString());
-                
-                // Redirect after delay
                 setTimeout(() => {
                     window.location.href = 'products.html';
                 }, 1500);
@@ -2251,7 +2137,6 @@ window.setFeaturedImage = function(index) {
                 return;
             }
             
-            // Create preview HTML
             const previewHtml = `
                 <div style="padding: 20px; font-family: 'Inter', sans-serif;">
                     <h1>${name}</h1>
@@ -2262,11 +2147,11 @@ window.setFeaturedImage = function(index) {
             
             const previewFrame = document.getElementById('previewFrame');
             previewFrame.srcdoc = previewHtml;
-            document.getElementById('previewModal').classList.add('active');
+            document.getElementById('previewModal').style.display = 'block';
         };
 
         window.closePreview = function() {
-            document.getElementById('previewModal').classList.remove('active');
+            document.getElementById('previewModal').style.display = 'none';
         };
         
         window.duplicateProduct = function() {
