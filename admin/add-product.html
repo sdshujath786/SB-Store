@@ -1716,7 +1716,7 @@
 <script type="module">
     // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, addDoc, updateDoc, collection, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
     
     // Firebase configuration
@@ -1917,9 +1917,9 @@ async function handleImageFiles(files) {
             
             console.log('Image uploaded successfully:', downloadUrl);
             
-            // Store the URL (not base64!)
+            // Store the URL
             uploadedImages.push({
-                data: downloadUrl,  // This is a URL, not base64!
+                data: downloadUrl,
                 name: file.name,
                 size: file.size,
                 featured: uploadedImages.length === 0
@@ -2043,13 +2043,13 @@ window.setFeaturedImage = function(index) {
                 if (productSnap.exists()) {
                     const product = productSnap.data();
                     document.getElementById('productId').value = productId;
-                    document.getElementById('productName').value = product.name || '';
+                    document.getElementById('productName').value = product.title || '';
                     document.getElementById('productCategory').value = product.category || '';
                     document.getElementById('productBrand').value = product.brand || '';
                     document.getElementById('productSku').value = product.sku || '';
                     document.getElementById('productBarcode').value = product.barcode || '';
                     
-                    // Pricing - all fields loaded independently
+                    // Pricing
                     document.getElementById('currency').value = product.currency || 'INR';
                     document.getElementById('productPrice').value = product.price || '';
                     document.getElementById('productSalePrice').value = product.salePrice || '';
@@ -2081,7 +2081,7 @@ window.setFeaturedImage = function(index) {
                         updateImagePreview();
                     }
                     
-                    document.getElementById('videoUrl').value = product.videoUrl || '';
+                    document.getElementById('videoUrl').value = product.videoLink || '';
                     document.getElementById('amazonUrl').value = product.amazonUrl || '';
                     document.getElementById('primeEligible').checked = product.prime || false;
                     
@@ -2121,7 +2121,7 @@ window.setFeaturedImage = function(index) {
                     showToast('Product updated successfully!', 'success');
                 } else {
                     // Add new product
-                    const docRef = await addDoc(collection(window.db, 'products'), productData);
+                    await addDoc(collection(window.db, 'products'), productData);
                     showToast('Product added successfully!', 'success');
                 }
                 return true;
@@ -2152,8 +2152,8 @@ window.setFeaturedImage = function(index) {
             submitBtn.disabled = true;
             
             // Get all form values
-            const name = document.getElementById('productName').value.trim();
-            if (!name) {
+            const title = document.getElementById('productName').value.trim();
+            if (!title) {
                 showToast('Product name is required', 'error');
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
@@ -2177,46 +2177,39 @@ window.setFeaturedImage = function(index) {
             // Get tags as array
             const tags = tagify.value.map(t => t.value);
 
+            // Get images array (at least 5 image URLs or empty array)
+            const images = uploadedImages.map(img => img.data);
+            // Ensure we have at least 5 slots (can be empty strings if not enough images)
+            while(images.length < 5) {
+                images.push("");
+            }
+
             const productData = {
-                name: name,
+                title: title,
+                price: price,
+                description: quill.root.innerHTML || document.getElementById('shortDescription').value || "",
                 category: document.getElementById('productCategory').value,
-                subcategory: document.getElementById('productSubcategory').value,
+                images: images,
+                videoLink: document.getElementById('videoUrl').value || "",
+                createdAt: serverTimestamp(),
+                // Additional fields for compatibility with existing UI
+                name: title,
+                shortDesc: document.getElementById('shortDescription').value,
                 brand: document.getElementById('productBrand').value,
                 sku: document.getElementById('productSku').value,
                 barcode: document.getElementById('productBarcode').value,
-                
-                // Pricing - all values saved as entered, no calculations
                 currency: document.getElementById('currency').value,
-                price: price,
                 salePrice: document.getElementById('productSalePrice').value ? parseFloat(document.getElementById('productSalePrice').value) : null,
                 cost: document.getElementById('productCost').value ? parseFloat(document.getElementById('productCost').value) : null,
                 discount: document.getElementById('productDiscount').value ? parseFloat(document.getElementById('productDiscount').value) : 0,
-                
-                // Inventory
                 stock: parseInt(document.getElementById('stockQuantity').value) || 0,
                 lowStockThreshold: parseInt(document.getElementById('lowStockThreshold').value) || 5,
                 inStock: document.getElementById('stockStatus').value === 'true',
-                
-                // Description
-                shortDesc: document.getElementById('shortDescription').value,
-                description: quill.root.innerHTML,
                 features: features,
-                
-                // Media
-                images: uploadedImages.map(img => img.data),
-                videoUrl: document.getElementById('videoUrl').value,
-                
-                // Affiliate
-                amazonUrl: document.getElementById('amazonUrl').value,
-                prime: document.getElementById('primeEligible').checked,
-                
-                // SEO
                 metaTitle: document.getElementById('metaTitle').value,
                 metaDesc: document.getElementById('metaDescription').value,
                 metaKeywords: document.getElementById('metaKeywords').value,
                 slug: document.getElementById('productSlug').value,
-                
-                // Shipping
                 weight: parseFloat(document.getElementById('weight').value) || null,
                 dimensions: {
                     length: parseFloat(document.getElementById('length').value) || null,
@@ -2225,23 +2218,14 @@ window.setFeaturedImage = function(index) {
                 },
                 freeShipping: document.getElementById('freeShipping').checked,
                 shippingClass: document.getElementById('shippingClass').value,
-                
-                // Status
                 status: document.getElementById('productStatus').value,
                 visibility: document.getElementById('productVisibility').value,
                 featured: document.getElementById('featuredProduct').checked,
                 taxClass: document.getElementById('taxClass').value,
                 tags: tags,
-                
-                // Timestamps
-                updatedAt: new Date().toISOString()
+                updatedAt: serverTimestamp()
             };
             
-            // Add createdAt for new products
-            if (!productId) {
-                productData.createdAt = new Date().toISOString();
-            }
-
             // Save to Firebase
             const success = await saveProductToFirebase(productData, productId);
             
